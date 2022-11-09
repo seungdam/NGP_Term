@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Game.h"
-#include "Networker.h"
+
+class Networker;
 
 class Core {
 	Core();

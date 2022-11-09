@@ -75,7 +75,7 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		m_vPlayer.push_back(p1);
 
 
-		fp = fopen("Scene/final.txt", "r");
+		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
 	}
 		break;
@@ -205,11 +205,11 @@ void Scene::Init()
 void Scene::Input(float fTimeElapsed)
 {
 	// player Move
-	uint8_t newDir;
+	uint8_t newDir = 0;
 	for (auto const& d : m_vPlayer) d->Input(fTimeElapsed);
 	
 	Core::GetInst().GetNetworkManager()->UpdateSendPacket(newDir);
-	Core::GetInst().GetNetworkManager()->SendPlayerPacket();
+	//Core::GetInst().GetNetworkManager()->SendPlayerPacket();
 
 	// camera
 	FPOINT pCenter;

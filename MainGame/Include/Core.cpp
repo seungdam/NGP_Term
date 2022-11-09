@@ -19,9 +19,9 @@ void Core::OnDestroy()
 		FMOD_System_Release(m_pSoundSystem);
 	}
 
-	if (m_NetworkManager) {
-		delete m_NetworkManager;
-	}
+	//if (m_NetworkManager) {
+	//	delete m_NetworkManager;
+	//}
 }
 
 bool Core::Init(HINSTANCE hInst)
@@ -75,13 +75,13 @@ int Core::Run()
 	QueryPerformanceCounter(&m_Time);
 
 	// if loggin failed
-	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
-		return -1;
+	//if (!m_NetworkManager->ConnectTo(SERVERIP)) 
+	//	return -1;
 
 	GameManager::GetInst().Init();
 
 	// wait for session start
-	m_NetworkManager->WaitForSessionStart();
+	//m_NetworkManager->WaitForSessionStart();
 
 
 	FMOD_SOUND* pBGSound;

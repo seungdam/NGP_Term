@@ -1,14 +1,12 @@
 #pragma once
+
 #include "Game.h"
 
 // when it is created, init wsa, when it's deleted, cleanup wsa
 class Networker
 {
-	int m_iClientID;
+	int m_iClientID = -1;
 	SOCKET m_clientSocket;
-	CS_MOVE_PACKET m_playerMovePacket;
-	SC_MOVE_PACKET m_otherPlayerPacket[MAX_PLAYERS];
-	SC_ROLLERCOASTER_PACKET m_movingStepPacket[MAX_MOVING_STEPS];
 
 public:
 	Networker();

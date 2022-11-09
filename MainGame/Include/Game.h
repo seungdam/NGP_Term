@@ -2,12 +2,14 @@
 #pragma warning (disable : 4996)
 #pragma comment(lib, "ws2_32")
 
+#include <winsock2.h>
+
 #include <Windows.h>
 #include <vector>
 #include <list>
 #include <string>
 #include <atlimage.h>
-#include <winsock2.h>
+
 #include <fmod.h>
 
 #ifdef _DEBUG
@@ -21,7 +23,7 @@ using namespace std;
 
 #include "Type.h"
 #include "Macro.h"
-#include "protocol.h"
+#include "Networker.h"
 
 #define SERVERPORT 9000
 #define SERVERIP "127.0.0.1"

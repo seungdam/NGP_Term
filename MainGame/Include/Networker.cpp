@@ -16,8 +16,8 @@ Networker::Networker()
 
 Networker::~Networker()
 {
-	closesocket(m_clientSocket);
-	WSACleanup();
+	//closesocket(m_clientSocket);
+	//WSACleanup();
 }
 
 bool Networker::ConnectTo(const char* ipAddr)
@@ -33,12 +33,6 @@ bool Networker::ConnectTo(const char* ipAddr)
 
 	// if login ok
 	// get client id here
-	val = recv(m_clientSocket, (char*)m_iClientID, sizeof(int), MSG_WAITALL);
-	if (val == SOCKET_ERROR) return false;
-	m_playerMovePacket.input_key = m_iClientID;
-
-	// if login fail return false
-
 	return true;
 }
 
@@ -51,14 +45,13 @@ bool Networker::WaitForSessionStart()
 
 void Networker::UpdateSendPacket(uint8_t dir)
 {
-	m_playerMovePacket.input_key = dir;
 }
 
 bool Networker::SendPlayerPacket()
 {
-	int val = send(m_clientSocket, (const char*)&m_playerMovePacket, sizeof(m_playerMovePacket), 0);
 
-	return val != SOCKET_ERROR;
+	return true;
+	//return val != SOCKET_ERROR;
 }
 
 bool Networker::GetPackets()
