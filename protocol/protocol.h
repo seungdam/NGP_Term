@@ -1,9 +1,21 @@
 #pragma once
 
+struct FPOINT {
+	float x;
+	float y;
+};
+
+struct FRECT {
+	float top;
+	float left;
+	float right;
+	float bottom;
+};
+
 struct PLAYERINFO
 {
 	int p_id;
-	int p_pos;
+	FPOINT p_pos[2];
 	int p_dir;
 };
 
