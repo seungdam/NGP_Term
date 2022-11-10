@@ -31,6 +31,7 @@ bool Core::Init(HINSTANCE hInst)
 	FMOD_System_Init(m_pSoundSystem, 32, FMOD_INIT_NORMAL, NULL);
 
 	// window init
+	m_NetworkManager = new Networker;
 	m_hInst = hInst;
 
 	m_tWndSize.cx = WINDOW_SIZE_WIDTH;
@@ -75,8 +76,8 @@ int Core::Run()
 	QueryPerformanceCounter(&m_Time);
 
 	// if loggin failed
-	//if (!m_NetworkManager->ConnectTo(SERVERIP)) 
-	//	return -1;
+	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
+		return -1;
 
 	GameManager::GetInst().Init();
 
