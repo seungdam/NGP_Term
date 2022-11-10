@@ -23,16 +23,15 @@ Networker::~Networker()
 bool Networker::ConnectTo(const char* ipAddr)
 {
 	// connect to ipAddr
-	SOCKADDR_IN serveraddr;
-	ZeroMemory(&serveraddr, sizeof(serveraddr));
-	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = inet_addr(ipAddr);
-	serveraddr.sin_port = htons(SERVERPORT);
-	int val = connect(m_clientSocket, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+	SOCKADDR_IN serverAddr;
+	ZeroMemory(&serverAddr, sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = inet_addr(ipAddr);
+	serverAddr.sin_port = htons(SERVERPORT);
+	int val = connect(m_clientSocket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
 	if (val == SOCKET_ERROR) return false;
 
-	// if login ok
-	// get client id here
+	// login ok
 	return true;
 }
 
