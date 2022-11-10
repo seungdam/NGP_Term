@@ -189,7 +189,6 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Type.h" />
-    <ClInclude Include="protocol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

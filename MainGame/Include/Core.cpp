@@ -19,9 +19,9 @@ void Core::OnDestroy()
 		FMOD_System_Release(m_pSoundSystem);
 	}
 
-	//if (m_NetworkManager) {
-	//	delete m_NetworkManager;
-	//}
+	if (m_NetworkManager) {
+		delete m_NetworkManager;
+	}
 }
 
 bool Core::Init(HINSTANCE hInst)

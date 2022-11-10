@@ -8,8 +8,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, in
 		return -1;
 	}
 
-	RECT temp;
-
 	int retValue = Core::GetInst().Run();
 
 	Core::GetInst().OnDestroy();

@@ -23,6 +23,7 @@ using namespace std;
 
 #include "Type.h"
 #include "Macro.h"
+#include "../../protocol/protocol.h"
 #include "Networker.h"
 
 #define SERVERPORT 9000
