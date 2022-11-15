@@ -94,16 +94,27 @@ int main(int argc, char* argv[]) {
 	struct sockaddr_in clientaddr;
 	int addrlen;
 
+	int acceptClientNum = 0;
+
 	int currentPlayerNum = 0;
 
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);
-		client_sock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
+		if (acceptClientNum <= 3) {
+			client_sock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
+			acceptClientNum++;
+		}
+		else {
+			closesocket(sock);
+			break;
+		}
 		if (client_sock == INVALID_SOCKET) {
 			err_display("accept()");
 			break;
 		}
+
+		//loginsend.ServerDoSend(0);
 
 		// if player < max player
 		if (currentPlayerNum < MAX_PLAYERS) {
@@ -116,14 +127,9 @@ int main(int argc, char* argv[]) {
 
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
 		}
-		
-
 	}
-
-
-
-
-
+	closesocket(sock);
+	WSACleanup();
 }
 
 
