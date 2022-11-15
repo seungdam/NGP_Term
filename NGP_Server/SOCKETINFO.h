@@ -1,5 +1,8 @@
 #pragma once
 #include <winsock2.h> 
+#include <iostream>
+
+using namespace std;
 
 
 class SOCKETINFO
@@ -7,6 +10,8 @@ class SOCKETINFO
 private:
 	int m_Id;
 	SOCKET m_sock;
+	char m_type;
+	char m_dir;
 
 public:
 	SOCKETINFO();

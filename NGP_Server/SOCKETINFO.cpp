@@ -1,6 +1,6 @@
 #include "SOCKETINFO.h"
 #include "../protocol/protocol.h"
-#include <iostream>
+
 
 SOCKETINFO::SOCKETINFO()
 {
@@ -37,24 +37,33 @@ void SOCKETINFO::ServerDoSend(char type)
 bool SOCKETINFO::ServerDoRecv()
 {
 	int retval;
+	char buff[512];
+	//C2S_MOVE_PACKET packet;
 
-	// 잘 오는지 테스트
-	char type;
-	C2S_MOVE_PACKET packet;
-	retval = recv(m_sock, &type, sizeof(char), MSG_WAITALL);
-	retval = recv(m_sock, (char*)&packet + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
-
-	printf("id: %d, 수신내용: %d\n", m_Id, (unsigned char)packet.direction);
+	retval = recv(m_sock, buff, sizeof(char), MSG_WAITALL);
+	retval = recv(m_sock, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
 
 	if (retval == SOCKET_ERROR) 
 		return false;
 
-	//ProcessPacket();
+	ProcessPacket(buff);
 
 	return true;
 }
 
 void SOCKETINFO::ProcessPacket(char* data)
 {
-
+	switch ((CLIENT_PACKET_INFO)data[0]) {
+	case CLIENT_PACKET_INFO::MOVE:
+	{
+		// 클라이언트에서 받은 
+		C2S_MOVE_PACKET* info = (C2S_MOVE_PACKET*)data;
+		m_type = info->type;
+		m_Id = info->from_c_id;
+		m_dir = info->direction;
+		cout << "id: " << m_Id << " dir: " << (int)m_dir << endl;
+	}
+		break;
+	}
+	
 }
