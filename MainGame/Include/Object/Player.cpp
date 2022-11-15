@@ -26,7 +26,7 @@ bool Player::Init()
 	return true;
 }
 
-void Player::Input(float fTimeElapsed)
+void Player::Input(float fTimeElapsed, uint8_t& input)
 {
 	// setSprite
 	m_iSpriteY = m_eMoveDir == MOVE_DIR::MD_BACK;
@@ -160,7 +160,7 @@ bool PurplePlayer::Init()
 	return Player::Init();
 }
 
-void PurplePlayer::Input(float fTimeElapsed)
+void PurplePlayer::Input(float fTimeElapsed, uint8_t& input)
 {
 	m_tBefPos = m_tPosition;
 
@@ -169,21 +169,29 @@ void PurplePlayer::Input(float fTimeElapsed)
 
 	// Input
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
+		input |= KEY_LEFT;
+
 		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_BACK;
 		m_bMoved = true;
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+		input |= KEY_RIGHT;
+
 		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_FRONT;
 		m_bMoved = true;
 	}
 	if (!m_bFalling) {
 		if (GetAsyncKeyState(VK_UP) & 0x8000) {
+			input |= KEY_UP;
+
 			m_bFalling = true;
 			m_fJumpSpeed = -550.0f;
 		}
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000 && !m_bLand) {
+			input |= KEY_DOWN;
+
 			m_bSit = true;
 		}
 		else {
@@ -191,7 +199,7 @@ void PurplePlayer::Input(float fTimeElapsed)
 		}
 	}
 
-	Player::Input(fTimeElapsed);
+	Player::Input(fTimeElapsed, input);
 }
 
 bool YellowPlayer::Init()
@@ -201,7 +209,7 @@ bool YellowPlayer::Init()
 	return Player::Init();
 }
 
-void YellowPlayer::Input(float fTimeElapsed)
+void YellowPlayer::Input(float fTimeElapsed, uint8_t& input)
 {
 	m_tBefPos = m_tPosition;
 
@@ -209,25 +217,33 @@ void YellowPlayer::Input(float fTimeElapsed)
 	m_bSit = false;
 
 	if (GetAsyncKeyState('A') & 0x8000) {
+		input |= KEY_A;
+
 		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_BACK;
 		m_bMoved = true;
 	}
 	if (GetAsyncKeyState('D') & 0x8000) {
+		input |= KEY_D;
+
 		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_FRONT;
 		m_bMoved = true;
 	}
 	if (!m_bFalling) {
 		if (GetAsyncKeyState('W') & 0x8000) {
+			input |= KEY_W;
+
 			m_bFalling = true;
 			m_fJumpSpeed = -550.0f;
 		}
 		if (GetAsyncKeyState('S') & 0x8000 && !m_bLand) {
+			input |= KEY_S;
+
 			m_bSit = true;
 		}
 		else m_bSitComplete = false;
 	}
 
-	Player::Input(fTimeElapsed);
+	Player::Input(fTimeElapsed, input);
 }

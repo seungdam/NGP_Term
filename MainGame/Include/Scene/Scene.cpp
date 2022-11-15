@@ -206,9 +206,9 @@ void Scene::Input(float fTimeElapsed)
 {
 	// player Move
 	uint8_t newDir = 0;
-	for (auto const& d : m_vPlayer) d->Input(fTimeElapsed);
+	for (auto const& d : m_vPlayer) d->Input(fTimeElapsed, newDir);
 	
-	Core::GetInst().GetNetworkManager()->UpdateSendPacket(newDir);
+	Core::GetInst().GetNetworkManager()->ClientDoSendMovePacket(newDir);
 	//Core::GetInst().GetNetworkManager()->SendPlayerPacket();
 
 	// camera

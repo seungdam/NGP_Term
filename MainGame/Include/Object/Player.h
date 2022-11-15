@@ -57,7 +57,7 @@ public:
 public:
 	virtual bool Init();
 
-	virtual void Input(float fTimeElapsed);
+	virtual void Input(float fTimeElapsed, uint8_t& input);
 	virtual int Update(float fTimeElapsed);
 	virtual void Render(HDC hdc);
 };
@@ -72,7 +72,7 @@ public:
 public:
 	virtual bool Init();
 
-	virtual void Input(float fTimeElapsed);
+	virtual void Input(float fTimeElapsed, uint8_t& input);
 };
 
 
@@ -86,7 +86,7 @@ public:
 public:
 	virtual bool Init();
 
-	virtual void Input(float fTimeElapsed);
+	virtual void Input(float fTimeElapsed, uint8_t& input);
 };
 
 

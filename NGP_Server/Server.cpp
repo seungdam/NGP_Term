@@ -1,14 +1,24 @@
 #include <iostream>
 #include <winsock2.h> 
 #include <ws2tcpip.h> 
+#include <Windows.h>
+#include <unordered_map>
+#include "SOCKETINFO.h"
 
 #include "../protocol/protocol.h"
 
 #pragma comment(lib, "WS2_32.lib")
 
 #define SERVERPORT 9000
+#define MAX_PLAYERS 3
 
 using namespace std;
+
+// SOCKETINFO를 담을 전역 변수
+unordered_map<int, SOCKETINFO> g_clients;
+
+// RecvThread를 관리하는 함수
+HANDLE rthread[MAX_PLAYERS];
 
 
 // 소켓 함수 오류 출력 후 종료
@@ -51,6 +61,7 @@ void err_display(int errcode)
 	LocalFree(lpMsgBuf);
 }
 
+DWORD WINAPI ServerRecvThread(LPVOID arg);
 
 int main(int argc, char* argv[]) {
 
@@ -83,6 +94,8 @@ int main(int argc, char* argv[]) {
 	struct sockaddr_in clientaddr;
 	int addrlen;
 
+	int currentPlayerNum = 0;
+
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);
@@ -92,10 +105,40 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 
+		// if player < max player
+		if (currentPlayerNum < MAX_PLAYERS) {
+			int id = currentPlayerNum++;
+			//pair<int, SOCKETINFO> client{ id, id, client_sock };
+
+			g_clients.emplace(std::piecewise_construct,
+				std::forward_as_tuple(id),
+				std::forward_as_tuple(id, client_sock));
+
+			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
+		}
+		
+
 	}
 
 
 
 
 
+}
+
+
+DWORD WINAPI ServerRecvThread(LPVOID arg)
+{
+	int id = *((int*)arg);
+	cout << "클라이언트 접속, id: " << id << endl;
+
+	while (true) {
+		if (!g_clients[id].ServerDoRecv())
+			break;
+	}
+
+	// 연결 해제
+	g_clients.erase(id);
+
+	return 0;
 }

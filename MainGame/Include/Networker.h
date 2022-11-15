@@ -15,17 +15,17 @@ public:
 	// returns false when fails
 	bool ConnectTo(const char* ipAddr);
 
-	// waits until server send start packet
-	bool WaitForSessionStart();
+	// 서버로부터 로그인 패킷이 올 때까지 기다린다.
+	bool WaitLoginPacket();
 
-	// set player moving dir
-	void UpdateSendPacket(uint8_t dir);
+	// 입력의 변화가 생기면 송신한다
+	bool ClientDoSendMovePacket(uint8_t dir);
 
 	// send packet to server
-	bool SendPlayerPacket();
+	void ProcessPacket(char* packet);
 
 	// receive packet from server
-	bool GetPackets();
+	bool ClientDoRecv();
 
 };
 

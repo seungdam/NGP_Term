@@ -16,8 +16,8 @@ Networker::Networker()
 
 Networker::~Networker()
 {
-	//closesocket(m_clientSocket);
-	//WSACleanup();
+	closesocket(m_clientSocket);
+	WSACleanup();
 }
 
 bool Networker::ConnectTo(const char* ipAddr)
@@ -35,29 +35,45 @@ bool Networker::ConnectTo(const char* ipAddr)
 	return true;
 }
 
-bool Networker::WaitForSessionStart()
-{
-	char temp;
-	int val = recv(m_clientSocket, &temp, sizeof(char), MSG_WAITALL);
-	return true;
-}
-
-void Networker::UpdateSendPacket(uint8_t dir)
-{
-}
-
-bool Networker::SendPlayerPacket()
+bool Networker::WaitLoginPacket()
 {
 
 	return true;
-	//return val != SOCKET_ERROR;
 }
 
-bool Networker::GetPackets()
+bool Networker::ClientDoSendMovePacket(uint8_t dir)
+{
+	static uint8_t befDir = 0;
+
+	// 만약 이전 입력과 다르다면
+	if (befDir != dir) {
+		befDir = dir;
+
+		// 플레이어 이동 패킷을 보낸다.
+		C2S_MOVE_PACKET packet;
+		packet.type = (char)CLIENT_PACKET_INFO::MOVE;
+		packet.from_c_id = m_iClientID;
+		packet.direction = dir;
+
+		int retval = send(m_clientSocket, (char*)&packet, sizeof(C2S_MOVE_PACKET), 0);
+
+		if (retval == SOCKET_ERROR)
+			return false;
+
+		// 테스트 코드
+		printf("송신: %d\n", dir);
+	}
+
+	return true;
+}
+
+void Networker::ProcessPacket(char* packet)
+{
+
+}
+
+bool Networker::ClientDoRecv()
 {
 	int val;
-	// synchronize other players
-
-	// synchronize moving steps
 	return true;
 }

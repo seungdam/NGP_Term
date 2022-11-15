@@ -44,6 +44,7 @@ using namespace std;
 #define WINDOW_SIZE_WIDTH 1280
 #define WINDOW_SIZE_HEIGHT 720
 
+
 template <typename T>
 void ReleaseAndCleanVector(T& p) {
 	typename T::iterator iter;
