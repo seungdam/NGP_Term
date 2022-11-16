@@ -79,10 +79,11 @@ int Core::Run()
 	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
 		return -1;
 
+	if (!m_NetworkManager->WaitLoginPacket())
+		return -1;
+
 	GameManager::GetInst().Init();
 
-	// wait for session start
-	//m_NetworkManager->WaitForSessionStart();
 
 
 	FMOD_SOUND* pBGSound;

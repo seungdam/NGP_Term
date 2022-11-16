@@ -37,7 +37,17 @@ bool Networker::ConnectTo(const char* ipAddr)
 
 bool Networker::WaitLoginPacket()
 {
+	//S2C_LOGIN_PACKET logpacket ;
 
+ // if (m_iClientID == logpacket.c_id ) {
+	//  logpacket.b_success = true;
+	//  return logpacket.b_success;
+ // }
+ // else {
+	//  return logpacket.b_success;
+ // }
+    int retval = recv(m_clientSocket, (char*)&m_iClientID, sizeof(int), 0);
+	if (retval == SOCKET_ERROR) return false;
 	return true;
 }
 
@@ -61,9 +71,10 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 			return false;
 
 		// 테스트 코드
-		printf("송신: %d\n", dir);
+		
+		printf("송신: %d\n", packet.type);
+		
 	}
-
 	return true;
 }
 
