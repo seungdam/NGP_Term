@@ -21,46 +21,6 @@ unordered_map<int, SOCKETINFO> g_clients;
 HANDLE rthread[MAX_PLAYERS];
 
 
-// 소켓 함수 오류 출력 후 종료
-void err_quit(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	MessageBoxA(NULL, (const char*)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(1);
-}
-
-// 소켓 함수 오류 출력
-void err_display(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-// 소켓 함수 오류 출력
-void err_display(int errcode)
-{
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, errcode,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	printf("[오류] %s\n", (char*)lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
 DWORD WINAPI ServerRecvThread(LPVOID arg);
 
 int main(int argc, char* argv[]) {
@@ -98,7 +58,10 @@ int main(int argc, char* argv[]) {
 
 	int currentPlayerNum = 0;
 
+	int id = currentPlayerNum;
+
 	while (1) {
+
 		// accept()
 		addrlen = sizeof(clientaddr);
 		if (acceptClientNum <= 3) {
@@ -114,11 +77,24 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 
-		//loginsend.ServerDoSend(0);
+		// 로그인 패킷
+		/*auto iter = g_clients.find(clientaddr.sin_port);
+		if (iter == g_clients.end()) {
+			S2C_LOGIN_PACKET logpacket;
+			logpacket.c_id = id;
+			g_clients.emplace(std::piecewise_construct, std::forward_as_tuple(clientaddr.sin_port),
+				std::forward_as_tuple(logpacket.c_id));
+
+			retval = send(client_sock, (char*)&logpacket.c_id, sizeof(logpacket.c_id), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+			}
+		}*/
+
 
 		// if player < max player
 		if (currentPlayerNum < MAX_PLAYERS) {
-			int id = currentPlayerNum++;
+			currentPlayerNum++;
 			//pair<int, SOCKETINFO> client{ id, id, client_sock };
 
 			g_clients.emplace(std::piecewise_construct,
@@ -126,6 +102,8 @@ int main(int argc, char* argv[]) {
 				std::forward_as_tuple(id, client_sock));
 
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
+
+			
 		}
 	}
 	closesocket(sock);

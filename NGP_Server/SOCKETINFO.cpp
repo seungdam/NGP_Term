@@ -19,9 +19,26 @@ SOCKETINFO::~SOCKETINFO()
 
 void SOCKETINFO::ServerDoSend(char type)
 {
+	int retval;
+	SOCKADDR_IN clientaddr;
+	int addrlen;
+
 	switch ((SERVER_PACKET_INFO)type) {
-	case SERVER_PACKET_INFO::LOGIN:
+	case SERVER_PACKET_INFO::LOGIN: {
+
 		// 로그인 패킷
+
+		//addrlen = sizeof(clientaddr);
+
+		//S2C_LOGIN_PACKET lpacket;
+
+		//
+
+		//retval = send(m_sock, (char*)&m_Id, sizeof(int), 0);
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("send()");
+		//}
+	}
 		break;
 
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
@@ -56,7 +73,7 @@ void SOCKETINFO::ProcessPacket(char* data)
 	switch ((CLIENT_PACKET_INFO)data[0]) {
 	case CLIENT_PACKET_INFO::MOVE:
 	{
-		// 클라이언트에서 받은 
+		// 클라이언트에서 받은 데이터 넣어주기
 		C2S_MOVE_PACKET* info = (C2S_MOVE_PACKET*)data;
 		m_type = info->type;
 		m_Id = info->from_c_id;
