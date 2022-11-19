@@ -114,7 +114,7 @@ struct S2C_PLAYER_MOVE_PACKET
 	PLAYERINFO p_data[3];
 };
 
-struct S2C_SCENE_CHANGE__PACKET
+struct S2C_SCENE_CHANGE_PACKET
 {
 	char type;
 	char next_scene_num;

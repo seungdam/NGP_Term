@@ -35,7 +35,7 @@ void err_display(const char* msg)
 }
 
 #define SERVERPORT 9000
-#define MAX_PLAYERS 3
+#define MAX_PLAYERS 1
 
 using namespace std;
 

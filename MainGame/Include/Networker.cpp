@@ -75,7 +75,7 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 
 void Networker::ProcessPacket(char* packet)
 {
-	switch ((SERVER_PACKET_INFO)packet[1]) {
+	switch ((SERVER_PACKET_INFO)packet[0]) {
 	case SERVER_PACKET_INFO::LOGIN:
 	{
 		S2C_LOGIN_PACKET* llp = (S2C_LOGIN_PACKET*)packet;
@@ -98,7 +98,7 @@ bool Networker::ClientDoRecv()
 	if (retval == SOCKET_ERROR) {
 		return false;
 	}
-	retval = recv(m_clientSocket, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
+	retval = recv(m_clientSocket, buff + sizeof(char), sizeof(S2C_LOGIN_PACKET) - sizeof(char), MSG_WAITALL);
 
 	if (retval == SOCKET_ERROR)
 		return false;
