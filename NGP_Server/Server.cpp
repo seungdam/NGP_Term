@@ -6,8 +6,33 @@
 #include "SOCKETINFO.h"
 
 #include "../protocol/protocol.h"
-
 #pragma comment(lib, "WS2_32.lib")
+
+// 소켓 함수 오류 출력 후 종료
+void err_quit(const char* msg)
+{
+	LPVOID lpMsgBuf;
+	FormatMessageA(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(char*)&lpMsgBuf, 0, NULL);
+	MessageBoxA(NULL, (const char*)lpMsgBuf, msg, MB_ICONERROR);
+	LocalFree(lpMsgBuf);
+	exit(1);
+}
+// 소켓 함수 오류 출력
+void err_display(const char* msg)
+{
+	LPVOID lpMsgBuf;
+	FormatMessageA(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(char*)&lpMsgBuf, 0, NULL);
+	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
+	LocalFree(lpMsgBuf);
+}
 
 #define SERVERPORT 9000
 #define MAX_PLAYERS 3
@@ -64,17 +89,19 @@ int main(int argc, char* argv[]) {
 
 		// accept()
 		addrlen = sizeof(clientaddr);
-		if (acceptClientNum <= 3) {
-			client_sock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
-			acceptClientNum++;
-		}
-		else {
-			closesocket(sock);
-			break;
-		}
+		client_sock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
 		if (client_sock == INVALID_SOCKET) {
-			err_display("accept()");
-			break;
+			err_quit("accept()");
+		}
+		if (currentPlayerNum < MAX_PLAYERS) {
+			currentPlayerNum++;
+			g_clients.try_emplace(id, id, client_sock);
+			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
+			if (MAX_PLAYERS == currentPlayerNum) {
+				for (auto& i : g_clients) {
+					i.second.ServerDoSendLoginPacket(true);
+				}
+			}
 		}
 
 		// 로그인 패킷
@@ -93,16 +120,7 @@ int main(int argc, char* argv[]) {
 
 
 		// if player < max player
-		if (currentPlayerNum < MAX_PLAYERS) {
-			currentPlayerNum++;
-			g_clients.try_emplace(id,id,client_sock);
-			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
-			if (MAX_PLAYERS == currentPlayerNum) {
-				for (auto& i : g_clients) {
-					i.second.ServerDoSendLoginPacket(true);
-				}
-			}
-		}
+		
 	}
 	closesocket(sock);
 	WSACleanup();

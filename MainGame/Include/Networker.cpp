@@ -43,7 +43,7 @@ bool Networker::ConnectTo(const char* ipAddr)
 
 bool Networker::IsClientLogin(bool isSuccess)
 {
-	return false;
+	return isSuccess;
 }
 
 bool Networker::ClientDoSendMovePacket(uint8_t dir)
@@ -77,8 +77,15 @@ void Networker::ProcessPacket(char* packet)
 {
 	switch ((SERVER_PACKET_INFO)packet[1]) {
 	case SERVER_PACKET_INFO::LOGIN:
+	{
 		S2C_LOGIN_PACKET* llp = (S2C_LOGIN_PACKET*)packet;
 		if (llp->b_success) IsClientLogin(llp->b_success);
+		break;
+	}
+	case SERVER_PACKET_INFO::PLAYER_MOVE:
+	{
+		S2C_PLAYER_MOVE_PACKET* pmp = (S2C_PLAYER_MOVE_PACKET*)packet;
+	}
 		break;
 	}
 }
@@ -88,6 +95,9 @@ bool Networker::ClientDoRecv()
 	int retval;
 	char buff[512];
 	retval = recv(m_clientSocket, buff, sizeof(char), MSG_WAITALL);
+	if (retval == SOCKET_ERROR) {
+		return false;
+	}
 	retval = recv(m_clientSocket, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
 
 	if (retval == SOCKET_ERROR)

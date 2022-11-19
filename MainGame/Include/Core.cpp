@@ -79,9 +79,6 @@ int Core::Run()
 	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
 		return -1;
 
-	if (!m_NetworkManager->WaitLoginPacket())
-		return -1;
-
 	m_NetworkManager->ClientDoRecv();
 
 	GameManager::GetInst().Init();

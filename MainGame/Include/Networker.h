@@ -16,7 +16,8 @@ public:
 	bool ConnectTo(const char* ipAddr);
 
 	// 서버로부터 로그인 패킷이 올 때까지 기다린다.
-	bool WaitLoginPacket();
+	//bool WaitLoginPacket();
+	bool IsClientLogin(bool);
 
 	// 입력의 변화가 생기면 송신한다
 	bool ClientDoSendMovePacket(uint8_t dir);
