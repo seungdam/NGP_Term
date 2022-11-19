@@ -82,6 +82,8 @@ int Core::Run()
 	if (!m_NetworkManager->WaitLoginPacket())
 		return -1;
 
+	m_NetworkManager->ClientDoRecv();
+
 	GameManager::GetInst().Init();
 
 

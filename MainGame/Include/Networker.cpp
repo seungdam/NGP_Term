@@ -35,20 +35,15 @@ bool Networker::ConnectTo(const char* ipAddr)
 	return true;
 }
 
-bool Networker::WaitLoginPacket()
-{
-	//S2C_LOGIN_PACKET logpacket ;
+//bool Networker::WaitLoginPacket()
+//{
+//
+//	return true;
+//}
 
- // if (m_iClientID == logpacket.c_id ) {
-	//  logpacket.b_success = true;
-	//  return logpacket.b_success;
- // }
- // else {
-	//  return logpacket.b_success;
- // }
-    int retval = recv(m_clientSocket, (char*)&m_iClientID, sizeof(int), 0);
-	if (retval == SOCKET_ERROR) return false;
-	return true;
+bool Networker::IsClientLogin(bool isSuccess)
+{
+	return false;
 }
 
 bool Networker::ClientDoSendMovePacket(uint8_t dir)
@@ -80,11 +75,24 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 
 void Networker::ProcessPacket(char* packet)
 {
-
+	switch ((SERVER_PACKET_INFO)packet[1]) {
+	case SERVER_PACKET_INFO::LOGIN:
+		S2C_LOGIN_PACKET* llp = (S2C_LOGIN_PACKET*)packet;
+		if (llp->b_success) IsClientLogin(llp->b_success);
+		break;
+	}
 }
 
 bool Networker::ClientDoRecv()
 {
-	int val;
+	int retval;
+	char buff[512];
+	retval = recv(m_clientSocket, buff, sizeof(char), MSG_WAITALL);
+	retval = recv(m_clientSocket, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
+
+	if (retval == SOCKET_ERROR)
+		return false;
+
+	ProcessPacket(buff);
 	return true;
 }
