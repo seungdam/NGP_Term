@@ -22,6 +22,7 @@ public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
 	void ServerDoSend(char type);
 
+	void ServerDoSendLoginPacket();
 	// 클라이언트로 부터 온 패킷을 수신한다
 	bool ServerDoRecv();
 

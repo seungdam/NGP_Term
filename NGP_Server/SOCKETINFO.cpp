@@ -17,6 +17,7 @@ SOCKETINFO::~SOCKETINFO()
 	closesocket(m_sock);
 }
 
+// Processing Scene change packet and move packet
 void SOCKETINFO::ServerDoSend(char type)
 {
 	int retval;
@@ -24,32 +25,31 @@ void SOCKETINFO::ServerDoSend(char type)
 	int addrlen;
 
 	switch ((SERVER_PACKET_INFO)type) {
-	case SERVER_PACKET_INFO::LOGIN: {
-
-		// 로그인 패킷
-
-		//addrlen = sizeof(clientaddr);
-
-		//S2C_LOGIN_PACKET lpacket;
-
-		//
-
-		//retval = send(m_sock, (char*)&m_Id, sizeof(int), 0);
-		//if (retval == SOCKET_ERROR) {
-		//	err_display("send()");
-		//}
-	}
-		break;
-
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
 		// 플레이어 이동 패킷
 		break;
-
 	case SERVER_PACKET_INFO::SCENE_CHANGE:
 		// 씬 변경 패킷
 		break;
 	}
 }
+
+void SOCKETINFO::ServerDoSendLoginPacket(bool isSuccess)
+{
+	S2C_LOGIN_PACKET login_packet;
+	login_packet.type = (char)SERVER_PACKET_INFO::LOGIN;
+	login_packet.b_success = isSuccess;
+	login_packet.c_id = m_Id;
+	
+	int retval;
+	retval = send(m_sock, (char*)&login_packet, sizeof(S2C_LOGIN_PACKET), 0);
+	if (SOCKET_ERROR == retval) {
+		cout << "err" << endl;
+	}
+
+}
+
+
 
 bool SOCKETINFO::ServerDoRecv()
 {

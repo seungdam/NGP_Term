@@ -95,15 +95,13 @@ int main(int argc, char* argv[]) {
 		// if player < max player
 		if (currentPlayerNum < MAX_PLAYERS) {
 			currentPlayerNum++;
-			//pair<int, SOCKETINFO> client{ id, id, client_sock };
-
-			g_clients.emplace(std::piecewise_construct,
-				std::forward_as_tuple(id),
-				std::forward_as_tuple(id, client_sock));
-
+			g_clients.try_emplace(id,id,client_sock);
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
-
-			
+			if (MAX_PLAYERS == currentPlayerNum) {
+				for (auto& i : g_clients) {
+					i.second.ServerDoSendLoginPacket(true);
+				}
+			}
 		}
 	}
 	closesocket(sock);
