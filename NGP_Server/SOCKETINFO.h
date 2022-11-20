@@ -27,6 +27,7 @@ public:
 
 	// 수신한 패킷의 종류를 파악하고 처리한다
 	void ProcessPacket(char* data);
+	void Disconnect();
 };
 
 
