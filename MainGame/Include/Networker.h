@@ -28,5 +28,6 @@ public:
 	// receive packet from server
 	bool ClientDoRecv();
 
+	void Disconnect();
 };
 

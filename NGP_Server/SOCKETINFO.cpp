@@ -84,3 +84,12 @@ void SOCKETINFO::ProcessPacket(char* data)
 	}
 	
 }
+
+void SOCKETINFO::Disconnect()
+{
+	// remove 패킷 전송할 필요가 잇음.-- > 게임 접속이 
+	/*S2C_REMOVE_PACKET p;
+	p.type = ....*/
+	
+	closesocket(m_sock);
+}

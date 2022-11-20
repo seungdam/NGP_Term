@@ -122,7 +122,7 @@ int Core::Run()
 
 	FMOD_Channel_Stop(pChannel);
 	FMOD_Sound_Release(pBGSound);
-
+	m_NetworkManager->Disconnect();
 	return 0;
 }
 

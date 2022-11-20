@@ -106,3 +106,10 @@ bool Networker::ClientDoRecv()
 	ProcessPacket(buff);
 	return true;
 }
+
+void Networker::Disconnect()
+{
+	closesocket(m_clientSocket);
+}
+
+
