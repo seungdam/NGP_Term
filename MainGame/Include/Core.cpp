@@ -2,6 +2,11 @@
 #include "GameManager/GameManager.h"
 #include <time.h>
 
+DWORD WINAPI Recv_Thread(LPVOID arg) {
+
+	return 0;
+}
+
 Core::Core()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -81,6 +86,10 @@ int Core::Run()
 
 	m_NetworkManager->ClientDoRecv();
 
+	HANDLE rThread = CreateThread(NULL, 0, Recv_Thread,(LPVOID)m_NetworkManager, 0, 0);
+	if (rThread == NULL) {
+
+	}
 	GameManager::GetInst().Init();
 
 

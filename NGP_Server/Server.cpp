@@ -130,11 +130,15 @@ int main(int argc, char* argv[]) {
 DWORD WINAPI ServerRecvThread(LPVOID arg)
 {
 	int id = *((int*)arg);
+	bool retval;
 	cout << "클라이언트 접속, id: " << id << endl;
 
 	while (true) {
-		if (!g_clients[id].ServerDoRecv())
+		retval = g_clients[id].ServerDoRecv();
+		if (!retval) {
+			err_display("recv()");
 			break;
+		}
 	}
 
 	// 연결 해제

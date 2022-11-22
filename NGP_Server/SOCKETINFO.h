@@ -17,7 +17,7 @@ public:
 	SOCKETINFO();
 	SOCKETINFO(int id, SOCKET s);
 
-	~SOCKETINFO();
+	~SOCKETINFO() { closesocket(m_sock); };
 
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
 	void ServerDoSend(char type);
