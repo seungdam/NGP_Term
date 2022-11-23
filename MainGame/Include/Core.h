@@ -60,5 +60,5 @@ public:
 public:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-	static DWORD WINAPI Recv_Thread();
+	static DWORD WINAPI Recv_Thread(LPVOID arg);
 };

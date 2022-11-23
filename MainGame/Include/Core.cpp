@@ -2,7 +2,7 @@
 #include "GameManager/GameManager.h"
 #include <time.h>
 
-DWORD WINAPI Recv_Thread(LPVOID arg) {
+DWORD WINAPI Core::Recv_Thread(LPVOID arg) {
 
 	return 0;
 }
@@ -150,7 +150,7 @@ LRESULT Core::WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 		break;
-		
+
 	case WM_KEYDOWN:
 		if (wParam == 'g') Core::GetInst().SetGridShow();
 		break;
@@ -171,9 +171,4 @@ LRESULT Core::WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
-}
-
-DWORD __stdcall Core::Recv_Thread()
-{
-	return 0;
 }
