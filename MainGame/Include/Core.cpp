@@ -4,6 +4,10 @@
 
 DWORD WINAPI Core::Recv_Thread(LPVOID arg) {
 
+	while (Core::GetInst().GetGameLoop()) {
+		Core::GetInst().GetNetworkManager()->ClientDoRecv();
+	}
+
 	return 0;
 }
 

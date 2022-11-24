@@ -127,6 +127,28 @@ struct C2S_MOVE_PACKET
 	char direction;
 };
 
+inline int GetS2CSize(SERVER_PACKET_INFO p)
+{
+	switch (p) {
+	case SERVER_PACKET_INFO::LOGIN:
+		return sizeof(S2C_LOGIN_PACKET);
+
+	case SERVER_PACKET_INFO::PLAYER_MOVE:
+		return sizeof(S2C_PLAYER_MOVE_PACKET);
+
+	case SERVER_PACKET_INFO::SCENE_CHANGE:
+		return sizeof(S2C_SCENE_CHANGE_PACKET);
+
+	default:
+		// error
+		return -1;
+	}
+}
+
+inline int GetS2CSize(char p)
+{
+	return GetS2CSize((SERVER_PACKET_INFO)p);
+}
 
 enum PLAYERMOVE {
 	KEY_W = 0b10000000,

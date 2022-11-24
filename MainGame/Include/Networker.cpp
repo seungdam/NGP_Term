@@ -79,6 +79,7 @@ void Networker::ProcessPacket(char* packet)
 	case SERVER_PACKET_INFO::LOGIN:
 	{
 		S2C_LOGIN_PACKET* llp = (S2C_LOGIN_PACKET*)packet;
+		m_iClientID = llp->c_id;
 		IsClientLogin(llp->b_success);
 		break;
 	}
@@ -98,8 +99,10 @@ bool Networker::ClientDoRecv()
 	if (retval == SOCKET_ERROR) {
 		return false;
 	}
-	retval = recv(m_clientSocket, buff + sizeof(char), sizeof(S2C_LOGIN_PACKET) - sizeof(char), MSG_WAITALL);
 
+	int packetSize = GetS2CSize(buff[0]);
+
+	retval = recv(m_clientSocket, buff + sizeof(char), packetSize - sizeof(char), MSG_WAITALL);
 	if (retval == SOCKET_ERROR)
 		return false;
 
