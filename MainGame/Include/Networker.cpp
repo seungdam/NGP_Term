@@ -79,7 +79,7 @@ void Networker::ProcessPacket(char* packet)
 	case SERVER_PACKET_INFO::LOGIN:
 	{
 		S2C_LOGIN_PACKET* llp = (S2C_LOGIN_PACKET*)packet;
-		if (llp->b_success) IsClientLogin(llp->b_success);
+		IsClientLogin(llp->b_success);
 		break;
 	}
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
