@@ -35,7 +35,7 @@ void err_display(const char* msg)
 }
 
 #define SERVERPORT 9000
-#define MAX_PLAYERS 1
+#define MAX_PLAYERS 3
 
 using namespace std;
 
@@ -83,7 +83,6 @@ int main(int argc, char* argv[]) {
 
 	int currentPlayerNum = 0;
 
-	int id = currentPlayerNum;
 
 	while (1) {
 
@@ -95,6 +94,7 @@ int main(int argc, char* argv[]) {
 		}
 		if (currentPlayerNum < MAX_PLAYERS) {
 			currentPlayerNum++;
+			int id = currentPlayerNum;
 			g_clients.try_emplace(id, id, client_sock);
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
 			if (MAX_PLAYERS == currentPlayerNum) {
