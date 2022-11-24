@@ -143,6 +143,7 @@
     <ClCompile Include="SOCKETINFO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\protocol\protocol.h" />
     <ClInclude Include="SOCKETINFO.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
