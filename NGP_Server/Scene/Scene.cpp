@@ -1,7 +1,6 @@
+#include "../Game.h"
 #include "Scene.h"
-#include "../Core.h"
-
-
+#include <random>
 
 Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 {
@@ -15,14 +14,6 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		m_nTileXLen = 32;
 		m_nNextSceneNum = 999;
 
-		m_imgBackGround.Load(TEXT("Resource/bgTemp.png"));
-
-		Player* p0 = new PurplePlayer;
-		Player* p1 = new YellowPlayer;
-
-		m_vPlayer.push_back(p0);
-		m_vPlayer.push_back(p1);
-		
 		// load moving objs
 
 		// static objs
@@ -52,28 +43,8 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 
 	case 1:
 	{
-		m_imgBackGround.Load(TEXT("Resource/tempBGv2.bmp"));
-		m_imgTile.Load(TEXT("Resource/tempsprite.bmp"));
-
-		Player* p0 = new PurplePlayer;
-		Player* p1 = new YellowPlayer;
-
-		p0->SetPosition({ 375,3500,400,3550 });
-		p1->SetPosition({ 175,3500,200,3550 });
-
-		m_p0StartPos = { 375,1150,400,1200 };
-		m_p1StartPos = { 175,1150,200,1200 };
-
-		//m_p0StartPos = { 1400,0,1425,50 };
-		//m_p1StartPos = { 1460,0,1485,50 };
-
-		p0->SetPosition(m_p0StartPos);
-		p1->SetPosition(m_p1StartPos);
-
-
-		m_vPlayer.push_back(p0);
-		m_vPlayer.push_back(p1);
-
+		m_p0StartPos = { 387.5f, 1175.0f };
+		m_p1StartPos = { 187.5f, 1175.0f };
 
 		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
@@ -83,7 +54,6 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	case END_SCENE:				// game clear;
 		m_nTileYLen = 18;
 		m_nTileXLen = 32;
-		m_imgBackGround.Load(TEXT("Resource/gameover.bmp"));
 		break;
 	}
 
@@ -93,10 +63,7 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 
 Scene::~Scene()
 {
-	DeleteObject(m_hDoubleBufferBitmap);
-	m_imgTile.Destroy();
-	m_imgBackGround.Destroy();
-	ReleaseAndCleanVector(m_vPlayer);
+	ReleaseAndCleanVector(m_vPlayers);
 	ReleaseAndCleanVector(m_vTiles);
 	ReleaseAndCleanVector(m_vSteps);
 	ReleaseAndCleanVector(m_vButton);
@@ -107,7 +74,7 @@ Scene::~Scene()
 bool Scene::LoadMapFromFile(FILE* fp)
 {
 	if (fp == NULL) return false;
-
+	
 	// get x,y size
 	fscanf(fp, "%d %d", &m_nTileXLen, &m_nTileYLen);
 
@@ -185,63 +152,97 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	}
 
 	fclose(fp);
+	
 	return true;
 }
 
-void Scene::ResetPlayerPos()
+void Scene::ResetPlayerPos(int index)
 {
-	m_vPlayer.front()->SetPosition(m_p0StartPos);
-	m_vPlayer.back()->SetPosition(m_p1StartPos);
+	// m_vPlayers에는 플레이어 하나 당 두 오브젝트가 들어간다
+	// index에 3이 들어왔다면 (0,1), (2,3), (4,5)이기 때문에 2,3의 위치를 시작위치로 초기화 해주어야 한다
+	// 3 / 2 = 1
+	// 1 * 2 = 2	- 2,3을 조종하는 플레이어의 첫번째 플레이어
+
+	printf("idx %d reset\n", index);
+
+	int purpleIndex = index / 2;
+	int yellowIndex = purpleIndex + 1;
+
+	m_vPlayers[purpleIndex]->SetPosition(m_p0StartPos);
+	m_vPlayers[yellowIndex]->SetPosition(m_p1StartPos);
 }
 
-void Scene::SetPlayerData(int idx, const PLAYERINFO& playerData)
+void Scene::InsertPlayers(int playerSize)
 {
-	playerData.p_dir;
+	std::random_device rd;
+	std::default_random_engine dre(rd());
+	std::uniform_real_distribution<float> uid(-50.0f, 50.0f);
 
-	m_vPlayer[0]->SetPivot(playerData.p_pos[0]);
-	m_vPlayer[1]->SetPivot(playerData.p_pos[1]);
+	for (int i = 0; i < playerSize; ++i) {
+		FPOINT offset = { uid(dre), uid(dre) };
+
+		Player* p0 = new PurplePlayer;
+		Player* p1 = new YellowPlayer;
+
+		FPOINT p0Pos = m_p0StartPos;
+		FPOINT p1Pos = m_p1StartPos;
+		
+		p0Pos.x += offset.x;
+		p0Pos.y += offset.y;
+
+		p1Pos.x += offset.x;
+		p1Pos.y += offset.y;
+
+		p0->SetPosition(p0Pos);
+		p1->SetPosition(p1Pos);
+
+		m_vPlayers.push_back(p0);
+		m_vPlayers.push_back(p1);
+	}
+}
+
+void Scene::SetPlayerInput(int index, unsigned char move)
+{
+	int purpleIndex = index / 2;
+	int yellowIndex = purpleIndex + 1;
+
+	m_vPlayers[purpleIndex]->SetInputData(move);
+	m_vPlayers[yellowIndex]->SetInputData(move);
+}
+
+FPOINT Scene::GetPlayerPosition(int index)
+{
+	return m_vPlayers[index]->GetPivot();
+}
+
+bool Scene::IsPlayersUpdated() const
+{
+	for (const auto& p : m_vPlayers)
+		if (p->IsPlayerUpdated()) return true;
+	return false;
 }
 
 void Scene::Init()
 {
 	// player init
-	for (auto const& d : m_vPlayer) d->Init();
+	for (auto const& d : m_vPlayers) d->Init();
 	for (auto& d : m_vMonster) d->Init();
 	for (auto& d : m_vSteps) d->Init();
 }
 
 void Scene::Input(float fTimeElapsed)
 {
-	// player Move
-	uint8_t newDir = 0;
-	for (auto const& d : m_vPlayer) d->Input(fTimeElapsed, newDir);
-	
-	Core::GetInst().GetNetworkManager()->ClientDoSendMovePacket(newDir);
-	//Core::GetInst().GetNetworkManager()->SendPlayerPacket();
-
-	// camera
-	FPOINT pCenter;
-	if (m_vPlayer.empty()) return;
-
-	pCenter.x = (m_vPlayer.front()->GetPosition().left + m_vPlayer.back()->GetPosition().left) / 2;
-	pCenter.y = (m_vPlayer.front()->GetPosition().bottom + m_vPlayer.back()->GetPosition().bottom) / 2;
-
-	m_CameraOffset.x = pCenter.x - m_CameraRectSize.cx / 2;
-	m_CameraOffset.y = pCenter.y - m_CameraRectSize.cy / 2;
-
-	if (m_CameraOffset.x < 0) m_CameraOffset.x = 0;
-	else if (m_CameraOffset.x > TILESIZE * m_nTileXLen - m_CameraRectSize.cx) m_CameraOffset.x = (float)(TILESIZE * m_nTileXLen - m_CameraRectSize.cx);
-
-	if (m_CameraOffset.y < 0) m_CameraOffset.y = 0;
-	else if (m_CameraOffset.y > TILESIZE * m_nTileYLen - m_CameraRectSize.cy) m_CameraOffset.y = (float)(TILESIZE * m_nTileYLen - m_CameraRectSize.cy);
 }
 
 void Scene::Update(float fTimeElapsed)
 {
-	// 몬스터 업데이트(대충 몬스터 이동 이라는 뜻)
+	// 플레이어들을 입력값으로 움직인다
+	for (auto& d : m_vPlayers) d->Update(fTimeElapsed);
+
+	// 몬스터 업데이트(몬스터 이동 이라는 뜻)
 	for (auto const& d : m_vMonster) d->Update(fTimeElapsed);
 
-	// 대충 롤러코스터 움직이라는 뜻
+	// 롤러코스터 움직이라는 뜻
 	for (auto& d : m_vRollerCoaster) d->Update(fTimeElapsed);
 
 	Collision();
@@ -252,28 +253,26 @@ void Scene::Collision()
 {
 	if (m_nSceneNum == END_SCENE) return;
 
-	RECT camRect = { (LONG)m_CameraOffset.x, (LONG)m_CameraOffset.y, (LONG)m_CameraOffset.x + m_CameraRectSize.cx, (LONG)m_CameraOffset.y + m_CameraRectSize.cy };
 	// 플레이어와 몬스터 충돌 확인
 	bool bCollide = false;
-	for (auto const dPlayer : m_vPlayer) {
-		for (auto const dMonster : m_vMonster) {
-			FRECT player = dPlayer->GetPosition();
+	for (int i = 0; i < m_vPlayers.size(); ++i) {
+		for (auto& dMonster : m_vMonster) {
+			FRECT player = m_vPlayers[i]->GetPosition();
 			FRECT monster = dMonster->GetPosition();
 
-			// Screen culling
-			if (monster.IntersectRect(camRect) && player.IntersectRect(monster)) {
-				ResetPlayerPos();
+			if (player.IntersectRect(monster)) {
+				ResetPlayerPos(i);
 				return;
 			}
 		}
 	}
 
 	// 플레이어와 타일맵 충돌 확인
-	for (auto& dPlayer : m_vPlayer) {
-		FRECT playerPos = dPlayer->GetPosition();
+	for (int i = 0; i < m_vPlayers.size(); ++i) {
+		FRECT playerPos = m_vPlayers[i]->GetPosition();
 
-		POINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
-		POINT tRight = { (LONG)floor((playerPos.right) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
+		FPOINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
+		FPOINT tRight = { (LONG)floor((playerPos.right) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
 
 		// 바닥
 		int LB = tLeft.y * m_nTileXLen + tLeft.x;
@@ -283,27 +282,29 @@ void Scene::Collision()
 
 		if (leftBottom == TILE_DATA::TD_BLOCK || rightBottom == TILE_DATA::TD_BLOCK ||
 			leftBottom == TILE_DATA::TD_FLOOR || rightBottom == TILE_DATA::TD_FLOOR) {
-			dPlayer->Move(0, 40 * tLeft.y - playerPos.bottom);
-			dPlayer->SetFallingFalse();
-
+			m_vPlayers[i]->Move(0, 40 * tLeft.y - playerPos.bottom);
+			m_vPlayers[i]->SetFallingFalse();
+			//printf("idx %d hit floor\n", i);
+			//printf("%.2f %.2f %.2f %.2f\n\n", playerPos.left, playerPos.top, playerPos.right, playerPos.bottom);
 		}
 		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
-			ResetPlayerPos();
+			ResetPlayerPos(i);
 			return;
 		}
 		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
 			// Stage Clear
-			//GameManager::GetInst().ChangeScene(m_nNextSceneNum);
+
+			// (주의) 스테이지 클리어 나중에 추가할 것
 			return;
 		}
-		else dPlayer->SetFallingTrue();						// NON, go fall
+		else m_vPlayers[i]->SetFallingTrue();						// NON, go fall
 
 		// 벽?
 		LB = tLeft.y * m_nTileXLen + tLeft.x - m_nTileXLen;
 		RB = tRight.y * m_nTileXLen + tRight.x - m_nTileXLen;
 
 		if (LB < 0 || RB < 0) {
-			dPlayer->SetFallingTrue();
+			m_vPlayers[i]->SetFallingTrue();
 			break;
 		}
 		//else if(LB > )
@@ -314,26 +315,24 @@ void Scene::Collision()
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_FLOOR ||
 			m_vTiles[RB]->GetTile() == TILE_DATA::TD_BLOCK ||
 			m_vTiles[RB]->GetTile() == TILE_DATA::TD_FLOOR)
-			dPlayer->GoBackX();
+			m_vPlayers[i]->GoBackX();
 		else if (((0 <= LB && LB < m_vTiles.size()) &&
 			(0 <= RB && RB < m_vTiles.size())) &&
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_GOAL ||
 			m_vTiles[RB]->GetTile() == TILE_DATA::TD_GOAL) {
-			ResetPlayerPos();
+			ResetPlayerPos(i);
 			return;
 		}
-
 	}
 
 	// 플레이어와 장애물 충돌 확인		(step, rollercoaster, button)
-	for (auto& dPlayer : m_vPlayer) {
+	for (auto& dPlayer : m_vPlayers) {
 		// step
 		FRECT playerPos = dPlayer->GetPosition();
 		for (auto const dStep : m_vSteps) {
 			FRECT stepPosition = dStep->GetPosition();
 
-			// screen culling
-			if (!stepPosition.IntersectRect(camRect) || !(dStep->IsAlive() + dStep->GetCount())) continue;
+			if (!(dStep->IsAlive() + dStep->GetCount())) continue;
 
 			if ((int)(dStep->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(stepPosition)) {
 				// hit side
@@ -352,15 +351,12 @@ void Scene::Collision()
 					dPlayer->Move(0, offset);
 					dPlayer->OnHitCeil();
 				}
-				//printf("%f\n", playerPos.top - dStep->GetPosition().bottom);
 			}
 		}
 
 		// rollercoaster
 		for (auto const dRCoaster : m_vRollerCoaster) {
 			FRECT rcPosition = dRCoaster->GetPosition();
-
-			if (!rcPosition.IntersectRect(camRect)) continue;
 
 			if ((int)(dRCoaster->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(rcPosition)) {
 				// hit side
@@ -379,14 +375,14 @@ void Scene::Collision()
 					dPlayer->Move(0, offset);
 					dPlayer->OnHitCeil();
 				}
-				//printf("%f\n", playerPos.top - rcPosition.bottom);
 			}
 		}
 	}
 
 	// 플레이어와 플레이어 충돌 확인
-	Player* p0 = m_vPlayer.front();
-	Player* p1 = m_vPlayer.back();
+	// (주의) 여기 부분 살짝 수정 필요
+	Player* p0 = m_vPlayers.front();
+	Player* p1 = m_vPlayers.back();
 	FRECT p0Pos = p0->GetPosition();
 	FRECT p1Pos = p1->GetPosition();
 
@@ -417,7 +413,7 @@ void Scene::Collision()
 	for (auto& d : m_vSteps) if (!d->IsAlive()) d->DeActive();
 	for (auto& dButton : m_vButton) {
 
-		for (auto& dPlayer : m_vPlayer) {
+		for (auto& dPlayer : m_vPlayers) {
 			if (dPlayer->GetPosition().IntersectRect(dButton->GetPosition())) {
 				//if (dButton->IsActive()) break;
 				dButton->SetActiveState(true);
@@ -470,83 +466,3 @@ void Scene::Collision()
 	//}
 }
 
-void Scene::Render(HDC hdc)
-{
-	hdc = GetDC(Core::GetInst().GethWnd());
-	HDC memdc = CreateCompatibleDC(hdc);
-	if (m_hDoubleBufferBitmap == NULL) m_hDoubleBufferBitmap = CreateCompatibleBitmap(hdc, m_nTileXLen * TILESIZE, m_nTileYLen * TILESIZE);
-
-	SIZE wndSize = Core::GetInst().GetSize();
-	SIZE imgSize = { m_imgBackGround.GetWidth(), m_imgBackGround.GetHeight() };
-
-	SelectObject(memdc, m_hDoubleBufferBitmap);
-
-	// draw bg
-	RECT imgRect = { 
-	(LONG)((m_CameraOffset.x * wndSize.cx) / (m_nTileXLen * TILESIZE)),
-	(LONG)((m_CameraOffset.y * wndSize.cy) / (m_nTileYLen * TILESIZE)),
-	(LONG)((m_CameraOffset.x + imgSize.cx) * wndSize.cx) / (m_nTileXLen * TILESIZE),
-	(LONG)((m_CameraOffset.y + imgSize.cy) * wndSize.cy) / (m_nTileYLen * TILESIZE) };
-					 
-	//printf("%4d %4d %4d %4d\n", imgRect.left, imgRect.top, imgRect.right, imgRect.bottom);
-
-	m_imgBackGround.BitBlt(memdc, { (int)(m_CameraOffset.x), (int)(m_CameraOffset.y),
-		(int)(m_CameraOffset.x) + wndSize.cx, (int)(m_CameraOffset.y) + wndSize.cy },
-		{ imgRect.left, imgRect.top }, SRCCOPY);
-
-	//if End Scene return
-	if (m_nSceneNum == END_SCENE) {
-		BitBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, (int)m_CameraOffset.x, (int)m_CameraOffset.y, SRCCOPY);
-
-		//DeleteObject(m_hDoubleBufferBitmap);
-		DeleteDC(memdc);
-		ReleaseDC(Core::GetInst().GethWnd(), hdc);
-		return;
-	}
-
-	// draw Tiles
-	int x = (int)m_CameraOffset.x / 40 - 1;
-	int y = (int)m_CameraOffset.y / 40 - 1;
-
-	if (x < 0) x = 0;
-	if (y < 0) y = 0;
-	for (int i = y; i < y + 20; ++i) {
-		for (int j = x; j < x + 34; ++j) {
-
-			if (m_vTiles[m_nTileXLen * i + j]->GetTile() == TILE_DATA::TD_BLOCK) {
-				RECT temp = { j * TILESIZE, i * TILESIZE, (j + 1) * TILESIZE, (i + 1) * TILESIZE };
-
-				m_imgTile.TransparentBlt(memdc, j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE,
-					TILE_IMAGE_STRIDE * TILE_IMAGE_BLOCK, 0, TILE_IMAGE_SIZE, TILE_IMAGE_SIZE, IMAGE_TRANSPARENT);
-
-				//FrameRect(memdc, &temp, (HBRUSH)GetStockObject(BLACK_BRUSH));
-			} else if (m_vTiles[m_nTileXLen * i + j]->GetTile() == TILE_DATA::TD_FLOOR) {
-				RECT temp = { j * TILESIZE, i * TILESIZE, (j + 1) * TILESIZE, (i + 1) * TILESIZE };
-
-				m_imgTile.TransparentBlt(memdc, j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE,
-					TILE_IMAGE_STRIDE * TILE_IMAGE_FLOOR, 0, TILE_IMAGE_SIZE, TILE_IMAGE_SIZE, IMAGE_TRANSPARENT);
-
-				//FrameRect(memdc, &temp, (HBRUSH)GetStockObject(BLACK_BRUSH));
-			}
-		}
-	}
-
-	// draw step, rollercoaster
-	for (auto const d : m_vSteps) d->Render(memdc);
-	for (auto const d : m_vRollerCoaster) d->Render(memdc);
-
-	// draw button
-	for (auto const d : m_vButton) d->Render(memdc);
-
-	// draw monster
-	for (auto const d : m_vMonster) d->Render(memdc);
-	// draw player
-	for (auto const d : m_vPlayer) d->Render(memdc);
-
-
-	BitBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, (int)m_CameraOffset.x, (int)m_CameraOffset.y, SRCCOPY);
-
-	//DeleteObject(m_hDoubleBufferBitmap);
-	DeleteDC(memdc);
-	ReleaseDC(Core::GetInst().GethWnd(), hdc);
-}

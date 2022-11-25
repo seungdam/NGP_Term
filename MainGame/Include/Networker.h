@@ -2,11 +2,14 @@
 
 #include "Game.h"
 
+class Scene;
+
 // when it is created, init wsa, when it's deleted, cleanup wsa
 class Networker
 {
 	int m_iClientID = -1;
 	SOCKET m_clientSocket;
+	Scene* m_pScene;
 
 public:
 	Networker();
@@ -29,5 +32,7 @@ public:
 	bool ClientDoRecv();
 
 	void Disconnect();
+
+	void SetScene(Scene* pScene);
 };
 

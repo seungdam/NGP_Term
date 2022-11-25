@@ -25,6 +25,8 @@ public:
 
 	void SynchronizeObjects();
 
+	Scene* GetScene() { return m_pScene; }
+
 public:
 	void Input(float fTimeElapsed);
 	void Update(float fTimeElapsed);

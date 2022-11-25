@@ -6,8 +6,8 @@ struct FPOINT {
 };
 
 struct FRECT {
-	float top;
 	float left;
+	float top;
 	float right;
 	float bottom;
 
@@ -99,7 +99,7 @@ struct PLAYERINFO
 {
 	int p_id;
 	FPOINT p_pos[2];
-	int p_dir;
+	unsigned char p_dir;
 };
 
 struct S2C_LOGIN_PACKET {
@@ -111,7 +111,7 @@ struct S2C_LOGIN_PACKET {
 struct S2C_PLAYER_MOVE_PACKET
 {
 	char type;
-	PLAYERINFO p_data[3];
+	PLAYERINFO p_data[1];
 };
 
 struct S2C_SCENE_CHANGE_PACKET
@@ -124,7 +124,7 @@ struct C2S_MOVE_PACKET
 {
 	char type;
 	char from_c_id;
-	char direction;
+	unsigned char direction;
 };
 
 inline int GetS2CSize(SERVER_PACKET_INFO p)

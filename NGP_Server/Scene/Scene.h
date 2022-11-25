@@ -1,12 +1,13 @@
 #pragma once
-
-#include "../Game.h"
-#include "../Tile.h"
+#include <vector>
+#include <Windows.h>
 #include "../Object/Player.h"
 #include "../Object/Step.h"
 #include "../Object/Monster.h"
 #include "../Object/RollerCoaster.h"
 #include "../Object/Button.h"
+#include "../Object/Tile.h"
+
 
 class Scene {
 public:
@@ -19,53 +20,47 @@ private:
 	int m_nSceneNum;
 	int m_nNextSceneNum;
 
-	// background, tile image
-	CImage m_imgBackGround;
-	CImage m_imgTile;
-
 	// movingObjs
-	vector<class Player* > m_vPlayer;
-	vector<class Monster*> m_vMonster;
-	vector<class RollerCoaster*> m_vRollerCoaster;
+	std::vector<class Player*> m_vPlayers;
+	std::vector<class Monster*> m_vMonster;
+	std::vector<class RollerCoaster*> m_vRollerCoaster;
 
 	// static Objs
-	vector<class Step*> m_vSteps;
-	vector<class Button*> m_vButton;
+	std::vector<class Step*> m_vSteps;
+	std::vector<class Button*> m_vButton;
 
 	// tiles;
-	vector<class Tile*> m_vTiles;
+	std::vector<class Tile*> m_vTiles;
 	int m_nTileXLen;
 	int m_nTileYLen;
 
-	// camera
-	FPOINT m_CameraOffset = { 0.0f,0.0f };
-	const SIZE m_CameraRectSize = { 1280,800 };
-	float dx;
-
 private:
 	// player start position
-	RECT m_p0StartPos;
-	RECT m_p1StartPos;
-
-private:
-	HBITMAP m_hDoubleBufferBitmap = NULL;
+	FPOINT m_p0StartPos;
+	FPOINT m_p1StartPos;
 
 private:
 	bool LoadMapFromFile(FILE* fp);
 
 	void Collision();
-	void ResetPlayerPos();
+	void ResetPlayerPos(int index);
 
 public:
-	void SetPlayerData(int idx, const PLAYERINFO& playerData);
-
 	int GetSceneNum() const { return m_nSceneNum; }
+
+public:
+	// 플레이어를 playerSize만큼 생성해서 m_vPlayers에 넣는다.
+	void InsertPlayers(int playerSize);
+
+	void SetPlayerInput(int index, unsigned char move);
+	FPOINT GetPlayerPosition(int index);
+
+	bool IsPlayersUpdated() const;
 
 public:
 	void Init();
 
 	void Input(float fTimeElapsed);
 	void Update(float fTimeElapsed);
-	void Render(HDC hdc);
 };
 

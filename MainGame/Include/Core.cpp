@@ -96,7 +96,7 @@ int Core::Run()
 	}
 	GameManager::GetInst().Init();
 
-
+	m_NetworkManager->SetScene(GameManager::GetInst().GetScene());
 
 	FMOD_SOUND* pBGSound;
 	FMOD_CHANNEL* pChannel;

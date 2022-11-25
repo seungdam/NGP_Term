@@ -4,6 +4,7 @@
 
 using namespace std;
 
+class Scene;
 
 class SOCKETINFO
 {
@@ -11,9 +12,13 @@ private:
 	int m_Id;
 	SOCKET m_sock;
 	char m_type;
-	char m_dir;
+	unsigned char m_dir;
 
 public:
+	static Scene* m_pScene;
+
+	static void SetScene(Scene* pScene) { m_pScene = pScene; }
+
 	SOCKETINFO();
 	SOCKETINFO(int id, SOCKET s);
 
@@ -22,6 +27,7 @@ public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
 	void ServerDoSend(char type);
 	void ServerDoSendLoginPacket(bool isSuccess);
+
 	// 클라이언트로 부터 온 패킷을 수신한다
 	bool ServerDoRecv();
 

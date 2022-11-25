@@ -1,6 +1,9 @@
 #include "SOCKETINFO.h"
-#include "../protocol/protocol.h"
+#include "Game.h"
+#include "Scene/Scene.h"
 
+
+Scene* SOCKETINFO::m_pScene = nullptr;
 
 SOCKETINFO::SOCKETINFO()
 {
@@ -27,6 +30,41 @@ void SOCKETINFO::ServerDoSend(char type)
 	switch ((SERVER_PACKET_INFO)type) {
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
 		// 플레이어 이동 패킷
+	{
+		const int MAX_PLAYER = 1;
+
+		S2C_PLAYER_MOVE_PACKET packet;
+		packet.type = (char)(SERVER_PACKET_INFO::PLAYER_MOVE);
+
+		PLAYERINFO pInfo[MAX_PLAYER];
+
+		for (int i = 0; i < MAX_PLAYER; ++i) {
+			// 서버에서 유지하는 플레이어의 정보를 담아서 보내줄 것
+			if (m_pScene) {
+				pInfo[i].p_dir = 0;		
+				pInfo[i].p_id = m_Id;
+				pInfo[i].p_pos[0] = m_pScene->GetPlayerPosition(i);
+				pInfo[i].p_pos[1] = m_pScene->GetPlayerPosition(i + 1);
+			}
+			else {
+				// 테스트용
+				pInfo[i].p_dir = 0;
+				pInfo[i].p_id = m_Id;
+				pInfo[i].p_pos[0].x = 387.5f;		// 테스트용 시작 좌표
+				pInfo[i].p_pos[0].y = 1175.0f;
+				pInfo[i].p_pos[1].x = 187.5f;		// 테스트용 시작 좌표
+				pInfo[i].p_pos[1].y = 1175.0f;
+			}
+		}
+		
+		memcpy(packet.p_data, pInfo, sizeof(PLAYERINFO) * MAX_PLAYER);
+
+		int retval;
+		retval = send(m_sock, (char*)&packet, sizeof(S2C_PLAYER_MOVE_PACKET), 0);
+		if (SOCKET_ERROR == retval) {
+			cout << "player move error" << endl;
+		}
+	}
 		break;
 	case SERVER_PACKET_INFO::SCENE_CHANGE:
 		// 씬 변경 패킷
@@ -78,7 +116,11 @@ void SOCKETINFO::ProcessPacket(char* data)
 		m_type = info->type;
 		m_Id = info->from_c_id;
 		m_dir = info->direction;
-		cout << "id: " << m_Id << " dir: " << (int)m_dir << endl;
+		cout << "id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
+
+		if (m_pScene) {
+			m_pScene->SetPlayerInput(m_Id, m_dir);
+		}
 	}
 		break;
 	}

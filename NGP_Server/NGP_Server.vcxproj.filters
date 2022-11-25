@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\GameReleated">
+      <UniqueIdentifier>{fa2079d0-e8b6-4f02-8720-3702c84abcdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GameReleated\GameObjects">
+      <UniqueIdentifier>{e2daa1ca-14cf-4af0-8e7e-3140cd0b1d18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -21,6 +27,33 @@
     <ClCompile Include="SOCKETINFO.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Button.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Monster.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\MovingObject.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Object.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Player.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\RollerCoaster.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Step.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Tile.cpp">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SOCKETINFO.h">
@@ -28,6 +61,36 @@
     </ClInclude>
     <ClInclude Include="..\protocol\protocol.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Button.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Monster.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\MovingObject.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Object.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Player.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\RollerCoaster.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Step.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>소스 파일\GameReleated</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Tile.h">
+      <Filter>소스 파일\GameReleated\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

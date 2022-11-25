@@ -1,4 +1,5 @@
 #include "Networker.h"
+#include "Scene/Scene.h"
 
 Networker::Networker()
 {
@@ -86,6 +87,17 @@ void Networker::ProcessPacket(char* packet)
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
 	{
 		S2C_PLAYER_MOVE_PACKET* pmp = (S2C_PLAYER_MOVE_PACKET*)packet;
+		PLAYERINFO pData = pmp->p_data[0];
+		// 테스트, 잘 오는지 확인 용
+		//printf("PLAYER_MOVE---------------\n");
+		//printf("ID: %d\nP1_POS: %.2f, %.2f\nP2_POS: %.2f, %.2f\n\n", pData.p_id, pData.p_pos[0].x, pData.p_pos[0].y, pData.p_pos[1].x, pData.p_pos[1].y);
+
+		// 여기서 플레이어의 업데이트된 정보를 Scene에다가 덮어써준다.
+		if (m_pScene) {
+			for (int i = 0; i < _countof(pmp->p_data); ++i) {
+				m_pScene->SetPlayerData(i, pmp->p_data[i]);
+			}
+		}
 	}
 		break;
 	}
@@ -113,6 +125,11 @@ bool Networker::ClientDoRecv()
 void Networker::Disconnect()
 {
 	closesocket(m_clientSocket);
+}
+
+void Networker::SetScene(Scene* pScene)
+{
+	m_pScene = pScene;
 }
 
 

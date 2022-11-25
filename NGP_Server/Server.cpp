@@ -1,12 +1,8 @@
-#include <iostream>
-#include <winsock2.h> 
-#include <ws2tcpip.h> 
-#include <Windows.h>
-#include <unordered_map>
+#include "Game.h"
 #include "SOCKETINFO.h"
-
 #include "../protocol/protocol.h"
-#pragma comment(lib, "WS2_32.lib")
+#include "Scene/Scene.h"
+
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -35,7 +31,7 @@ void err_display(const char* msg)
 }
 
 #define SERVERPORT 9000
-#define MAX_PLAYERS 3
+#define MAX_PLAYERS 1
 
 using namespace std;
 
@@ -44,9 +40,10 @@ unordered_map<int, SOCKETINFO> g_clients;
 
 // RecvThread를 관리하는 함수
 HANDLE rthread[MAX_PLAYERS];
-
+HANDLE sthread;
 
 DWORD WINAPI ServerRecvThread(LPVOID arg);
+DWORD WINAPI ServerSendThread(LPVOID arg);
 
 int main(int argc, char* argv[]) {
 
@@ -93,35 +90,18 @@ int main(int argc, char* argv[]) {
 			err_quit("accept()");
 		}
 		if (currentPlayerNum < MAX_PLAYERS) {
-			currentPlayerNum++;
-			int id = currentPlayerNum;
+			// id는 0부터 부여한다
+			int id = currentPlayerNum++;
 			g_clients.try_emplace(id, id, client_sock);
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
 			if (MAX_PLAYERS == currentPlayerNum) {
-				for (auto& i : g_clients) {
-					i.second.ServerDoSendLoginPacket(true);
-				}
+				// send 스레드 생성, 
+				// 정보) 로그인 패킷 송신 부분 SendThread로 이동 확인 했으면 이 주석 지울 것
+				sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
 			}
 		}
-
-		// 로그인 패킷
-		/*auto iter = g_clients.find(clientaddr.sin_port);
-		if (iter == g_clients.end()) {
-			S2C_LOGIN_PACKET logpacket;
-			logpacket.c_id = id;
-			g_clients.emplace(std::piecewise_construct, std::forward_as_tuple(clientaddr.sin_port),
-				std::forward_as_tuple(logpacket.c_id));
-
-			retval = send(client_sock, (char*)&logpacket.c_id, sizeof(logpacket.c_id), 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-			}
-		}*/
-
-
-		// if player < max player
-		
 	}
+
 	closesocket(sock);
 	WSACleanup();
 }
@@ -143,6 +123,57 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 
 	// 연결 해제
 	g_clients.erase(id);
+
+	return 0;
+}
+
+DWORD WINAPI ServerSendThread(LPVOID arg)
+{
+	// scene 생성
+	const int startSceneNum = 1;
+	Scene* pScene = new Scene(startSceneNum);
+
+	SOCKETINFO::SetScene(pScene);
+
+	pScene->Init();
+	pScene->InsertPlayers(MAX_PLAYERS);
+
+	// 접속한 플레이어들에게 로그인
+	for (auto& i : g_clients) {
+		i.second.ServerDoSendLoginPacket(true);
+	}
+
+	// 타이머
+	LARGE_INTEGER sec;
+	LARGE_INTEGER time;
+	
+	QueryPerformanceFrequency(&sec);
+	QueryPerformanceCounter(&time);
+
+	float fTimeElapsed = 0;
+
+	while (true) {
+		// get elapsed time
+		LARGE_INTEGER tTime;
+		QueryPerformanceCounter(&tTime);
+		fTimeElapsed = (tTime.QuadPart - time.QuadPart) / (float)sec.QuadPart;
+		time = tTime;
+		// update
+		pScene->Update(fTimeElapsed);
+
+		// send to player
+
+		// 만약 플레이어들의 이동이 있다면 전송, 지금은 테스트 하기 위해 true로 전송한다. 내용물도 빈 값
+		if (pScene->IsPlayersUpdated()) {
+			for (auto& client : g_clients) {
+				
+				client.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+			}
+		}
+
+	}
+
+	if (pScene) delete pScene;
 
 	return 0;
 }

@@ -139,11 +139,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Object\Button.cpp" />
+    <ClCompile Include="Object\Monster.cpp" />
+    <ClCompile Include="Object\MovingObject.cpp" />
+    <ClCompile Include="Object\Object.cpp" />
+    <ClCompile Include="Object\Player.cpp" />
+    <ClCompile Include="Object\RollerCoaster.cpp" />
+    <ClCompile Include="Object\Step.cpp" />
+    <ClCompile Include="Object\Tile.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SOCKETINFO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\protocol.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Object\Button.h" />
+    <ClInclude Include="Object\Monster.h" />
+    <ClInclude Include="Object\MovingObject.h" />
+    <ClInclude Include="Object\Object.h" />
+    <ClInclude Include="Object\Player.h" />
+    <ClInclude Include="Object\RollerCoaster.h" />
+    <ClInclude Include="Object\Step.h" />
+    <ClInclude Include="Object\Tile.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="SOCKETINFO.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
