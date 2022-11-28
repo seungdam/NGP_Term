@@ -70,10 +70,13 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		p0->SetPosition(m_p0StartPos);
 		p1->SetPosition(m_p1StartPos);
 
-
 		m_vPlayer.push_back(p0);
 		m_vPlayer.push_back(p1);
 
+		for (int i = 1; i < MAX_PLAYERS; ++i) {
+			m_vOtherPlayers.push_back(new PurplePlayer);
+			m_vOtherPlayers.push_back(new YellowPlayer);
+		}
 
 		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
@@ -194,18 +197,29 @@ void Scene::ResetPlayerPos()
 	m_vPlayer.back()->SetPosition(m_p1StartPos);
 }
 
-void Scene::SetPlayerData(int idx, const PLAYERINFO& playerData)
+void Scene::SetMyPlayerData(const PLAYERINFO& playerData)
 {
+	// 방향도 업데이트 해줄 것
 	playerData.p_dir;
 
 	m_vPlayer[0]->SetPivot(playerData.p_pos[0]);
 	m_vPlayer[1]->SetPivot(playerData.p_pos[1]);
 }
 
+void Scene::SetOtherPlayerData(int idx, const PLAYERINFO& playerData)
+{
+	// 방향도 업데이트 해줄 것
+	playerData.p_dir;
+
+	m_vOtherPlayers[idx * 2]->SetPivot(playerData.p_pos[0]);
+	m_vOtherPlayers[idx * 2 + 1]->SetPivot(playerData.p_pos[1]);
+}
+
 void Scene::Init()
 {
 	// player init
 	for (auto const& d : m_vPlayer) d->Init();
+	for (auto const& d : m_vOtherPlayers) d->Init();
 	for (auto& d : m_vMonster) d->Init();
 	for (auto& d : m_vSteps) d->Init();
 }
@@ -238,6 +252,8 @@ void Scene::Input(float fTimeElapsed)
 
 void Scene::Update(float fTimeElapsed)
 {
+	for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
+
 	// 몬스터 업데이트(대충 몬스터 이동 이라는 뜻)
 	for (auto const& d : m_vMonster) d->Update(fTimeElapsed);
 
@@ -542,6 +558,8 @@ void Scene::Render(HDC hdc)
 	for (auto const d : m_vMonster) d->Render(memdc);
 	// draw player
 	for (auto const d : m_vPlayer) d->Render(memdc);
+
+	for (auto& p : m_vOtherPlayers) p->Render(memdc);
 
 
 	BitBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, (int)m_CameraOffset.x, (int)m_CameraOffset.y, SRCCOPY);

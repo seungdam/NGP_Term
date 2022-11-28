@@ -111,7 +111,7 @@ struct S2C_LOGIN_PACKET {
 struct S2C_PLAYER_MOVE_PACKET
 {
 	char type;
-	PLAYERINFO p_data[1];
+	PLAYERINFO p_data[2];
 };
 
 struct S2C_SCENE_CHANGE_PACKET

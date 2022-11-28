@@ -31,7 +31,7 @@ void SOCKETINFO::ServerDoSend(char type)
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
 		// 플레이어 이동 패킷
 	{
-		const int MAX_PLAYER = 1;
+		const int MAX_PLAYER = 2;
 
 		S2C_PLAYER_MOVE_PACKET packet;
 		packet.type = (char)(SERVER_PACKET_INFO::PLAYER_MOVE);

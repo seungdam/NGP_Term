@@ -94,8 +94,10 @@ void Networker::ProcessPacket(char* packet)
 
 		// 여기서 플레이어의 업데이트된 정보를 Scene에다가 덮어써준다.
 		if (m_pScene) {
+			int cnt = 0;
 			for (int i = 0; i < _countof(pmp->p_data); ++i) {
-				m_pScene->SetPlayerData(i, pmp->p_data[i]);
+				if (pmp->p_data[i].p_id == m_iClientID)	m_pScene->SetMyPlayerData(pmp->p_data[i]);
+				else m_pScene->SetOtherPlayerData(cnt++, pmp->p_data[i]);
 			}
 		}
 	}

@@ -31,7 +31,7 @@ void err_display(const char* msg)
 }
 
 #define SERVERPORT 9000
-#define MAX_PLAYERS 1
+#define MAX_PLAYERS 2
 
 using namespace std;
 
@@ -135,8 +135,8 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 	SOCKETINFO::SetScene(pScene);
 
-	pScene->Init();
 	pScene->InsertPlayers(MAX_PLAYERS);
+	pScene->Init();
 
 	// 접속한 플레이어들에게 로그인
 	for (auto& i : g_clients) {

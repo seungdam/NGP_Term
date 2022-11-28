@@ -24,7 +24,8 @@ private:
 	CImage m_imgTile;
 
 	// movingObjs
-	vector<class Player* > m_vPlayer;
+	vector<class Player*> m_vPlayer;
+	vector<class Player*> m_vOtherPlayers;
 	vector<class Monster*> m_vMonster;
 	vector<class RollerCoaster*> m_vRollerCoaster;
 
@@ -57,7 +58,8 @@ private:
 	void ResetPlayerPos();
 
 public:
-	void SetPlayerData(int idx, const PLAYERINFO& playerData);
+	void SetMyPlayerData(const PLAYERINFO& playerData);
+	void SetOtherPlayerData(int idx, const PLAYERINFO& playerData);
 
 	int GetSceneNum() const { return m_nSceneNum; }
 
