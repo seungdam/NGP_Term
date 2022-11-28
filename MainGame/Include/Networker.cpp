@@ -68,7 +68,7 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 
 		// 테스트 코드
 		
-		printf("송신: %d\n", packet.type);
+		//printf("송신: %d\n", packet.type);
 		
 	}
 	return true;

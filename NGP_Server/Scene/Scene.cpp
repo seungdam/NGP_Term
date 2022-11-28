@@ -163,7 +163,7 @@ void Scene::ResetPlayerPos(int index)
 	// 3 / 2 = 1
 	// 1 * 2 = 2	- 2,3을 조종하는 플레이어의 첫번째 플레이어
 
-	printf("idx %d reset\n", index);
+	//printf("idx %d reset\n", index);
 
 	int purpleIndex = index / 2;
 	int yellowIndex = purpleIndex + 1;

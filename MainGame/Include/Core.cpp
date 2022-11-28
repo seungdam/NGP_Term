@@ -36,8 +36,8 @@ void Core::OnDestroy()
 bool Core::Init(HINSTANCE hInst)
 {
 	// fmod system init
-	FMOD_System_Create(&m_pSoundSystem);
-	FMOD_System_Init(m_pSoundSystem, 32, FMOD_INIT_NORMAL, NULL);
+	//FMOD_System_Create(&m_pSoundSystem);
+	//FMOD_System_Init(m_pSoundSystem, 32, FMOD_INIT_NORMAL, NULL);
 
 	// window init
 	m_NetworkManager = new Networker;
@@ -102,9 +102,9 @@ int Core::Run()
 	FMOD_CHANNEL* pChannel;
 
 	// bg sound
-	FMOD_System_CreateSound(m_pSoundSystem, "Sounds/bgMusic.mp3", FMOD_LOOP_NORMAL, 0, &pBGSound);
-	FMOD_System_PlaySound(m_pSoundSystem, pBGSound, NULL, 0, &pChannel);
-	FMOD_Channel_SetVolume(pChannel, 0.1f);
+	//FMOD_System_CreateSound(m_pSoundSystem, "Sounds/bgMusic.mp3", FMOD_LOOP_NORMAL, 0, &pBGSound);
+	//FMOD_System_PlaySound(m_pSoundSystem, pBGSound, NULL, 0, &pChannel);
+	//FMOD_Channel_SetVolume(pChannel, 0.1f);
 
 	while (GetGameLoop()) {
 		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE)) {
@@ -133,8 +133,8 @@ int Core::Run()
 
 	GameManager::GetInst().OnDestroy();
 
-	FMOD_Channel_Stop(pChannel);
-	FMOD_Sound_Release(pBGSound);
+	//FMOD_Channel_Stop(pChannel);
+	//FMOD_Sound_Release(pBGSound);
 	m_NetworkManager->Disconnect();
 	return 0;
 }
