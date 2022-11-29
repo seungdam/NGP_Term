@@ -1,5 +1,7 @@
 #pragma once
 
+#define MAX_PLAYERS 2
+
 struct FPOINT {
 	float x;
 	float y;
@@ -111,7 +113,7 @@ struct S2C_LOGIN_PACKET {
 struct S2C_PLAYER_MOVE_PACKET
 {
 	char type;
-	PLAYERINFO p_data[2];
+	PLAYERINFO p_data[MAX_PLAYERS];
 };
 
 struct S2C_SCENE_CHANGE_PACKET

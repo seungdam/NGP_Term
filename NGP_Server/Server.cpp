@@ -31,7 +31,6 @@ void err_display(const char* msg)
 }
 
 #define SERVERPORT 9000
-#define MAX_PLAYERS 2
 
 using namespace std;
 
@@ -158,16 +157,16 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		QueryPerformanceCounter(&tTime);
 		fTimeElapsed = (tTime.QuadPart - time.QuadPart) / (float)sec.QuadPart;
 		time = tTime;
+
 		// update
 		pScene->Update(fTimeElapsed);
+		SOCKETINFO::UpdatePlayerInfo();
 
 		// send to player
-
 		// 만약 플레이어들의 이동이 있다면 전송, 지금은 테스트 하기 위해 true로 전송한다. 내용물도 빈 값
 		if (pScene->IsPlayersUpdated()) {
-			for (auto& client : g_clients) {
-				
-				client.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+			for (int i = 0; i < MAX_PLAYERS; ++i) {
+				g_clients[i].ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 			}
 		}
 

@@ -29,7 +29,6 @@ using namespace std;
 #define SERVERPORT 9000
 #define SERVERIP "127.0.0.1"
 
-#define MAX_PLAYERS 4
 #define MAX_MOVING_STEPS 30
 
 #define TILE_IMAGE_SIZE 70

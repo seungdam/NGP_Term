@@ -217,8 +217,9 @@ FPOINT Scene::GetPlayerPosition(int index)
 
 bool Scene::IsPlayersUpdated() const
 {
-	for (const auto& p : m_vPlayers)
-		if (p->IsPlayerUpdated()) return true;
+	for (const auto& player : m_vPlayers)
+		if (player->IsPlayerUpdated()) return true;
+
 	return false;
 }
 

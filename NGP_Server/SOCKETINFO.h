@@ -15,15 +15,22 @@ private:
 	unsigned char m_dir;
 
 public:
-	static Scene* m_pScene;
-
-	static void SetScene(Scene* pScene) { m_pScene = pScene; }
-
 	SOCKETINFO();
 	SOCKETINFO(int id, SOCKET s);
 
 	~SOCKETINFO();
 
+private:
+	static Scene* m_pScene;
+	static PLAYERINFO m_PlayersInfo[MAX_PLAYERS];
+
+public:
+	static void SetScene(Scene* pScene) { m_pScene = pScene; }
+
+	// 플레이어 패킷의 정보를 갱신
+	static void UpdatePlayerInfo();
+
+public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
 	void ServerDoSend(char type);
 	void ServerDoSendLoginPacket(bool isSuccess);

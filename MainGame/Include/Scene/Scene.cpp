@@ -77,6 +77,10 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 			m_vOtherPlayers.push_back(new PurplePlayer);
 			m_vOtherPlayers.push_back(new YellowPlayer);
 		}
+		for (auto& player : m_vOtherPlayers) {
+			player->bRender = true;
+		}
+		
 
 		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);

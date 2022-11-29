@@ -141,7 +141,7 @@ void Player::Render(HDC hdc)
 	FrameRect(hdc,&t, (HBRUSH)GetStockObject(BLACK_BRUSH));
 #endif // DEBUG
 
-
+	if (bRender)
 	m_tImg.TransparentBlt(hdc, t.left - 13, t.top, 50, 50, 
 		m_iImageSprite * 72, 72 * m_iSpriteY, 70, 70, IMAGE_TRANSPARENT);
 

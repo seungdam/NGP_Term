@@ -87,17 +87,26 @@ void Networker::ProcessPacket(char* packet)
 	case SERVER_PACKET_INFO::PLAYER_MOVE:
 	{
 		S2C_PLAYER_MOVE_PACKET* pmp = (S2C_PLAYER_MOVE_PACKET*)packet;
-		PLAYERINFO pData = pmp->p_data[0];
-		// 테스트, 잘 오는지 확인 용
-		//printf("PLAYER_MOVE---------------\n");
-		//printf("ID: %d\nP1_POS: %.2f, %.2f\nP2_POS: %.2f, %.2f\n\n", pData.p_id, pData.p_pos[0].x, pData.p_pos[0].y, pData.p_pos[1].x, pData.p_pos[1].y);
 
 		// 여기서 플레이어의 업데이트된 정보를 Scene에다가 덮어써준다.
 		if (m_pScene) {
 			int cnt = 0;
-			for (int i = 0; i < _countof(pmp->p_data); ++i) {
-				if (pmp->p_data[i].p_id == m_iClientID)	m_pScene->SetMyPlayerData(pmp->p_data[i]);
-				else m_pScene->SetOtherPlayerData(cnt++, pmp->p_data[i]);
+
+			for (int i = 0; i < MAX_PLAYERS; ++i) {
+				PLAYERINFO pData = pmp->p_data[i];
+				// 테스트용 출력 코드, 출력하면 느리다
+				//printf("PLAYER_MOVE---------------\n");
+				//printf("ID: %d\n", pData.p_id);
+				//printf("P1_POS: %.2f, %.2f\n", pData.p_pos[0].x, pData.p_pos[0].y);
+				//printf("P2_POS: %.2f, %.2f\n", pData.p_pos[1].x, pData.p_pos[1].y);
+				//printf("\n");
+
+				if (pData.p_id == m_iClientID) {
+					m_pScene->SetMyPlayerData(pData);
+				}
+				else {
+					m_pScene->SetOtherPlayerData(cnt++, pData);
+				}
 			}
 		}
 	}

@@ -15,6 +15,7 @@ class Player : public MovingObject
 public:
     Player();
     virtual ~Player();
+	bool bRender = false;
 
 protected:
     int m_iPlayerNum;
