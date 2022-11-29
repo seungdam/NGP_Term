@@ -33,9 +33,9 @@ void SOCKETINFO::UpdatePlayerInfo()
 }
 
 // Processing Scene change packet and move packet
-void SOCKETINFO::ServerDoSend(char type)
+int SOCKETINFO::ServerDoSend(char type)
 {
-	int retval;
+	int retval = 0;
 	SOCKADDR_IN clientaddr;
 	int addrlen;
 
@@ -49,7 +49,7 @@ void SOCKETINFO::ServerDoSend(char type)
 		// cpy
 		memcpy(packet.p_data, m_PlayersInfo, sizeof(PLAYERINFO) * MAX_PLAYERS);
 
-		int retval;
+		
 		retval = send(m_sock, (char*)&packet, sizeof(S2C_PLAYER_MOVE_PACKET), 0);
 		if (SOCKET_ERROR == retval) {
 			cout << "player move error" << endl;
@@ -60,9 +60,10 @@ void SOCKETINFO::ServerDoSend(char type)
 		// 씬 변경 패킷
 		break;
 	}
+	return retval;
 }
 
-void SOCKETINFO::ServerDoSendLoginPacket(bool isSuccess)
+int SOCKETINFO::ServerDoSendLoginPacket(bool isSuccess)
 {
 	S2C_LOGIN_PACKET login_packet;
 	login_packet.type = (char)SERVER_PACKET_INFO::LOGIN;
@@ -74,7 +75,7 @@ void SOCKETINFO::ServerDoSendLoginPacket(bool isSuccess)
 	if (SOCKET_ERROR == retval) {
 		cout << "err" << endl;
 	}
-
+	return retval;
 }
 
 
@@ -115,13 +116,4 @@ void SOCKETINFO::ProcessPacket(char* data)
 		break;
 	}
 	
-}
-
-void SOCKETINFO::Disconnect()
-{
-	// remove 패킷 전송할 필요가 잇음.-- > 게임 접속이 
-	/*S2C_REMOVE_PACKET p;
-	p.type = ....*/
-	
-	closesocket(m_sock);
 }

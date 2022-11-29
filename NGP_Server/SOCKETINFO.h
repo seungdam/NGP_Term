@@ -22,6 +22,7 @@ public:
 
 private:
 	static Scene* m_pScene;
+public:
 	static PLAYERINFO m_PlayersInfo[MAX_PLAYERS];
 
 public:
@@ -32,15 +33,14 @@ public:
 
 public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
-	void ServerDoSend(char type);
-	void ServerDoSendLoginPacket(bool isSuccess);
+	int ServerDoSend(char type);
+	int ServerDoSendLoginPacket(bool isSuccess);
 
 	// 클라이언트로 부터 온 패킷을 수신한다
 	bool ServerDoRecv();
 
 	// 수신한 패킷의 종류를 파악하고 처리한다
 	void ProcessPacket(char* data);
-	void Disconnect();
 };
 
 

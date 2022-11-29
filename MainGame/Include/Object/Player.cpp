@@ -6,6 +6,8 @@ FMOD_SOUND* Player::m_pWalkSound = NULL;
 
 Player::Player()
 {
+	RECT t = { 0,0,25,50 };
+	m_tPosition = t;
 }
 
 Player::~Player()

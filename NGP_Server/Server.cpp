@@ -43,7 +43,7 @@ HANDLE sthread;
 
 DWORD WINAPI ServerRecvThread(LPVOID arg);
 DWORD WINAPI ServerSendThread(LPVOID arg);
-
+int currentPlayerNum = 0;
 int main(int argc, char* argv[]) {
 
 	int retval;
@@ -75,10 +75,6 @@ int main(int argc, char* argv[]) {
 	struct sockaddr_in clientaddr;
 	int addrlen;
 
-	int acceptClientNum = 0;
-
-	int currentPlayerNum = 0;
-
 
 	while (1) {
 
@@ -105,6 +101,14 @@ int main(int argc, char* argv[]) {
 	WSACleanup();
 }
 
+void Disconnect(int id) {
+
+	g_clients[id].m_PlayersInfo[id].p_pos[0].x = -1;
+	g_clients[id].m_PlayersInfo[id].p_pos[0].y = -1;
+	g_clients[id].m_PlayersInfo[id].p_pos[1].x = -1;
+	g_clients[id].m_PlayersInfo[id].p_pos[1].y = -1;
+	g_clients.erase(id);
+}
 
 DWORD WINAPI ServerRecvThread(LPVOID arg)
 {
@@ -119,9 +123,6 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 			break;
 		}
 	}
-
-	// 연결 해제
-	g_clients.erase(id);
 
 	return 0;
 }
@@ -162,11 +163,15 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		pScene->Update(fTimeElapsed);
 		SOCKETINFO::UpdatePlayerInfo();
 
+		int retval = 0;
 		// send to player
 		// 만약 플레이어들의 이동이 있다면 전송, 지금은 테스트 하기 위해 true로 전송한다. 내용물도 빈 값
 		if (pScene->IsPlayersUpdated()) {
-			for (int i = 0; i < MAX_PLAYERS; ++i) {
-				g_clients[i].ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+			for (auto& i : g_clients) {
+				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+				 if (retval == SOCKET_ERROR) {
+					 Disconnect(i.first);
+				 }
 			}
 		}
 
