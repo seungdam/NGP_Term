@@ -193,7 +193,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		}
 		// open dialog window(modeless) and set wndSize;
 		g_bModalOpen = true;
-		hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, ModelessDlgProc);
+		hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)ModelessDlgProc);
 		ShowWindow(hDlg, SW_SHOW);
 		break;
 	}
@@ -201,7 +201,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_KEYDOWN:
 		if (wParam == VK_RETURN && !g_bModalOpen) {
-			hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, ModelessDlgProc);
+			hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)ModelessDlgProc);
 			ShowWindow(hDlg, SW_SHOW);
 		}
 		if (wParam == VK_DELETE) {
