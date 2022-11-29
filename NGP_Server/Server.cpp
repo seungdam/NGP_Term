@@ -171,6 +171,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {
 					 Disconnect(i.first);
+					 break;
 				 }
 			}
 		}
