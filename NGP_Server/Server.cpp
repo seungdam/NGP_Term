@@ -150,7 +150,9 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 	QueryPerformanceFrequency(&sec);
 	QueryPerformanceCounter(&time);
 
-	float fTimeElapsed = 0;
+	float fTimeElapsed = 0.0f;
+	float fSendElapsed = 0.0f;
+	const float fSendDelay = 24.0f;
 
 	while (true) {
 		// get elapsed time
@@ -159,13 +161,17 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		fTimeElapsed = (tTime.QuadPart - time.QuadPart) / (float)sec.QuadPart;
 		time = tTime;
 
+		fSendElapsed += fTimeElapsed;
+
 		// update
 		pScene->Update(fTimeElapsed);
 		SOCKETINFO::UpdatePlayerInfo();
 
 		int retval = 0;
 		// send to player
-		if (pScene->IsPlayersUpdated()) {
+		if (SOCKETINFO::IsUpdated() && fSendDelay > 1.0f / fSendElapsed) {
+			fSendElapsed = 0.0f;
+			SOCKETINFO::UpdateBeforeInfo();
 			for (auto& i : g_clients) {
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {

@@ -5,6 +5,7 @@
 
 Scene* SOCKETINFO::m_pScene = nullptr;
 PLAYERINFO SOCKETINFO::m_PlayersInfo[MAX_PLAYERS] = {};
+PLAYERINFO SOCKETINFO::m_befPlayersInfo[MAX_PLAYERS] = {};
 
 SOCKETINFO::SOCKETINFO()
 {
@@ -25,11 +26,32 @@ void SOCKETINFO::UpdatePlayerInfo()
 {
 	// 씬에서 플레이어 정보를 가져와 업데이트 한다
 	for (int i = 0; i < MAX_PLAYERS; ++i) {
-		m_PlayersInfo[i].p_dir = 0;				// 방향 업데이트 필요
+		m_PlayersInfo[i].p_dir = m_pScene->GetPlayerInput(i);				// 방향 업데이트 필요
 		m_PlayersInfo[i].p_id = i;
 		m_PlayersInfo[i].p_pos[0] = m_pScene->GetPlayerPosition(i * 2);
 		m_PlayersInfo[i].p_pos[1] = m_pScene->GetPlayerPosition(i * 2 + 1);
 	}
+}
+
+void SOCKETINFO::UpdateBeforeInfo()
+{
+	// m_befPlayersInfo를 갱신한다
+	memcpy(m_befPlayersInfo, m_PlayersInfo, sizeof(PLAYERINFO) * MAX_PLAYERS);
+}
+
+bool SOCKETINFO::IsUpdated()
+{
+	for (int i = 0; i < MAX_PLAYERS; ++i) {
+		// 입력 비교
+		// 입력을 아주 잠깐만 눌렀다 땠을 때 땟다는 정보를 서버가 보내지 않는 점 확인,
+		// 이를 수정하기 위해 단순히 떨어지고 있다 || 움직이고 있다 뿐만 아닌 입력 변화도 체크해준다
+		if (m_befPlayersInfo[i].p_dir != m_PlayersInfo[i].p_dir) return true;
+	}
+
+	// 모든 플레이어들에 대해 떨어지는중 || 움직이는중을 확인
+	if (m_pScene->IsPlayersUpdated()) return true;
+
+	return false;
 }
 
 // Processing Scene change packet and move packet
@@ -54,6 +76,8 @@ int SOCKETINFO::ServerDoSend(char type)
 		if (SOCKET_ERROR == retval) {
 			cout << "player move error" << endl;
 		}
+
+		//cout << "send id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
 	}
 		break;
 	case SERVER_PACKET_INFO::SCENE_CHANGE:
@@ -107,7 +131,7 @@ void SOCKETINFO::ProcessPacket(char* data)
 		m_type = info->type;
 		m_Id = info->from_c_id;
 		m_dir = info->direction;
-		cout << "id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
+		//cout << "recv id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
 
 		if (m_pScene) {
 			m_pScene->SetPlayerInput(m_Id, m_dir);

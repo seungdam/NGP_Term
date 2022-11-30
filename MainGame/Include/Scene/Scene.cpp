@@ -212,11 +212,10 @@ void Scene::SetMyPlayerData(const PLAYERINFO& playerData)
 
 void Scene::SetOtherPlayerData(int idx, const PLAYERINFO& playerData)
 {
-	// 방향도 업데이트 해줄 것
-	playerData.p_dir;
-
 	m_vOtherPlayers[idx * 2]->SetPivot(playerData.p_pos[0]);
+	m_vOtherPlayers[idx * 2]->SetInput(playerData.p_dir);
 	m_vOtherPlayers[idx * 2 + 1]->SetPivot(playerData.p_pos[1]);
+	m_vOtherPlayers[idx * 2 + 1]->SetInput(playerData.p_dir);
 }
 
 void Scene::Init()
@@ -259,7 +258,7 @@ void Scene::Update(float fTimeElapsed)
 	for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
 
 	// 몬스터 업데이트(대충 몬스터 이동 이라는 뜻)
-	for (auto const& d : m_vMonster) d->Update(fTimeElapsed);
+	for (auto& d : m_vMonster) d->Update(fTimeElapsed);
 
 	// 대충 롤러코스터 움직이라는 뜻
 	for (auto& d : m_vRollerCoaster) d->Update(fTimeElapsed);
@@ -289,7 +288,17 @@ void Scene::Collision()
 	}
 
 	// 플레이어와 타일맵 충돌 확인
-	for (auto& dPlayer : m_vPlayer) {
+
+	Player* players[MAX_PLAYERS * 2];
+
+	players[0] = m_vPlayer[0];
+	players[1] = m_vPlayer[1];
+
+	for (int i = 2; i < _countof(players); ++i)
+		players[i] = m_vOtherPlayers[i - 2];
+
+
+	for (auto& dPlayer : players) {
 		FRECT playerPos = dPlayer->GetPosition();
 
 		POINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };

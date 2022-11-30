@@ -215,6 +215,11 @@ FPOINT Scene::GetPlayerPosition(int index)
 	return m_vPlayers[index]->GetPivot();
 }
 
+unsigned char Scene::GetPlayerInput(int index)
+{
+	return m_vPlayers[index * 2]->GetInputData();
+}
+
 bool Scene::IsPlayersUpdated() const
 {
 	for (const auto& player : m_vPlayers)

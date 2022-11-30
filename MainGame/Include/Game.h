@@ -28,6 +28,7 @@ using namespace std;
 
 #define SERVERPORT 9000
 #define SERVERIP "127.0.0.1"
+//#define SERVERIP "192.168.219.106"
 
 #define MAX_MOVING_STEPS 30
 

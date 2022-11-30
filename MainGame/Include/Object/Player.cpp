@@ -28,8 +28,10 @@ bool Player::Init()
 	return true;
 }
 
-void Player::Input(float fTimeElapsed, uint8_t& input)
+int Player::Update(float fTimeElapsed)
 {
+	Object::Update(fTimeElapsed);
+
 	// setSprite
 	m_iSpriteY = m_eMoveDir == MOVE_DIR::MD_BACK;
 
@@ -86,7 +88,7 @@ void Player::Input(float fTimeElapsed, uint8_t& input)
 			m_iImageSprite++;
 			m_fCnt = 0;
 		}
-		
+
 		if (m_iImageSprite > 15 - (3 * m_iPlayerNum)) {
 			m_bLand = false;
 			m_iSpriteY -= 2;
@@ -102,7 +104,7 @@ void Player::Input(float fTimeElapsed, uint8_t& input)
 			m_fCnt = 0;
 		}
 		m_iImageSprite %= m_iMaxImageSprite + m_bSitComplete - m_iPlayerNum;
-		
+
 		m_bBeforeSit = false;
 		if (!m_bWalking) {
 			FMOD_System_PlaySound(Core::GetInst().GetFmodSystem(), m_pWalkSound, NULL, 0, &m_pPlayerChannel);
@@ -124,12 +126,6 @@ void Player::Input(float fTimeElapsed, uint8_t& input)
 		FMOD_Channel_Stop(m_pPlayerChannel);
 		m_bWalking = false;
 	}
-	
-}
-
-int Player::Update(float fTimeElapsed)
-{
-	Object::Update(fTimeElapsed);
 	return 0;
 }
 
@@ -160,6 +156,42 @@ bool PurplePlayer::Init()
 	m_tImg.Load(L"Resource/player1.png");
 
 	return Player::Init();
+}
+
+int PurplePlayer::Update(float fTimeElapsed)
+{
+	m_tBefPos = m_tPosition;
+
+	m_bMoved = false;
+	m_bSit = false;
+
+	// Input
+	if (m_PlayerInput & KEY_LEFT) {
+		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		m_eMoveDir = MOVE_DIR::MD_BACK;
+		m_bMoved = true;
+	}
+	if (m_PlayerInput & KEY_RIGHT) {
+		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		m_eMoveDir = MOVE_DIR::MD_FRONT; 
+		m_bMoved = true;
+	}
+	// 이전에 w가 안눌렸고, 지금은 눌린 상태
+	if (!(m_befPlayerInput & KEY_UP) && m_PlayerInput & KEY_UP) {
+		if (m_PlayerInput & KEY_UP) {
+			m_bFalling = true;
+			m_fJumpSpeed = -550.0f;
+		}
+		if (m_PlayerInput & KEY_DOWN && !m_bLand) {
+			m_bSit = true;
+		}
+		else {
+			m_bSitComplete = false;
+		}
+	}
+
+	m_befPlayerInput = m_PlayerInput;
+	return Player::Update(fTimeElapsed);
 }
 
 void PurplePlayer::Input(float fTimeElapsed, uint8_t& input)
@@ -201,7 +233,7 @@ void PurplePlayer::Input(float fTimeElapsed, uint8_t& input)
 		}
 	}
 
-	Player::Input(fTimeElapsed, input);
+	Player::Update(fTimeElapsed);
 }
 
 bool YellowPlayer::Init()
@@ -209,6 +241,39 @@ bool YellowPlayer::Init()
 	m_tImg.Load(L"Resource/player2.bmp");
 	
 	return Player::Init();
+}
+
+int YellowPlayer::Update(float fTimeElapsed)
+{
+	m_tBefPos = m_tPosition;
+
+	m_bMoved = false;
+	m_bSit = false;
+
+	if (m_PlayerInput & KEY_A) {
+		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		m_eMoveDir = MOVE_DIR::MD_BACK;
+		m_bMoved = true;
+	}
+	if (m_PlayerInput & KEY_D) {
+		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		m_eMoveDir = MOVE_DIR::MD_FRONT;
+		m_bMoved = true;
+	}
+	// 이전에 w가 안눌렸고, 지금은 눌린 상태
+	if (!(m_befPlayerInput & KEY_W) && m_PlayerInput & KEY_W) {
+		if (m_PlayerInput & KEY_W) {
+			m_bFalling = true;
+			m_fJumpSpeed = -550.0f;
+		}
+		if (m_PlayerInput & KEY_S && !m_bLand) {
+			m_bSit = true;
+		}
+		else m_bSitComplete = false;
+	}
+
+	m_befPlayerInput = m_PlayerInput;
+	return Player::Update(fTimeElapsed);
 }
 
 void YellowPlayer::Input(float fTimeElapsed, uint8_t& input)
@@ -247,5 +312,5 @@ void YellowPlayer::Input(float fTimeElapsed, uint8_t& input)
 		else m_bSitComplete = false;
 	}
 
-	Player::Input(fTimeElapsed, input);
+	Player::Update(fTimeElapsed);
 }

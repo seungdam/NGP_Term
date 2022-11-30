@@ -20,6 +20,9 @@ public:
 protected:
     int m_iPlayerNum;
 
+	unsigned char m_PlayerInput = 0;
+	unsigned char m_befPlayerInput = 0;
+
 	// for image sprite, walking
 	bool m_bMoved = false;
 	bool m_bFalling = true;
@@ -54,11 +57,12 @@ public:
 	void SetFallingFalse() { m_bFalling = false; m_fJumpSpeed = 0; }
 	void SetFallingTrue() { m_bFalling = true; }
 	void OnHitCeil() { m_fJumpSpeed = 0; }
+	void SetInput(unsigned char in) { m_PlayerInput = in; }
 
 public:
 	virtual bool Init();
 
-	virtual void Input(float fTimeElapsed, uint8_t& input);
+	virtual void Input(float fTimeElapsed, uint8_t& input) {}
 	virtual int Update(float fTimeElapsed);
 	virtual void Render(HDC hdc);
 };
@@ -73,6 +77,7 @@ public:
 public:
 	virtual bool Init();
 
+	virtual int Update(float fTimeElapsed);
 	virtual void Input(float fTimeElapsed, uint8_t& input);
 };
 
@@ -87,6 +92,7 @@ public:
 public:
 	virtual bool Init();
 
+	virtual int Update(float fTimeElapsed);
 	virtual void Input(float fTimeElapsed, uint8_t& input);
 };
 

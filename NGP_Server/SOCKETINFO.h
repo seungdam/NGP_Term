@@ -22,7 +22,10 @@ public:
 
 private:
 	static Scene* m_pScene;
+
 public:
+	// 이전 입력, 위치와 비교하기 위한 변수를 설정
+	static PLAYERINFO m_befPlayersInfo[MAX_PLAYERS];
 	static PLAYERINFO m_PlayersInfo[MAX_PLAYERS];
 
 public:
@@ -30,6 +33,10 @@ public:
 
 	// 플레이어 패킷의 정보를 갱신
 	static void UpdatePlayerInfo();
+
+	static void UpdateBeforeInfo();
+
+	static bool IsUpdated();
 
 public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다

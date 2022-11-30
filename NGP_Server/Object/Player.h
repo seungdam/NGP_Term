@@ -43,7 +43,7 @@ protected:
 	int m_iMaxImageSprite = 4;
 
 	unsigned char m_PlayerInput = 0;
-	
+
 public:
 	int GetPlayerNum() { return m_iPlayerNum; }
 
@@ -52,7 +52,7 @@ public:
 	void OnHitCeil() { m_fJumpSpeed = 0; }
 
 	void SetInputData(unsigned char in) { m_PlayerInput = in; }
-
+	unsigned char GetInputData() const { return m_PlayerInput; }
 	bool IsPlayerUpdated() const { return m_bMoved || m_bFalling; }
 
 public:

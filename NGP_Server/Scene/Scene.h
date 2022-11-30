@@ -54,6 +54,7 @@ public:
 
 	void SetPlayerInput(int index, unsigned char move);
 	FPOINT GetPlayerPosition(int index);
+	unsigned char GetPlayerInput(int index);
 
 	bool IsPlayersUpdated() const;
 
