@@ -165,7 +165,6 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 		int retval = 0;
 		// send to player
-		// 만약 플레이어들의 이동이 있다면 전송, 지금은 테스트 하기 위해 true로 전송한다. 내용물도 빈 값
 		if (pScene->IsPlayersUpdated()) {
 			for (auto& i : g_clients) {
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));

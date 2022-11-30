@@ -165,7 +165,7 @@ void Scene::ResetPlayerPos(int index)
 
 	//printf("idx %d reset\n", index);
 
-	int purpleIndex = index / 2;
+	int purpleIndex = (index / 2) * 2;
 	int yellowIndex = purpleIndex + 1;
 
 	m_vPlayers[purpleIndex]->SetPosition(m_p0StartPos);
@@ -203,7 +203,7 @@ void Scene::InsertPlayers(int playerSize)
 
 void Scene::SetPlayerInput(int index, unsigned char move)
 {
-	int purpleIndex = index / 2;
+	int purpleIndex = index * 2;
 	int yellowIndex = purpleIndex + 1;
 
 	m_vPlayers[purpleIndex]->SetInputData(move);
