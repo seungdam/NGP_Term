@@ -24,10 +24,12 @@ private:
 	CImage m_imgTile;
 
 	// movingObjs
-	vector<class Player*> m_vPlayer;
+	vector<class Player*> m_vMyPlayer;
 	vector<class Player*> m_vOtherPlayers;
 	vector<class Monster*> m_vMonster;
 	vector<class RollerCoaster*> m_vRollerCoaster;
+	// 내용물 delete 엄금
+	vector<class Player*> m_vPlayerVectors;
 
 	// static Objs
 	vector<class Step*> m_vSteps;
@@ -55,7 +57,7 @@ private:
 	bool LoadMapFromFile(FILE* fp);
 
 	void Collision();
-	void ResetPlayerPos();
+	void ResetPlayerPos(int index);
 
 public:
 	void SetMyPlayerData(const PLAYERINFO& playerData);

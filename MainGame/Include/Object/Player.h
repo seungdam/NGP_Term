@@ -57,7 +57,10 @@ public:
 	void SetFallingFalse() { m_bFalling = false; m_fJumpSpeed = 0; }
 	void SetFallingTrue() { m_bFalling = true; }
 	void OnHitCeil() { m_fJumpSpeed = 0; }
+
 	void SetInput(unsigned char in) { m_PlayerInput = in; }
+
+	bool IsYSpeedNeedToUpdate() { return false; }
 
 public:
 	virtual bool Init();

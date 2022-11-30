@@ -53,7 +53,7 @@ public:
 
 	void SetInputData(unsigned char in) { m_PlayerInput = in; }
 	unsigned char GetInputData() const { return m_PlayerInput; }
-	bool IsPlayerUpdated() const { return m_bMoved || m_bFalling; }
+	bool IsPlayerUpdated() const { return false; }
 
 public:
 	virtual bool Init();
