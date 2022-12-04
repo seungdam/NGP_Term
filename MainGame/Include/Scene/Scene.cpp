@@ -94,11 +94,20 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		break;
 	}
 
-
 	m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
 
-	std::copy(m_vMyPlayer.begin(), m_vMyPlayer.end(), back_inserter(m_vPlayerVectors));
-	std::copy(m_vOtherPlayers.begin(), m_vOtherPlayers.end(), back_inserter(m_vPlayerVectors));
+	int cnt = 0;
+	int id = Core::GetInst().GetNetworkManager()->GetID();
+	for (int i = 0; i < MAX_PLAYERS; ++i) {
+		if (id == i) {
+			m_vPlayerVectors.push_back(m_vMyPlayer[0]);
+			m_vPlayerVectors.push_back(m_vMyPlayer[1]);
+		}
+		else {
+			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+		}
+	}
 }
 
 Scene::~Scene()
@@ -212,21 +221,16 @@ void Scene::ResetPlayerPos(int index)
 	m_vPlayerVectors[yellowIndex]->SetPosition(m_p1StartPos);
 }
 
-void Scene::SetMyPlayerData(const PLAYERINFO& playerData)
+void Scene::SetPlayerData(S2C_PLAYER_MOVE_PACKET* pData)
 {
-	// 방향도 업데이트 해줄 것
-	playerData.p_dir;
+	int id = pData->p_id * 2 + pData->is_purple;
+	FPOINT pos = { pData->x, pData->y };
+	unsigned char dir = pData->p_dir;
 
-	m_vMyPlayer[0]->SetPivot(playerData.p_pos[0]);
-	m_vMyPlayer[1]->SetPivot(playerData.p_pos[1]);
-}
+	printf("id: %d, %d, %d\n", id, pData->x, pData->y);
 
-void Scene::SetOtherPlayerData(int idx, const PLAYERINFO& playerData)
-{
-	m_vOtherPlayers[idx * 2]->SetPivot(playerData.p_pos[0]);
-	m_vOtherPlayers[idx * 2]->SetInput(playerData.p_dir);
-	m_vOtherPlayers[idx * 2 + 1]->SetPivot(playerData.p_pos[1]);
-	m_vOtherPlayers[idx * 2 + 1]->SetInput(playerData.p_dir);
+	m_vPlayerVectors[id]->SetPivot(pos);
+	m_vPlayerVectors[id]->SetInput(dir);
 }
 
 void Scene::Init()

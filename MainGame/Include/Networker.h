@@ -34,5 +34,7 @@ public:
 	void Disconnect();
 
 	void SetScene(Scene* pScene);
+
+	int GetID() const { return m_iClientID; }
 };
 

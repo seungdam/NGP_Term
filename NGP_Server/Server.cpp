@@ -152,7 +152,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 	float fTimeElapsed = 0.0f;
 	float fSendElapsed = 0.0f;
-	const float fSendDelay = 24.0f;
+	const float fSendDelay = 60.0f;
 
 	while (true) {
 		// get elapsed time
@@ -171,7 +171,6 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		// send to player
 		if (SOCKETINFO::IsUpdated() && fSendDelay > 1.0f / fSendElapsed) {
 			fSendElapsed = 0.0f;
-			SOCKETINFO::UpdateBeforeInfo();
 			for (auto& i : g_clients) {
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {
@@ -179,6 +178,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 					 break;
 				 }
 			}
+			SOCKETINFO::UpdateBeforeInfo();
 		}
 
 	}

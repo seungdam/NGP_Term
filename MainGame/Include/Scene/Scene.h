@@ -28,7 +28,7 @@ private:
 	vector<class Player*> m_vOtherPlayers;
 	vector<class Monster*> m_vMonster;
 	vector<class RollerCoaster*> m_vRollerCoaster;
-	// 내용물 delete 엄금
+	// 내용물 delete 금지
 	vector<class Player*> m_vPlayerVectors;
 
 	// static Objs
@@ -60,8 +60,8 @@ private:
 	void ResetPlayerPos(int index);
 
 public:
-	void SetMyPlayerData(const PLAYERINFO& playerData);
-	void SetOtherPlayerData(int idx, const PLAYERINFO& playerData);
+	void SetPlayerData(S2C_PLAYER_MOVE_PACKET* pData);
+
 
 	int GetSceneNum() const { return m_nSceneNum; }
 

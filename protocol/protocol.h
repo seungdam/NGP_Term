@@ -1,10 +1,17 @@
 #pragma once
 
 #define MAX_PLAYERS 2
+#define EPSILON 0.00001f
 
 struct FPOINT {
 	float x;
 	float y;
+
+	bool operator==(const FPOINT& other) {
+		return
+			(abs(x - other.x) < EPSILON) &&
+			(abs(y - other.y) < EPSILON);
+	}
 };
 
 struct FRECT {
@@ -113,7 +120,10 @@ struct S2C_LOGIN_PACKET {
 struct S2C_PLAYER_MOVE_PACKET
 {
 	char type;
-	PLAYERINFO p_data[MAX_PLAYERS];
+	char p_id;
+	char is_purple;
+	unsigned char p_dir;
+	short x, y;
 };
 
 struct S2C_SCENE_CHANGE_PACKET
