@@ -28,7 +28,7 @@ void GameManager::OnDestroy()
 void GameManager::Init()
 {
 	// test scene == -1
-	m_iCurSceneNum = 1;
+	m_iCurSceneNum = LOADING_SCENE;
 	m_pScene = new Scene(m_iCurSceneNum);
 
 	m_pScene->Init();

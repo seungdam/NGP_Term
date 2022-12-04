@@ -103,10 +103,6 @@ int main(int argc, char* argv[]) {
 
 void Disconnect(int id) {
 
-	g_clients[id].m_PlayersInfo[id].p_pos[0].x = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[0].y = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[1].x = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[1].y = -1;
 	g_clients.erase(id);
 }
 

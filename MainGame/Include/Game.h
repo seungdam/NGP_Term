@@ -27,8 +27,8 @@ using namespace std;
 #include "Networker.h"
 
 #define SERVERPORT 9000
-//#define SERVERIP "127.0.0.1"
-#define SERVERIP "192.168.219.108"
+#define SERVERIP "127.0.0.1"
+//#define SERVERIP "192.168.219.108"
 
 #define MAX_MOVING_STEPS 30
 
@@ -40,7 +40,7 @@ using namespace std;
 
 #define TILESIZE 40
 #define END_SCENE 999
-
+#define LOADING_SCENE 998
 #define WINDOW_SIZE_WIDTH 1280
 #define WINDOW_SIZE_HEIGHT 720
 

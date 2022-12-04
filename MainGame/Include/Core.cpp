@@ -24,8 +24,8 @@ Core::~Core()
 void Core::OnDestroy()
 {
 	if (m_pSoundSystem) {
-		FMOD_System_Close(m_pSoundSystem);
-		FMOD_System_Release(m_pSoundSystem);
+		//FMOD_System_Close(m_pSoundSystem);
+		//FMOD_System_Release(m_pSoundSystem);
 	}
 
 	if (m_NetworkManager) {
@@ -83,23 +83,24 @@ int Core::Run()
 
 	QueryPerformanceFrequency(&m_Sec);
 	QueryPerformanceCounter(&m_Time);
-
+	GameManager::GetInst().Init();
+	GameManager::GetInst().Render(hdc);
 	// if loggin failed
 	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
 		return -1;
 
-	m_NetworkManager->ClientDoRecv();
+	if(!m_NetworkManager->ClientDoRecv()) return -1;
 
 	HANDLE rThread = CreateThread(NULL, 0, Recv_Thread,(LPVOID)m_NetworkManager, 0, 0);
-	if (rThread == NULL) {
-
+	if (rThread != NULL) {
+		CloseHandle(rThread);
 	}
-	GameManager::GetInst().Init();
 
+	GameManager::GetInst().ChangeScene(1);
 	m_NetworkManager->SetScene(GameManager::GetInst().GetScene());
 
-	FMOD_SOUND* pBGSound;
-	FMOD_CHANNEL* pChannel;
+	//FMOD_SOUND* pBGSound;
+	//FMOD_CHANNEL* pChannel;
 
 	// bg sound
 	//FMOD_System_CreateSound(m_pSoundSystem, "Sounds/bgMusic.mp3", FMOD_LOOP_NORMAL, 0, &pBGSound);

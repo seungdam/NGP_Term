@@ -92,20 +92,26 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		m_nTileXLen = 32;
 		m_imgBackGround.Load(TEXT("Resource/gameover.bmp"));
 		break;
+	case LOADING_SCENE:				// game clear;
+		m_nTileYLen = 18;
+		m_nTileXLen = 32;
+		m_imgBackGround.Load(TEXT("Resource/title.bmp"));
+		break;
 	}
+	if (iSceneNum == 1) {
+		m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
 
-	m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
-
-	int cnt = 0;
-	int id = Core::GetInst().GetNetworkManager()->GetID();
-	for (int i = 0; i < MAX_PLAYERS; ++i) {
-		if (id == i) {
-			m_vPlayerVectors.push_back(m_vMyPlayer[0]);
-			m_vPlayerVectors.push_back(m_vMyPlayer[1]);
-		}
-		else {
-			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
-			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+		int cnt = 0;
+		int id = Core::GetInst().GetNetworkManager()->GetID();
+		for (int i = 0; i < MAX_PLAYERS; ++i) {
+			if (id == i) {
+				m_vPlayerVectors.push_back(m_vMyPlayer[0]);
+				m_vPlayerVectors.push_back(m_vMyPlayer[1]);
+			}
+			else {
+				m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+				m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+			}
 		}
 	}
 }
@@ -539,6 +545,14 @@ void Scene::Render(HDC hdc)
 	//if End Scene return
 	if (m_nSceneNum == END_SCENE) {
 		BitBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, (int)m_CameraOffset.x, (int)m_CameraOffset.y, SRCCOPY);
+
+		//DeleteObject(m_hDoubleBufferBitmap);
+		DeleteDC(memdc);
+		ReleaseDC(Core::GetInst().GethWnd(), hdc);
+		return;
+	}
+	if (m_nSceneNum == LOADING_SCENE) {
+		StretchBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, 0, 0,imgSize.cx,imgSize.cy, SRCCOPY);
 
 		//DeleteObject(m_hDoubleBufferBitmap);
 		DeleteDC(memdc);
