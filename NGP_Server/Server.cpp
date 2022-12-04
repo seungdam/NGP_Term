@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 			if (MAX_PLAYERS == currentPlayerNum) {
 				// send 스레드 생성, 
 				// 정보) 로그인 패킷 송신 부분 SendThread로 이동 확인 했으면 이 주석 지울 것
-				sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
+				//sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
 			}
 		}
 	}
@@ -102,11 +102,6 @@ int main(int argc, char* argv[]) {
 }
 
 void Disconnect(int id) {
-
-	g_clients[id].m_PlayersInfo[id].p_pos[0].x = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[0].y = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[1].x = -1;
-	g_clients[id].m_PlayersInfo[id].p_pos[1].y = -1;
 	g_clients.erase(id);
 }
 
@@ -122,6 +117,8 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 			err_display("recv()");
 			break;
 		}
+		for (auto& s : g_clients)
+			s.second.ServerDoSendMovePacket(id);
 	}
 
 	return 0;
@@ -129,61 +126,61 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 
 DWORD WINAPI ServerSendThread(LPVOID arg)
 {
-	// scene 생성
-	const int startSceneNum = 1;
-	Scene* pScene = new Scene(startSceneNum);
+	//// scene 생성
+	//const int startSceneNum = 1;
+	//Scene* pScene = new Scene(startSceneNum);
 
-	SOCKETINFO::SetScene(pScene);
+	//SOCKETINFO::SetScene(pScene);
 
-	pScene->InsertPlayers(MAX_PLAYERS);
-	pScene->Init();
+	//pScene->InsertPlayers(MAX_PLAYERS);
+	//pScene->Init();
 
-	// 접속한 플레이어들에게 로그인
-	for (auto& i : g_clients) {
-		i.second.ServerDoSendLoginPacket(true);
-	}
+	//// 접속한 플레이어들에게 로그인
+	//for (auto& i : g_clients) {
+	//	i.second.ServerDoSendLoginPacket(true);
+	//}
 
-	// 타이머
-	LARGE_INTEGER sec;
-	LARGE_INTEGER time;
-	
-	QueryPerformanceFrequency(&sec);
-	QueryPerformanceCounter(&time);
+	//// 타이머
+	//LARGE_INTEGER sec;
+	//LARGE_INTEGER time;
+	//
+	//QueryPerformanceFrequency(&sec);
+	//QueryPerformanceCounter(&time);
 
-	float fTimeElapsed = 0.0f;
-	float fSendElapsed = 0.0f;
-	const float fSendDelay = 24.0f;
+	//float fTimeElapsed = 0.0f;
+	//float fSendElapsed = 0.0f;
+	//const float fSendDelay = 24.0f;
 
-	while (true) {
-		// get elapsed time
-		LARGE_INTEGER tTime;
-		QueryPerformanceCounter(&tTime);
-		fTimeElapsed = (tTime.QuadPart - time.QuadPart) / (float)sec.QuadPart;
-		time = tTime;
+	//while (true) {
+	//	// get elapsed time
+	//	LARGE_INTEGER tTime;
+	//	QueryPerformanceCounter(&tTime);
+	//	fTimeElapsed = (tTime.QuadPart - time.QuadPart) / (float)sec.QuadPart;
+	//	time = tTime;
 
-		fSendElapsed += fTimeElapsed;
+	//	fSendElapsed += fTimeElapsed;
 
-		// update
-		pScene->Update(fTimeElapsed);
-		SOCKETINFO::UpdatePlayerInfo();
+	//	// update
+	//	pScene->Update(fTimeElapsed);
+	//	SOCKETINFO::UpdatePlayerInfo();
 
-		int retval = 0;
-		// send to player
-		if (SOCKETINFO::IsUpdated() && fSendDelay > 1.0f / fSendElapsed) {
-			fSendElapsed = 0.0f;
-			SOCKETINFO::UpdateBeforeInfo();
-			for (auto& i : g_clients) {
-				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
-				 if (retval == SOCKET_ERROR) {
-					 Disconnect(i.first);
-					 break;
-				 }
-			}
-		}
+	//	int retval = 0;
+	//	// send to player
+	//	if (SOCKETINFO::IsUpdated() && fSendDelay > 1.0f / fSendElapsed) {
+	//		fSendElapsed = 0.0f;
+	//		SOCKETINFO::UpdateBeforeInfo();
+	//		for (auto& i : g_clients) {
+	//			 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+	//			 if (retval == SOCKET_ERROR) {
+	//				 Disconnect(i.first);
+	//				 break;
+	//			 }
+	//		}
+	//	}
 
-	}
+	//}
 
-	if (pScene) delete pScene;
+	//if (pScene) delete pScene;
 
 	return 0;
 }
