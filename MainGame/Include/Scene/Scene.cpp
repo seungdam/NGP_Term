@@ -227,7 +227,7 @@ void Scene::SetPlayerData(S2C_PLAYER_MOVE_PACKET* pData)
 	FPOINT pos = { pData->x, pData->y };
 	unsigned char dir = pData->p_dir;
 
-	printf("id: %d, %d, %d\n", id, pData->x, pData->y);
+	//printf("id: %d, %d, %d\n", id, pData->x, pData->y);
 
 	m_vPlayerVectors[id]->SetPivot(pos);
 	m_vPlayerVectors[id]->SetInput(dir);
@@ -270,7 +270,7 @@ void Scene::Input(float fTimeElapsed)
 
 void Scene::Update(float fTimeElapsed)
 {
-	for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
+	//for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
 
 	// 몬스터 업데이트(대충 몬스터 이동 이라는 뜻)
 	for (auto& d : m_vMonster) d->Update(fTimeElapsed);
@@ -293,7 +293,7 @@ void Scene::Collision()
 	// 플레이어와 몬스터 충돌 확인
 	bool bCollide = false;
 	int cnt = 0;
-	for (auto const dPlayer : m_vPlayerVectors) {
+	for (auto const dPlayer : m_vMyPlayer) {
 		for (auto const dMonster : m_vMonster) {
 			FRECT player = dPlayer->GetPosition();
 			FRECT monster = dMonster->GetPosition();
@@ -310,7 +310,7 @@ void Scene::Collision()
 
 	// 플레이어와 타일맵 충돌 확인
 	cnt = 0;
-	for (auto& dPlayer : m_vPlayerVectors) {
+	for (auto& dPlayer : m_vMyPlayer) {
 		FRECT playerPos = dPlayer->GetPosition();
 
 		POINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
@@ -368,7 +368,7 @@ void Scene::Collision()
 	}
 
 	// 플레이어와 장애물 충돌 확인		(step, rollercoaster, button)
-	for (auto& dPlayer : m_vPlayerVectors) {
+	for (auto& dPlayer : m_vMyPlayer) {
 		// step
 		FRECT playerPos = dPlayer->GetPosition();
 		for (auto const dStep : m_vSteps) {

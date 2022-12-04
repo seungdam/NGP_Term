@@ -169,7 +169,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 		int retval = 0;
 		// send to player
-		if (SOCKETINFO::IsUpdated() && fSendDelay > 1.0f / fSendElapsed) {
+		if (SOCKETINFO::IsUpdated()) {
 			fSendElapsed = 0.0f;
 			for (auto& i : g_clients) {
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
