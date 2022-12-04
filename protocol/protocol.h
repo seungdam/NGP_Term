@@ -99,7 +99,8 @@ enum class CLIENT_PACKET_INFO {
 
 struct PLAYERINFO
 {
-	char p_id;
+	int p_id;
+	FPOINT p_pos[2];
 	unsigned char p_dir;
 };
 
@@ -112,8 +113,7 @@ struct S2C_LOGIN_PACKET {
 struct S2C_PLAYER_MOVE_PACKET
 {
 	char type;
-	char p_id;
-	unsigned char p_dir;
+	PLAYERINFO p_data[MAX_PLAYERS];
 };
 
 struct S2C_SCENE_CHANGE_PACKET
