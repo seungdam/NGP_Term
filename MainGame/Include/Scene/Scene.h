@@ -47,8 +47,8 @@ private:
 
 private:
 	// player start position
-	RECT m_p0StartPos;
-	RECT m_p1StartPos;
+	FRECT m_p0StartPos = { 0.0f, 0.0f, 25.0f, 50.0f };
+	FRECT m_p1StartPos = { 0.0f, 0.0f, 25.0f, 50.0f };
 
 private:
 	HBITMAP m_hDoubleBufferBitmap = NULL;

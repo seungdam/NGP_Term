@@ -46,10 +46,26 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	case 3:
 	{
 		switch (m_nSceneNum) {
-		case 1:		fp = fopen("Scene/scene_01.txt", "r");	break;
-		case 2:		fp = fopen("Scene/stage2.txt", "r");	break;
-		case 3:		fp = fopen("Scene/stage3.txt", "r");	break;
-		default:	fp = fopen("Scene/scene_01.txt", "r");	break;
+		case 1:		
+			fp = fopen("Scene/scene_01.txt", "r");	
+			m_p0StartPos = { 600, 40 };
+			m_p0StartPos = { 620, 40 };
+			break;
+		case 2:		
+			fp = fopen("Scene/stage2.txt", "r");	
+			m_p0StartPos = { 600, 40 };
+			m_p0StartPos = { 620, 40 };
+			break;
+		case 3:		
+			fp = fopen("Scene/stage3.txt", "r");	
+			m_p0StartPos = { 600, 40 };
+			m_p0StartPos = { 620, 40 };
+			break;
+		default:	
+			fp = fopen("Scene/scene_01.txt", "r");	
+			m_p0StartPos = { 600, 40 };
+			m_p0StartPos = { 620, 40 };
+			break;
 		}
 
 		LoadMapFromFile(fp);

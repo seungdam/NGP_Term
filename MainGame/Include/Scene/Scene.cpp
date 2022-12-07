@@ -301,6 +301,7 @@ void Scene::Collision()
 
 	RECT camRect = { (LONG)m_CameraOffset.x, (LONG)m_CameraOffset.y, (LONG)m_CameraOffset.x + m_CameraRectSize.cx, (LONG)m_CameraOffset.y + m_CameraRectSize.cy };
 	// 플레이어와 몬스터 충돌 확인
+	/*
 	bool bCollide = false;
 	int cnt = 0;
 	for (auto const dPlayer : m_vMyPlayer) {
@@ -316,10 +317,10 @@ void Scene::Collision()
 		}
 		++cnt;
 	}
-
+	*/
 
 	// 플레이어와 타일맵 충돌 확인
-	cnt = 0;
+	int cnt = 0;
 	for (auto& dPlayer : m_vMyPlayer) {
 		FRECT playerPos = dPlayer->GetPosition();
 
@@ -339,7 +340,7 @@ void Scene::Collision()
 
 		}
 		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
-			ResetPlayerPos(cnt);
+			//ResetPlayerPos(cnt);
 			return;
 		}
 		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
@@ -371,7 +372,7 @@ void Scene::Collision()
 			(0 <= RB && RB < m_vTiles.size())) &&
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_GOAL ||
 			m_vTiles[RB]->GetTile() == TILE_DATA::TD_GOAL) {
-			ResetPlayerPos(cnt);
+			//ResetPlayerPos(cnt);
 			return;
 		}
 		cnt++;
