@@ -280,7 +280,7 @@ void Scene::Input(float fTimeElapsed)
 
 void Scene::Update(float fTimeElapsed)
 {
-	//for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
+	for (auto& p : m_vOtherPlayers) p->Update(fTimeElapsed);
 
 	// 몬스터 업데이트(대충 몬스터 이동 이라는 뜻)
 	for (auto& d : m_vMonster) d->Update(fTimeElapsed);
@@ -321,7 +321,7 @@ void Scene::Collision()
 
 	// 플레이어와 타일맵 충돌 확인
 	int cnt = 0;
-	for (auto& dPlayer : m_vMyPlayer) {
+	for (auto& dPlayer : m_vPlayerVectors) {
 		FRECT playerPos = dPlayer->GetPosition();
 
 		POINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
@@ -357,11 +357,11 @@ void Scene::Collision()
 
 		if (LB < 0 || RB < 0) {
 			dPlayer->SetFallingTrue();
-			break;
+			continue;
 		}
 		//else if(LB > )
 
-		if (LB < 0 || m_vTiles.size() <= LB || RB < 0 || m_vTiles.size() <= RB) break;
+		if (LB < 0 || m_vTiles.size() <= LB || RB < 0 || m_vTiles.size() <= RB) continue;
 
 		if (m_vTiles[LB]->GetTile() == TILE_DATA::TD_BLOCK ||
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_FLOOR ||
@@ -378,6 +378,7 @@ void Scene::Collision()
 		cnt++;
 
 	}
+
 
 	// 플레이어와 장애물 충돌 확인		(step, rollercoaster, button)
 	for (auto& dPlayer : m_vMyPlayer) {

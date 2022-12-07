@@ -167,12 +167,12 @@ int PurplePlayer::Update(float fTimeElapsed)
 
 	// Input
 	if (m_PlayerInput & KEY_LEFT) {
-		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		//Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_BACK;
 		m_bMoved = true;
 	}
 	if (m_PlayerInput & KEY_RIGHT) {
-		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		//Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_FRONT; 
 		m_bMoved = true;
 	}
@@ -251,12 +251,12 @@ int YellowPlayer::Update(float fTimeElapsed)
 	m_bSit = false;
 
 	if (m_PlayerInput & KEY_A) {
-		Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		//Move(-GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_BACK;
 		m_bMoved = true;
 	}
 	if (m_PlayerInput & KEY_D) {
-		Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
+		//Move(GetSpeed() * fTimeElapsed / (m_bSitComplete + 1), 0);
 		m_eMoveDir = MOVE_DIR::MD_FRONT;
 		m_bMoved = true;
 	}

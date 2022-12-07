@@ -49,19 +49,19 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		case 1:		
 			fp = fopen("Scene/scene_01.txt", "r");	
 			//m_p0StartPos = { 600, 40 };
-			//m_p0StartPos = { 620, 40 };
+			//m_p1StartPos = { 620, 40 };
 			m_p0StartPos = { 375, 1150 };
 			m_p1StartPos = { 175, 1150 };
 			break;
 		case 2:		
 			fp = fopen("Scene/stage2.txt", "r");	
-			m_p0StartPos = { 600, 40 };
-			m_p1StartPos = { 620, 40 };
+			m_p0StartPos = { 40, 400 };
+			m_p1StartPos = { 80, 400 };
 			break;
 		case 3:		
 			fp = fopen("Scene/stage3.txt", "r");	
-			m_p0StartPos = { 600, 40 };
-			m_p1StartPos = { 620, 40 };
+			m_p0StartPos = { 40, 400 };
+			m_p1StartPos = { 80, 400 };
 			break;
 		default:	
 			fp = fopen("Scene/scene_01.txt", "r");	
@@ -193,6 +193,8 @@ void Scene::ResetPlayerPos(int index)
 
 	m_vPlayers[purpleIndex]->SetPosition(m_p0StartPos);
 	m_vPlayers[yellowIndex]->SetPosition(m_p1StartPos);
+	m_vPlayers[purpleIndex]->SetBefPos(m_p0StartPos);
+	m_vPlayers[yellowIndex]->SetBefPos(m_p0StartPos);
 }
 
 void Scene::InsertPlayers(int playerSize)

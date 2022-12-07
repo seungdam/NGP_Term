@@ -21,6 +21,8 @@ public:
 	void MoveXFromSpeed(MOVE_DIR eDir);
 	void MoveYFromSpeed(MOVE_DIR eDir);
 
+	void SetBefPos(const FPOINT& p) { m_tBefPos = p; };
+
 	void GoBack();
 	void GoBackX();
 	void GoBackY();
