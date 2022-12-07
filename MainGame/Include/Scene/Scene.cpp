@@ -200,7 +200,7 @@ void Scene::InsertNewPlayer(int myId)
 	}
 
 	for (int i = 0; i < m_vOtherPlayers.size(); ++i) {
-		m_vOtherPlayers[i]->m_iClientNum = 1 + (i / 2) * 2;
+		m_vOtherPlayers[i]->m_iClientNum = 1 + (i / 2);
 		m_vOtherPlayers[i]->bRender = true;
 	}
 

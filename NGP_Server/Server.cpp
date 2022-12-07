@@ -218,18 +218,20 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 			}
 			curScene++;
 		}
+
 		SOCKETINFO::UpdatePlayerInfo();
 
 		int retval = 0;
 		// send to player
 		if (SOCKETINFO::IsUpdated()) {
 			fSendElapsed = 0.0f;
-			for (auto& i : g_clients) {
-				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
+			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+				 retval = iter->second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {
-					 Disconnect(i.first);
-					 break;
+					 std::cout << iter->first << " 클라이언트 종료" << std::endl;
+					 iter = g_clients.erase(iter);
 				 }
+				 else ++iter;
 			}
 			SOCKETINFO::UpdateBeforeInfo();
 		}
