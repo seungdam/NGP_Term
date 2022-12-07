@@ -145,7 +145,7 @@ bool Scene::LoadMapFromFile(FILE* fp)
 		fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &sf, &b, &g, &mt.left, &mt.top, &mt.right, &mt.bottom);
 
 		//RollerCoaster(RECT pos, STEP_FOR t, BOOL b, int g, RECT mt);
-		RollerCoaster* temp = new RollerCoaster(t, sf, b, g, mt);
+		RollerCoaster* temp = new RollerCoaster(t, sf, b, g, mt);;
 
 		m_vRollerCoaster.push_back(temp);
 	}
@@ -296,7 +296,7 @@ void Scene::Update(float fTimeElapsed)
 
 void Scene::Collision()
 {
-	if (m_nSceneNum == END_SCENE) return;
+	if (m_nSceneNum == 4) return;
 
 
 	// players 배열에 내플레이어, 다른플레이어를 넣음
@@ -556,7 +556,7 @@ void Scene::Render(HDC hdc)
 		{ imgRect.left, imgRect.top }, SRCCOPY);
 
 	//if End Scene return
-	if (m_nSceneNum == END_SCENE) {
+	if (m_nSceneNum == 4) {
 		BitBlt(hdc, 0, 0, wndSize.cx, wndSize.cy, memdc, (int)m_CameraOffset.x, (int)m_CameraOffset.y, SRCCOPY);
 
 		//DeleteObject(m_hDoubleBufferBitmap);

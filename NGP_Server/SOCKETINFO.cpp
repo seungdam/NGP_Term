@@ -147,8 +147,10 @@ int SOCKETINFO::ServerDoRecv()
 	//C2S_MOVE_PACKET packet;
 
 	retval = recv(m_sock, buff, sizeof(char), MSG_WAITALL);
-	if (retval == SOCKET_ERROR || retval == 0)
+	if (retval == SOCKET_ERROR || retval == 0) {
+		cout << "recv error1 " << endl;
 		return retval;
+	}
 	retval = recv(m_sock, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
 	if (retval == SOCKET_ERROR || retval == 0) 
 		return retval;

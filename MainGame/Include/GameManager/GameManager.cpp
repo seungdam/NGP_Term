@@ -50,7 +50,7 @@ void GameManager::Update(float fTimeElapsed)
 {
 	if (m_bChange) ChangeScene(m_iNextScene);
 
-	if (m_pScene && m_pScene->GetSceneNum() != END_SCENE) m_pScene->Update(fTimeElapsed);
+	if (m_pScene && m_pScene->GetSceneNum() != 4) m_pScene->Update(fTimeElapsed);
 }
 
 void GameManager::Render(HDC hdc)

@@ -44,7 +44,11 @@ public:
 
 	// 클라이언트로 부터 온 패킷을 수신한다
 	int ServerDoRecv();
-	void AddScore() { ++m_score; }
+
+	void AddScore() {
+		++m_score;
+		std::cout << "[" << m_Id << "] Score: " << m_score << std::endl;
+	}
 	int GetScore() { return m_score; }
 	// 수신한 패킷의 종류를 파악하고 처리한다
 	void ProcessPacket(char* data);
