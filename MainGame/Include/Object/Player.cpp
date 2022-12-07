@@ -153,7 +153,11 @@ void Player::Render(HDC hdc)
 
 bool PurplePlayer::Init()
 {
-	m_tImg.Load(L"Resource/player1.png");
+	switch (m_iClientNum) {
+	case 0: m_tImg.Load(L"Resource/player1.png");		break;
+	case 1: m_tImg.Load(L"Resource/playerBora2.bmp");	break;
+	case 2: m_tImg.Load(L"Resource/playerBora3.bmp");	break;
+	}
 
 	return Player::Init();
 }
@@ -238,8 +242,12 @@ void PurplePlayer::Input(float fTimeElapsed, uint8_t& input)
 
 bool YellowPlayer::Init()
 {
-	m_tImg.Load(L"Resource/player2.bmp");
-	
+	switch (m_iClientNum) {
+	case 0: m_tImg.Load(L"Resource/player2.bmp");		break;
+	case 1: m_tImg.Load(L"Resource/playerNorang2.bmp");	break;
+	case 2: m_tImg.Load(L"Resource/playerNorang3.bmp");	break;
+	}
+
 	return Player::Init();
 }
 

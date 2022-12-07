@@ -198,8 +198,10 @@ void Scene::InsertNewPlayer(int myId)
 		m_vOtherPlayers.push_back(new PurplePlayer);
 		m_vOtherPlayers.push_back(new YellowPlayer);
 	}
-	for (auto& player : m_vOtherPlayers) {
-		player->bRender = true;
+
+	for (int i = 0; i < m_vOtherPlayers.size(); ++i) {
+		m_vOtherPlayers[i]->m_iClientNum = 1 + (i / 2) * 2;
+		m_vOtherPlayers[i]->bRender = true;
 	}
 
 	m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());

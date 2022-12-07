@@ -194,7 +194,7 @@ void Scene::ResetPlayerPos(int index)
 	m_vPlayers[purpleIndex]->SetPosition(m_p0StartPos);
 	m_vPlayers[yellowIndex]->SetPosition(m_p1StartPos);
 	m_vPlayers[purpleIndex]->SetBefPos(m_p0StartPos);
-	m_vPlayers[yellowIndex]->SetBefPos(m_p0StartPos);
+	m_vPlayers[yellowIndex]->SetBefPos(m_p1StartPos);
 }
 
 void Scene::InsertPlayers(int playerSize)

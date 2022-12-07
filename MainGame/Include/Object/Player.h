@@ -15,8 +15,9 @@ class Player : public MovingObject
 public:
     Player();
     virtual ~Player();
-	bool bRender = false;
-
+	bool bRender = true;
+	int m_iClientNum = 0;
+	
 protected:
     int m_iPlayerNum;
 
