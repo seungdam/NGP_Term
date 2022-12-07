@@ -96,6 +96,7 @@ void Networker::ProcessPacket(char* packet)
 
 	case SERVER_PACKET_INFO::SCENE_CHANGE: 
 	{
+		m_pScene = nullptr;
 		S2C_SCENE_CHANGE_PACKET* pmp = (S2C_SCENE_CHANGE_PACKET*)packet;
 		GameManager::GetInst().OnSceneChangePacket(pmp->next_scene_num);
 	}

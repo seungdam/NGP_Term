@@ -160,8 +160,6 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		// update
 		int res = pManager->Update(fTimeElapsed);
 		if (res == CLEAR_STAGE) {
-			printf("SceneChange\n");
-
 			for (auto& i : g_clients) {
 				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene++);
 				if (retval == SOCKET_ERROR) {

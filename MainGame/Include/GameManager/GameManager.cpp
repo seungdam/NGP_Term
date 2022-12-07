@@ -15,6 +15,9 @@ void GameManager::ChangeScene(int nSceneNum)
 	m_bChange = false;
 
 	m_pScene->Init();
+
+	Core::GetInst().GetNetworkManager()->SetScene(m_pScene);
+
 }
 
 void GameManager::SynchronizeObjects()
