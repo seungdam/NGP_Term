@@ -321,7 +321,13 @@ int Scene::Collision()
 			// Stage Clear
 			std::cout << "hit goal" << std::endl;
 			// (주의) 스테이지 클리어 나중에 추가할 것
-			return CLEAR_STAGE;
+			if (i == 0 || i == 1)
+				return 0;
+			else if (i == 2 || i == 3)
+				return 1;
+			else {
+				return 2;
+			}
 		}
 		else m_vPlayers[i]->SetFallingTrue();						// NON, go fall
 
@@ -498,6 +504,6 @@ int Scene::Collision()
 	//	m_pScene->m_vPlayer.front()->SetFallingTrue();
 	//	m_pScene->m_vPlayer.back()->SetFallingTrue();
 	//}
-	return 0;
+	return -1;
 }
 

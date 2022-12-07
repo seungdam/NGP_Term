@@ -6,6 +6,12 @@ DWORD WINAPI Core::Recv_Thread(LPVOID arg) {
 
 	while (Core::GetInst().GetGameLoop()) {
 		Core::GetInst().GetNetworkManager()->ClientDoRecv();
+		if (Core::GetInst().GetNetworkManager()->m_most_high_score_id >= 0) {
+			wstring str{ L"Winner Clients is~" };
+			str += to_wstring(Core::GetInst().GetNetworkManager()->m_most_high_score_id);
+			MessageBox(NULL, str.c_str(), L"WINNER", MB_OK);
+			break;
+		}
 	}
 
 	return 0;
@@ -136,6 +142,7 @@ int Core::Run()
 		}
 	}
 
+	
 	GameManager::GetInst().OnDestroy();
 
 	//FMOD_Channel_Stop(pChannel);

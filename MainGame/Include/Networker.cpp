@@ -101,6 +101,12 @@ void Networker::ProcessPacket(char* packet)
 		GameManager::GetInst().OnSceneChangePacket(pmp->next_scene_num);
 	}
 		break;
+	case SERVER_PACKET_INFO::GAME_END:
+	{
+		S2C_END_GAME* pmp = (S2C_END_GAME*)packet;
+		m_most_high_score_id = pmp->most_high_score_id;
+	}
+	break;
 	}
 }
 

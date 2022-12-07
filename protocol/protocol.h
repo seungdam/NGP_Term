@@ -97,7 +97,8 @@ struct FRECT {
 enum class SERVER_PACKET_INFO {
 	LOGIN = 0,
 	PLAYER_MOVE,
-	SCENE_CHANGE
+	SCENE_CHANGE,
+	GAME_END
 };
 
 enum class CLIENT_PACKET_INFO {
@@ -130,6 +131,11 @@ struct S2C_SCENE_CHANGE_PACKET
 {
 	char type;
 	char next_scene_num;
+};
+
+struct S2C_END_GAME_PACKET {
+	char type;
+	char most_high_score_id;
 };
 
 struct C2S_MOVE_PACKET

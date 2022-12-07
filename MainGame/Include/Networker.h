@@ -13,6 +13,7 @@ class Networker
 	
 public:
 	bool m_isLogin = false;
+	int m_most_high_score_id = -1;
 	Networker();
 	~Networker();
 

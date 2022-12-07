@@ -64,7 +64,7 @@ bool SOCKETINFO::IsUpdated()
 }
 
 // Processing Scene change packet and move packet
-int SOCKETINFO::ServerDoSend(char type, int scene)
+int SOCKETINFO::ServerDoSend(char type, int i)
 {
 	int retval = 0;
 	SOCKADDR_IN clientaddr;
@@ -100,11 +100,22 @@ int SOCKETINFO::ServerDoSend(char type, int scene)
 	{
 		S2C_SCENE_CHANGE_PACKET packet;
 		packet.type = (char)(SERVER_PACKET_INFO::SCENE_CHANGE);
-		packet.next_scene_num = scene;
+		packet.next_scene_num = i;
 		retval = send(m_sock, (char*)&packet, sizeof(S2C_SCENE_CHANGE_PACKET), 0);
 
 		if (SOCKET_ERROR == retval) {
 			cout <<"[" << m_Id <<"]" << "scene change error" << endl;
+		}
+	}
+		break;
+	case SERVER_PACKET_INFO::GAME_END:
+	{
+		S2C_END_GAME_PACKET packet;
+		packet.type = (char)(SERVER_PACKET_INFO::GAME_END);
+		packet.most_high_score_id = i;
+		retval = send(m_sock, (char*)&packet, sizeof(S2C_END_GAME_PACKET), 0);
+		if (SOCKET_ERROR == retval) {
+			cout << "[" << m_Id << "]" << "end game error" << endl;
 		}
 	}
 		break;

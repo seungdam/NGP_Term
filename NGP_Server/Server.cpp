@@ -175,18 +175,34 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		fSendElapsed += fTimeElapsed;
 
 		// update
-		int res = pManager->Update(fTimeElapsed);
-		if (res == CLEAR_STAGE) {
+		int goal_clients_id = pManager->Update(fTimeElapsed);
+		if (goal_clients_id >= 0) {
+			g_clients[goal_clients_id].AddScore();
 			for (auto& i : g_clients) {
-				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene + 1);
+				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene++);
 				if (retval == SOCKET_ERROR) {
 					Disconnect(i.first);
 					break;
 				}
 			}
 			// ¾À º¯°æ
-			pManager->ChangeScene(++curScene);
+			pManager->ChangeScene(curScene);
 			SOCKETINFO::SetScene(pManager->GetScene());
+			if (curScene == 4) {
+				int max_score_id = 0;
+				int score = 0;
+				for (auto i : g_clients) {
+					if (i.second.GetScore() > score) max_score_id = i.first;
+					score = i.second.GetScore();
+				}
+				for (auto& i : g_clients) {
+					int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::GAME_END), max_score_id);
+					if (retval == SOCKET_ERROR) {
+						Disconnect(i.first);
+						break;
+					}
+				}
+			}
 		}
 		SOCKETINFO::UpdatePlayerInfo();
 
