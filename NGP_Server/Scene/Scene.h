@@ -42,7 +42,7 @@ private:
 private:
 	bool LoadMapFromFile(FILE* fp);
 
-	void Collision();
+	int Collision();
 	void ResetPlayerPos(int index);
 
 public:
@@ -62,6 +62,6 @@ public:
 	void Init();
 
 	void Input(float fTimeElapsed);
-	void Update(float fTimeElapsed);
+	int Update(float fTimeElapsed);
 };
 

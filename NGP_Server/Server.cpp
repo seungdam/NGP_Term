@@ -2,6 +2,7 @@
 #include "SOCKETINFO.h"
 #include "../protocol/protocol.h"
 #include "Scene/Scene.h"
+#include "SceneManager.h"
 
 
 // 소켓 함수 오류 출력 후 종료
@@ -77,7 +78,6 @@ int main(int argc, char* argv[]) {
 
 
 	while (1) {
-
 		// accept()
 		addrlen = sizeof(clientaddr);
 		client_sock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
@@ -127,12 +127,11 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 {
 	// scene 생성
 	const int startSceneNum = 1;
-	Scene* pScene = new Scene(startSceneNum);
+	int curScene = startSceneNum;
+	SceneManager* pManager = new SceneManager;
 
-	SOCKETINFO::SetScene(pScene);
-
-	pScene->InsertPlayers(MAX_PLAYERS);
-	pScene->Init();
+	pManager->ChangeScene(curScene++);
+	SOCKETINFO::SetScene(pManager->GetScene());
 
 	// 접속한 플레이어들에게 로그인
 	for (auto& i : g_clients) {
@@ -148,7 +147,6 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 	float fTimeElapsed = 0.0f;
 	float fSendElapsed = 0.0f;
-	const float fSendDelay = 60.0f;
 
 	while (true) {
 		// get elapsed time
@@ -160,7 +158,19 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		fSendElapsed += fTimeElapsed;
 
 		// update
-		pScene->Update(fTimeElapsed);
+		int res = pManager->Update(fTimeElapsed);
+		if (res == CLEAR_STAGE) {
+			for (auto& i : g_clients) {
+				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene++);
+				if (retval == SOCKET_ERROR) {
+					Disconnect(i.first);
+					break;
+				}
+			}
+			// 씬 변경
+			pManager->ChangeScene(curScene);
+			SOCKETINFO::SetScene(pManager->GetScene());
+		}
 		SOCKETINFO::UpdatePlayerInfo();
 
 		int retval = 0;
@@ -179,7 +189,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 	}
 
-	if (pScene) delete pScene;
+	if (pManager) delete pManager;
 
 	return 0;
 }

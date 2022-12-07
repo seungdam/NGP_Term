@@ -55,6 +55,7 @@ private:
 
 private:
 	bool LoadMapFromFile(FILE* fp);
+	void InsertNewPlayer(int myId);
 
 	void Collision();
 	void ResetPlayerPos(int index);

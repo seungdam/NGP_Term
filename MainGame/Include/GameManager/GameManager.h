@@ -10,6 +10,10 @@ private:
 	~GameManager();
 
 	int m_iCurSceneNum = 0;
+
+	bool m_bChange = false;
+	int m_iNextScene = 1;
+
 	class Scene *m_pScene = nullptr;
 
 public:
@@ -18,9 +22,11 @@ public:
 		return inst;
 	}
 
+	
 	void Init();
 	void OnDestroy();
 
+	void OnSceneChangePacket(int nextScene) { m_bChange = true, m_iNextScene = nextScene; }
 	void ChangeScene(int nSceneNum);
 
 	void SynchronizeObjects();

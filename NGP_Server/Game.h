@@ -11,6 +11,7 @@
 
 #define TILESIZE 40
 #define END_SCENE 999
+#define CLEAR_STAGE 1
 
 // enum
 // Move Direction

@@ -51,38 +51,21 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	break;
 
 	case 1:
+	case 2:
+	case 3:
 	{
 		m_imgBackGround.Load(TEXT("Resource/tempBGv2.bmp"));
 		m_imgTile.Load(TEXT("Resource/tempsprite.bmp"));
 
-		Player* p0 = new PurplePlayer;
-		Player* p1 = new YellowPlayer;
+		InsertNewPlayer(Core::GetInst().GetNetworkManager()->GetID());
 
-		p0->SetPosition({ 375,3500,400,3550 });
-		p1->SetPosition({ 175,3500,200,3550 });
-
-		m_p0StartPos = { 375,1150,400,1200 };
-		m_p1StartPos = { 175,1150,200,1200 };
-
-		//m_p0StartPos = { 1400,0,1425,50 };
-		//m_p1StartPos = { 1460,0,1485,50 };
-
-		p0->SetPosition(m_p0StartPos);
-		p1->SetPosition(m_p1StartPos);
-
-		m_vMyPlayer.push_back(p0);
-		m_vMyPlayer.push_back(p1);
-
-		for (int i = 1; i < MAX_PLAYERS; ++i) {
-			m_vOtherPlayers.push_back(new PurplePlayer);
-			m_vOtherPlayers.push_back(new YellowPlayer);
+		switch (m_nSceneNum) {
+		case 1:		fp = fopen("Scene/scene_01.txt", "r");	break;
+		case 2:		fp = fopen("Scene/stage2.txt", "r");	break;
+		case 3:		fp = fopen("Scene/stage3.txt", "r");	break;
+		default:	fp = fopen("Scene/scene_01.txt", "r");	break;
 		}
-		for (auto& player : m_vOtherPlayers) {
-			player->bRender = true;
-		}
-		
 
-		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
 	}
 		break;
@@ -92,36 +75,15 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		m_nTileXLen = 32;
 		m_imgBackGround.Load(TEXT("Resource/gameover.bmp"));
 		break;
+
 	case LOADING_SCENE:				// game clear;
 		m_nTileYLen = 18;
 		m_nTileXLen = 32;
 		m_imgBackGround.Load(TEXT("Resource/title.bmp"));
 		break;
-	case NEXT_SCENE:
-		m_nTileYLen = 18;
-		m_nTileXLen = 32;
-
-		fp = fopen("Scene/scene_02.txt", "r");
-		LoadMapFromFile(fp);
-
 	}
 
-	if (iSceneNum == 1) {
-		m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
 
-		int cnt = 0;
-		int id = Core::GetInst().GetNetworkManager()->GetID();
-		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			if (id == i) {
-				m_vPlayerVectors.push_back(m_vMyPlayer[0]);
-				m_vPlayerVectors.push_back(m_vMyPlayer[1]);
-			}
-			else {
-				m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
-				m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
-			}
-		}
-	}
 }
 
 Scene::~Scene()
@@ -219,6 +181,40 @@ bool Scene::LoadMapFromFile(FILE* fp)
 
 	fclose(fp);
 	return true;
+}
+
+void Scene::InsertNewPlayer(int myId)
+{
+	Player* p0 = new PurplePlayer;
+	Player* p1 = new YellowPlayer;
+
+	p0->SetPosition(m_p0StartPos);
+	p1->SetPosition(m_p1StartPos);
+
+	m_vMyPlayer.push_back(p0);
+	m_vMyPlayer.push_back(p1);
+
+	for (int i = 1; i < MAX_PLAYERS; ++i) {
+		m_vOtherPlayers.push_back(new PurplePlayer);
+		m_vOtherPlayers.push_back(new YellowPlayer);
+	}
+	for (auto& player : m_vOtherPlayers) {
+		player->bRender = true;
+	}
+
+	m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
+
+	int cnt = 0;
+	for (int i = 0; i < MAX_PLAYERS; ++i) {
+		if (myId == i) {
+			m_vPlayerVectors.push_back(m_vMyPlayer[0]);
+			m_vPlayerVectors.push_back(m_vMyPlayer[1]);
+		}
+		else {
+			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+			m_vPlayerVectors.push_back(m_vOtherPlayers[cnt++]);
+		}
+	}
 }
 
 void Scene::ResetPlayerPos(int index)
