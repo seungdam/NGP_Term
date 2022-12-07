@@ -10,6 +10,7 @@ DWORD WINAPI Core::Recv_Thread(LPVOID arg) {
 			wstring str{ L"Winner Clients is~" };
 			str += to_wstring(Core::GetInst().GetNetworkManager()->m_most_high_score_id);
 			MessageBox(NULL, str.c_str(), L"WINNER", MB_OK);
+			Core::GetInst().m_bGameLoop = false;
 			break;
 		}
 	}
