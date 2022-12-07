@@ -30,7 +30,7 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		for (int i = 0; i < m_nTileYLen; ++i) {
 			for (int j = 0; j < m_nTileXLen; ++j) {
 				Tile* t;
-				
+
 				if (i == m_nTileYLen - 1) t = new Tile(TILE_DATA::TD_BLOCK);
 				else if (i == m_nTileYLen - 2 && j >= m_nTileXLen / 2) t = new Tile(TILE_DATA::TD_BLOCK);
 				else t = new Tile(TILE_DATA::TD_NON);
@@ -46,27 +46,33 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	case 3:
 	{
 		switch (m_nSceneNum) {
-		case 1:		
-			fp = fopen("Scene/scene_01.txt", "r");	
-			//m_p0StartPos = { 600, 40 };
-			//m_p1StartPos = { 620, 40 };
-			m_p0StartPos = { 375, 1150 };
-			m_p1StartPos = { 175, 1150 };
-			break;
-		case 2:		
-			fp = fopen("Scene/stage2.txt", "r");	
-			m_p0StartPos = { 40, 400 };
-			m_p1StartPos = { 80, 400 };
-			break;
-		case 3:		
-			fp = fopen("Scene/stage3.txt", "r");	
-			m_p0StartPos = { 40, 400 };
-			m_p1StartPos = { 80, 400 };
-			break;
-		default:	
-			fp = fopen("Scene/scene_01.txt", "r");	
+		case 1:
+			fp = fopen("Scene/scene_01.txt", "r");
 			m_p0StartPos = { 600, 40 };
 			m_p1StartPos = { 620, 40 };
+			//m_p0StartPos = { 375, 1150 };
+			//m_p1StartPos = { 175, 1150 };
+			break;
+		case 2:
+			fp = fopen("Scene/stage2.txt", "r");
+			//m_p1StartPos = { 1640, 40 };
+			//m_p1StartPos = { 1680, 40 };
+			m_p0StartPos = { 40, 40 };
+			m_p1StartPos = { 80, 40 };
+			break;
+		case 3:
+			fp = fopen("Scene/stage3.txt", "r");
+			//m_p0StartPos = { 3030, 40 };
+			//m_p1StartPos = { 3070, 40 };
+			m_p0StartPos = { 40, 400 };
+			m_p1StartPos = { 80, 400 };
+			break;
+		default:
+			fp = fopen("Scene/scene_01.txt", "r");
+			m_p0StartPos = { 600, 40 };
+			m_p1StartPos = { 620, 40 };
+			//m_p0StartPos = { 40, 40 };
+			//m_p1StartPos = { 80, 40 };
 			break;
 		}
 
@@ -97,7 +103,7 @@ Scene::~Scene()
 bool Scene::LoadMapFromFile(FILE* fp)
 {
 	if (fp == NULL) return false;
-	
+
 	// get x,y size
 	fscanf(fp, "%d %d", &m_nTileXLen, &m_nTileYLen);
 
@@ -144,7 +150,7 @@ bool Scene::LoadMapFromFile(FILE* fp)
 
 		m_vRollerCoaster.push_back(temp);
 	}
-	
+
 	// step
 	fscanf(fp, "%d", &size);
 	m_vSteps.reserve(size);
@@ -175,7 +181,7 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	}
 
 	fclose(fp);
-	
+
 	return true;
 }
 
@@ -211,7 +217,7 @@ void Scene::InsertPlayers(int playerSize)
 
 		FPOINT p0Pos = m_p0StartPos;
 		FPOINT p1Pos = m_p1StartPos;
-		
+
 		p0Pos.x += offset.x;
 		p0Pos.y += offset.y;
 
@@ -464,7 +470,7 @@ int Scene::Collision()
 				break;
 			}
 			else {
-				if (dButton->IsFixed()) 
+				if (dButton->IsFixed())
 					break;
 				dButton->SetActiveState(false);
 			}

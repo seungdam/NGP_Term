@@ -103,7 +103,7 @@ void Networker::ProcessPacket(char* packet)
 		break;
 	case SERVER_PACKET_INFO::GAME_END:
 	{
-		S2C_END_GAME* pmp = (S2C_END_GAME*)packet;
+		S2C_END_GAME_PACKET* pmp = (S2C_END_GAME_PACKET*)packet;
 		m_most_high_score_id = pmp->most_high_score_id;
 	}
 	break;

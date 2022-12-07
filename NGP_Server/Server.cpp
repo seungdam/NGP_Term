@@ -179,7 +179,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		if (goal_clients_id >= 0) {
 			g_clients[goal_clients_id].AddScore();
 			for (auto& i : g_clients) {
-				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene++);
+				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene);
 				if (retval == SOCKET_ERROR) {
 					Disconnect(i.first);
 					break;
@@ -203,6 +203,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 					}
 				}
 			}
+			curScene++;
 		}
 		SOCKETINFO::UpdatePlayerInfo();
 
