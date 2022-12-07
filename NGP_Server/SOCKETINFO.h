@@ -41,7 +41,7 @@ public:
 
 public:
 	// 클라이언트에게 type에 해당하는 패킷을 생성해 송신한다
-	int ServerDoSend(char type);
+	int ServerDoSend(char type, int i = 0);
 	int ServerDoSendLoginPacket(bool isSuccess);
 
 	// 클라이언트로 부터 온 패킷을 수신한다

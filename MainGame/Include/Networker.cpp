@@ -68,7 +68,6 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 
 		// 테스트 코드
 		
-		//printf("송신: %d\n", packet.type);
 		
 	}
 	return true;
@@ -92,6 +91,13 @@ void Networker::ProcessPacket(char* packet)
 
 			m_pScene->SetPlayerData(pmp);
 		}
+	}
+		break;
+
+	case SERVER_PACKET_INFO::SCENE_CHANGE: 
+	{
+		S2C_SCENE_CHANGE_PACKET* pmp = (S2C_SCENE_CHANGE_PACKET*)packet;
+		GameManager::GetInst().OnSceneChangePacket(pmp->next_scene_num);
 	}
 		break;
 	}

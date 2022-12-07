@@ -12,6 +12,8 @@ void GameManager::ChangeScene(int nSceneNum)
 	SAFE_DELETE(m_pScene);
 	m_pScene = new Scene(m_iCurSceneNum);
 	
+	m_bChange = false;
+
 	m_pScene->Init();
 }
 
@@ -34,18 +36,23 @@ void GameManager::Init()
 	m_pScene->Init();
 }
 
-
 void GameManager::Input(float fTimeElapsed)
 {
+	if (m_bChange) ChangeScene(m_iNextScene);
+
 	if (m_pScene) m_pScene->Input(fTimeElapsed);
 }
 
 void GameManager::Update(float fTimeElapsed)
 {
+	if (m_bChange) ChangeScene(m_iNextScene);
+
 	if (m_pScene && m_pScene->GetSceneNum() != END_SCENE) m_pScene->Update(fTimeElapsed);
 }
 
 void GameManager::Render(HDC hdc)
 {
+	if (m_bChange) ChangeScene(m_iNextScene);
+
 	if (m_pScene) m_pScene->Render(hdc);
 }

@@ -57,7 +57,7 @@ bool SOCKETINFO::IsUpdated()
 }
 
 // Processing Scene change packet and move packet
-int SOCKETINFO::ServerDoSend(char type)
+int SOCKETINFO::ServerDoSend(char type, int scene)
 {
 	int retval = 0;
 	SOCKADDR_IN clientaddr;
@@ -90,6 +90,16 @@ int SOCKETINFO::ServerDoSend(char type)
 		break;
 	case SERVER_PACKET_INFO::SCENE_CHANGE:
 		// ¾À º¯°æ ÆÐÅ¶
+	{
+		S2C_SCENE_CHANGE_PACKET packet;
+		packet.type = (char)(SERVER_PACKET_INFO::SCENE_CHANGE);
+		packet.next_scene_num = scene;
+		retval = send(m_sock, (char*)&packet, sizeof(S2C_SCENE_CHANGE_PACKET), 0);
+
+		if (SOCKET_ERROR == retval) {
+			cout << "scene change error" << endl;
+		}
+	}
 		break;
 	}
 	return retval;
@@ -139,7 +149,7 @@ void SOCKETINFO::ProcessPacket(char* data)
 		m_type = info->type;
 		m_Id = info->from_c_id;
 		m_dir = info->direction;
-		cout << "recv id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
+		//cout << "recv id: " << m_Id << " dir: " << (unsigned int)m_dir << endl;
 
 		if (m_pScene) {
 			m_pScene->SetPlayerInput(m_Id, m_dir);

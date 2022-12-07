@@ -147,6 +147,7 @@
     <ClCompile Include="Object\RollerCoaster.cpp" />
     <ClCompile Include="Object\Step.cpp" />
     <ClCompile Include="Object\Tile.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="SOCKETINFO.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Object\RollerCoaster.h" />
     <ClInclude Include="Object\Step.h" />
     <ClInclude Include="Object\Tile.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="SOCKETINFO.h" />
   </ItemGroup>

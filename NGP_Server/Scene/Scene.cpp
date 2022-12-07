@@ -240,7 +240,7 @@ void Scene::Input(float fTimeElapsed)
 {
 }
 
-void Scene::Update(float fTimeElapsed)
+int Scene::Update(float fTimeElapsed)
 {
 	// 플레이어들을 입력값으로 움직인다
 	for (auto& d : m_vPlayers) d->Update(fTimeElapsed);
@@ -251,13 +251,12 @@ void Scene::Update(float fTimeElapsed)
 	// 롤러코스터 움직이라는 뜻
 	for (auto& d : m_vRollerCoaster) d->Update(fTimeElapsed);
 
-	Collision();
-	
+	return Collision();
 }
 
-void Scene::Collision()
+int Scene::Collision()
 {
-	if (m_nSceneNum == END_SCENE) return;
+	if (m_nSceneNum == END_SCENE) return 0;
 
 	// 플레이어와 몬스터 충돌 확인
 	bool bCollide = false;
@@ -268,7 +267,6 @@ void Scene::Collision()
 
 			if (player.IntersectRect(monster)) {
 				ResetPlayerPos(i);
-				return;
 			}
 		}
 	}
@@ -290,18 +288,15 @@ void Scene::Collision()
 			leftBottom == TILE_DATA::TD_FLOOR || rightBottom == TILE_DATA::TD_FLOOR) {
 			m_vPlayers[i]->Move(0, 40 * tLeft.y - playerPos.bottom);
 			m_vPlayers[i]->SetFallingFalse();
-			//printf("idx %d hit floor\n", i);
-			//printf("%.2f %.2f %.2f %.2f\n\n", playerPos.left, playerPos.top, playerPos.right, playerPos.bottom);
 		}
-		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
+		if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
 			ResetPlayerPos(i);
-			return;
 		}
-		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
+		if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
 			// Stage Clear
-			
+			std::cout << "hit goal" << std::endl;
 			// (주의) 스테이지 클리어 나중에 추가할 것
-			return;
+			return CLEAR_STAGE;
 		}
 		else m_vPlayers[i]->SetFallingTrue();						// NON, go fall
 
@@ -326,8 +321,9 @@ void Scene::Collision()
 			(0 <= RB && RB < m_vTiles.size())) &&
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_GOAL ||
 			m_vTiles[RB]->GetTile() == TILE_DATA::TD_GOAL) {
-			ResetPlayerPos(i);
-			return;
+			std::cout << "hit goal" << std::endl;
+			// (주의) 스테이지 클리어 나중에 추가할 것
+			return CLEAR_STAGE;
 		}
 	}
 
@@ -470,5 +466,6 @@ void Scene::Collision()
 	//	m_pScene->m_vPlayer.front()->SetFallingTrue();
 	//	m_pScene->m_vPlayer.back()->SetFallingTrue();
 	//}
+	return 0;
 }
 
