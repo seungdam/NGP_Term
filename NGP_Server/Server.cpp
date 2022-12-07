@@ -183,7 +183,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene);
 				if (retval == SOCKET_ERROR) {
 					Disconnect(i.first);
-					break;
+					return;
 				}
 			}
 			// ¾À º¯°æ
@@ -200,7 +200,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 					int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::GAME_END), max_score_id);
 					if (retval == SOCKET_ERROR) {
 						Disconnect(i.first);
-						break;
+						return;
 					}
 				}
 			}
@@ -216,7 +216,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {
 					 Disconnect(i.first);
-					 break;
+					 return;
 				 }
 			}
 			SOCKETINFO::UpdateBeforeInfo();
