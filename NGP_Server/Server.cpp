@@ -238,6 +238,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 			SOCKETINFO::UpdateBeforeInfo();
 		}
 
+		if (g_clients.empty()) break;
 	}
 
 	//g_clients.clear();

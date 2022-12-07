@@ -8,6 +8,7 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
+	if (m_pScene) delete m_pScene;
 }
 
 void SceneManager::ChangeScene(int nextScene)
