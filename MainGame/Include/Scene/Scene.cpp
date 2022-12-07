@@ -257,6 +257,8 @@ void Scene::Init()
 void Scene::Input(float fTimeElapsed)
 {
 	// player Move
+	if (m_nSceneNum == END_SCENE) return;
+
 	uint8_t newDir = 0;
 	for (auto const& d : m_vMyPlayer) d->Input(fTimeElapsed, newDir);
 	

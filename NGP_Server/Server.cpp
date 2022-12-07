@@ -131,7 +131,8 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 
 	while (true) {
 		retval = g_clients[id].ServerDoRecv();
-		if (retval == SOCKET_ERROR || retval == 0) {
+		//if (retval == SOCKET_ERROR || retval == 0) {
+		if (false) {
 			err_display("recv()");
 			break;
 		}

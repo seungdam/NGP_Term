@@ -63,8 +63,10 @@ bool Networker::ClientDoSendMovePacket(uint8_t dir)
 
 		int retval = send(m_clientSocket, (char*)&packet, sizeof(C2S_MOVE_PACKET), 0);
 
-		if (retval == SOCKET_ERROR)
+		if (retval == SOCKET_ERROR) {
+			cout << "송신 실패" << endl;
 			return false;
+		}
 
 		// 테스트 코드
 		
