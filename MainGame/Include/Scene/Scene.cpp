@@ -439,27 +439,31 @@ void Scene::Collision()
 	}
 
 	// 플레이어와 플레이어 충돌 확인
-	Player* p0 = m_vMyPlayer.front();
-	Player* p1 = m_vMyPlayer.back();
-	FRECT p0Pos = p0->GetPosition();
-	FRECT p1Pos = p1->GetPosition();
+	for (int i = 0; i < m_vPlayerVectors.size(); ++i) {
+		Player* p0 = m_vPlayerVectors[i];
+		FRECT p0Pos = p0->GetPosition();
+		for (int j = i + 1; j < m_vPlayerVectors.size(); ++j) {
+			Player* p1 = m_vPlayerVectors[j];
+			FRECT p1Pos = p1->GetPosition();
 
-	if (p0Pos.IntersectRect(p1Pos)) {
-		if (p0Pos.IntersectRect(p1Pos)) {
-			// p0 is higher position
-			if (p0Pos.bottom - p1Pos.bottom < -20) {
-				float offset = p1Pos.top - p0Pos.bottom + 0.1f;
-				p0->Move(0, offset);
-				p0->SetFallingFalse();
-			}
-			else if (p1Pos.bottom - p0Pos.bottom < -20) {
-				float offset = p0Pos.top - p1Pos.bottom + 0.1f;
-				p1->Move(0, offset);
-				p1->SetFallingFalse();
-			}
-			else {
-				p1->GoBackX();
-				p0->GoBackX();
+			if (p0Pos.IntersectRect(p1Pos)) {
+				if (p0Pos.IntersectRect(p1Pos)) {
+					// p0 is higher position
+					if (p0Pos.bottom - p1Pos.bottom < -20) {
+						float offset = p1Pos.top - p0Pos.bottom + 0.1f;
+						p0->Move(0, offset);
+						p0->SetFallingFalse();
+					}
+					else if (p1Pos.bottom - p0Pos.bottom < -20) {
+						float offset = p0Pos.top - p1Pos.bottom + 0.1f;
+						p1->Move(0, offset);
+						p1->SetFallingFalse();
+					}
+					else {
+						p1->GoBackX();
+						p0->GoBackX();
+					}
+				}
 			}
 		}
 	}

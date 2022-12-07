@@ -48,23 +48,25 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		switch (m_nSceneNum) {
 		case 1:		
 			fp = fopen("Scene/scene_01.txt", "r");	
-			m_p0StartPos = { 600, 40 };
-			m_p0StartPos = { 620, 40 };
+			//m_p0StartPos = { 600, 40 };
+			//m_p0StartPos = { 620, 40 };
+			m_p0StartPos = { 375, 1150 };
+			m_p1StartPos = { 175, 1150 };
 			break;
 		case 2:		
 			fp = fopen("Scene/stage2.txt", "r");	
 			m_p0StartPos = { 600, 40 };
-			m_p0StartPos = { 620, 40 };
+			m_p1StartPos = { 620, 40 };
 			break;
 		case 3:		
 			fp = fopen("Scene/stage3.txt", "r");	
 			m_p0StartPos = { 600, 40 };
-			m_p0StartPos = { 620, 40 };
+			m_p1StartPos = { 620, 40 };
 			break;
 		default:	
 			fp = fopen("Scene/scene_01.txt", "r");	
 			m_p0StartPos = { 600, 40 };
-			m_p0StartPos = { 620, 40 };
+			m_p1StartPos = { 620, 40 };
 			break;
 		}
 
@@ -310,10 +312,10 @@ int Scene::Collision()
 			m_vPlayers[i]->Move(0, 40 * tLeft.y - playerPos.bottom);
 			m_vPlayers[i]->SetFallingFalse();
 		}
-		if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
+		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
 			ResetPlayerPos(i);
 		}
-		if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
+		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
 			// Stage Clear
 			std::cout << "hit goal" << std::endl;
 			// (주의) 스테이지 클리어 나중에 추가할 것
@@ -404,30 +406,37 @@ int Scene::Collision()
 
 	// 플레이어와 플레이어 충돌 확인
 	// (주의) 여기 부분 살짝 수정 필요
-	Player* p0 = m_vPlayers.front();
-	Player* p1 = m_vPlayers.back();
-	FRECT p0Pos = p0->GetPosition();
-	FRECT p1Pos = p1->GetPosition();
 
-	if (p0Pos.IntersectRect(p1Pos)) {
-		if (p0Pos.IntersectRect(p1Pos)) {
-			// p0 is higher position
-			if (p0Pos.bottom - p1Pos.bottom < -20) {
-				float offset = p1Pos.top - p0Pos.bottom + 0.1f;
-				p0->Move(0, offset);
-				p0->SetFallingFalse();
-			}
-			else if (p1Pos.bottom - p0Pos.bottom < -20) {
-				float offset = p0Pos.top - p1Pos.bottom + 0.1f;
-				p1->Move(0, offset);
-				p1->SetFallingFalse();
-			}
-			else {
-				p1->GoBackX();
-				p0->GoBackX();
+	for (int i = 0; i < m_vPlayers.size(); ++i) {
+		Player* p0 = m_vPlayers[i];
+		FRECT p0Pos = p0->GetPosition();
+		for (int j = i + 1; j < m_vPlayers.size(); ++j) {
+			Player* p1 = m_vPlayers[j];
+			FRECT p1Pos = p1->GetPosition();
+
+			if (p0Pos.IntersectRect(p1Pos)) {
+				if (p0Pos.IntersectRect(p1Pos)) {
+					// p0 is higher position
+					if (p0Pos.bottom - p1Pos.bottom < -20) {
+						float offset = p1Pos.top - p0Pos.bottom + 0.1f;
+						p0->Move(0, offset);
+						p0->SetFallingFalse();
+					}
+					else if (p1Pos.bottom - p0Pos.bottom < -20) {
+						float offset = p0Pos.top - p1Pos.bottom + 0.1f;
+						p1->Move(0, offset);
+						p1->SetFallingFalse();
+					}
+					else {
+						p1->GoBackX();
+						p0->GoBackX();
+					}
+				}
 			}
 		}
 	}
+
+
 
 
 	// button
