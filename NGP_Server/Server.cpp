@@ -45,6 +45,8 @@ HANDLE sthread;
 DWORD WINAPI ServerRecvThread(LPVOID arg);
 DWORD WINAPI ServerSendThread(LPVOID arg);
 int currentPlayerNum = 0;
+bool g_bGameLoop = true;
+
 int main(int argc, char* argv[]) {
 
 	int retval;
@@ -118,7 +120,7 @@ void Disconnect(int id) {
 
 	std::cout << id << " 클라이언트 종료" << std::endl;
 	g_clients.erase(id);
-	for (auto i : g_clients) {
+	for (auto& i : g_clients) {
 		std::cout << "남은 클라 ID: " << i.first << std::endl;
 	}
 }
@@ -129,7 +131,7 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 	int retval;
 	cout << "클라이언트 접속, id: " << id << endl;
 
-	while (true) {
+	while (g_bGameLoop) {
 		retval = g_clients[id].ServerDoRecv();
 		if (retval == SOCKET_ERROR || retval == 0) {
 		//if (false) {
@@ -179,16 +181,22 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		int goal_clients_id = pManager->Update(fTimeElapsed);
 		if (goal_clients_id >= 0) {
 			g_clients[goal_clients_id].AddScore();
-			for (auto& i : g_clients) {
-				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene);
+
+			//for (auto& i : g_clients) {
+			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+				int retval = iter->second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene);
 				if (retval == SOCKET_ERROR) {
-					Disconnect(i.first);
-					return;
+					std::cout << iter->first << " 클라이언트 종료" << std::endl;
+					iter = g_clients.erase(iter);
 				}
+				else ++iter;
+				
 			}
 			// 씬 변경
 			pManager->ChangeScene(curScene);
 			SOCKETINFO::SetScene(pManager->GetScene());
+
+			// 게임 끝이라면?
 			if (curScene == 4) {
 				int max_score_id = 0;
 				int score = 0;
@@ -196,13 +204,17 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 					if (i.second.GetScore() > score) max_score_id = i.first;
 					score = i.second.GetScore();
 				}
-				for (auto& i : g_clients) {
-					int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::GAME_END), max_score_id);
+
+				for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+					int retval = iter->second.ServerDoSend((char)(SERVER_PACKET_INFO::GAME_END), max_score_id);
 					if (retval == SOCKET_ERROR) {
-						Disconnect(i.first);
-						return;
+						std::cout << iter->first << " 클라이언트 종료" << std::endl;
+						iter = g_clients.erase(iter);
 					}
+					else ++iter;
 				}
+				g_bGameLoop = false;
+				break;
 			}
 			curScene++;
 		}
@@ -216,13 +228,15 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 				 retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
 				 if (retval == SOCKET_ERROR) {
 					 Disconnect(i.first);
-					 return;
+					 break;
 				 }
 			}
 			SOCKETINFO::UpdateBeforeInfo();
 		}
 
 	}
+
+	//g_clients.clear();
 
 	if (pManager) delete pManager;
 
