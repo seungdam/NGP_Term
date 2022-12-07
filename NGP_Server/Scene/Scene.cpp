@@ -55,24 +55,24 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 			break;
 		case 2:
 			fp = fopen("Scene/stage2.txt", "r");
-			//m_p1StartPos = { 1640, 40 };
-			//m_p1StartPos = { 1680, 40 };
-			m_p0StartPos = { 40, 40 };
-			m_p1StartPos = { 80, 40 };
+			m_p0StartPos = { 1640, 100 };
+			m_p1StartPos = { 1580, 100 };
+			//m_p0StartPos = { 40, 40 };
+			//m_p1StartPos = { 80, 40 };
 			break;
 		case 3:
 			fp = fopen("Scene/stage3.txt", "r");
-			//m_p0StartPos = { 3030, 40 };
-			//m_p1StartPos = { 3070, 40 };
-			m_p0StartPos = { 40, 400 };
-			m_p1StartPos = { 80, 400 };
+			m_p0StartPos = { 2900, 100 };
+			m_p1StartPos = { 2980, 100 };
+			//m_p0StartPos = { 40, 400 };
+			//m_p1StartPos = { 80, 400 };
 			break;
 		default:
 			fp = fopen("Scene/scene_01.txt", "r");
-			m_p0StartPos = { 600, 40 };
-			m_p1StartPos = { 620, 40 };
-			//m_p0StartPos = { 40, 40 };
-			//m_p1StartPos = { 80, 40 };
+			//m_p0StartPos = { 600, 40 };
+			//m_p1StartPos = { 620, 40 };
+			m_p0StartPos = { 375, 1150 };
+			m_p1StartPos = { 175, 1150 };
 			break;
 		}
 
@@ -309,6 +309,12 @@ int Scene::Collision()
 		FPOINT tLeft = { (LONG)floor((playerPos.left) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
 		FPOINT tRight = { (LONG)floor((playerPos.right) / 40.0f), (LONG)floor((playerPos.bottom) / 40.0f) };
 
+		// ¸Ê ¹Ù´ÚÀ» ¶Õ¾î¹ö¸®¸é ¸®¼Â
+		if (tLeft.y > m_nTileYLen + (m_nTileYLen / 10)) {
+			ResetPlayerPos(i);
+			continue;
+		}
+
 		// ¹Ù´Ú
 		int LB = tLeft.y * m_nTileXLen + tLeft.x;
 		int RB = tRight.y * m_nTileXLen + tRight.x;
@@ -343,11 +349,11 @@ int Scene::Collision()
 
 		if (LB < 0 || RB < 0) {
 			m_vPlayers[i]->SetFallingTrue();
-			break;
+			continue;
 		}
 		//else if(LB > )
 
-		if (LB < 0 || m_vTiles.size() <= LB || RB < 0 || m_vTiles.size() <= RB) break;
+		if (LB < 0 || m_vTiles.size() <= LB || RB < 0 || m_vTiles.size() <= RB) continue;
 
 		if (m_vTiles[LB]->GetTile() == TILE_DATA::TD_BLOCK ||
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_FLOOR ||
