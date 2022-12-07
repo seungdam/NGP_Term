@@ -93,7 +93,8 @@ int Core::Run()
 	else {
 		if (!m_NetworkManager->m_isLogin) return -1;
 	}
-
+	wstring s = to_wstring(m_NetworkManager->GetID());
+	SetWindowText(m_hWnd, s.c_str());
 	HANDLE rThread = CreateThread(NULL, 0, Recv_Thread,(LPVOID)m_NetworkManager, 0, 0);
 	if (rThread != NULL) {
 		CloseHandle(rThread);
