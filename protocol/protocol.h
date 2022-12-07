@@ -157,6 +157,9 @@ inline int GetS2CSize(SERVER_PACKET_INFO p)
 	case SERVER_PACKET_INFO::SCENE_CHANGE:
 		return sizeof(S2C_SCENE_CHANGE_PACKET);
 
+	case SERVER_PACKET_INFO::GAME_END:
+		return sizeof(S2C_END_GAME_PACKET);
+
 	default:
 		// error
 		return -1;

@@ -131,8 +131,8 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 
 	while (true) {
 		retval = g_clients[id].ServerDoRecv();
-		//if (retval == SOCKET_ERROR || retval == 0) {
-		if (false) {
+		if (retval == SOCKET_ERROR || retval == 0) {
+		//if (false) {
 			err_display("recv()");
 			break;
 		}
@@ -192,7 +192,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 			if (curScene == 4) {
 				int max_score_id = 0;
 				int score = 0;
-				for (auto i : g_clients) {
+				for (auto& i : g_clients) {
 					if (i.second.GetScore() > score) max_score_id = i.first;
 					score = i.second.GetScore();
 				}

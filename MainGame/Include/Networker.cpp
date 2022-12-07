@@ -105,6 +105,7 @@ void Networker::ProcessPacket(char* packet)
 		break;
 	case SERVER_PACKET_INFO::GAME_END:
 	{
+		m_pScene = nullptr;
 		S2C_END_GAME_PACKET* pmp = (S2C_END_GAME_PACKET*)packet;
 		m_most_high_score_id = pmp->most_high_score_id;
 	}
@@ -118,14 +119,17 @@ bool Networker::ClientDoRecv()
 	char buff[512];
 	retval = recv(m_clientSocket, buff, sizeof(char), MSG_WAITALL);
 	if (retval == SOCKET_ERROR) {
+		cout << "수신 에러" << endl;
 		return false;
 	}
 
 	int packetSize = GetS2CSize(buff[0]);
 
 	retval = recv(m_clientSocket, buff + sizeof(char), packetSize - sizeof(char), MSG_WAITALL);
-	if (retval == SOCKET_ERROR)
+	if (retval == SOCKET_ERROR) {
+		cout << "수신 에러" << endl;
 		return false;
+	}
 
 	ProcessPacket(buff);
 	return true;

@@ -241,6 +241,8 @@ void Scene::SetPlayerData(S2C_PLAYER_MOVE_PACKET* pData)
 
 	//printf("id: %d, %d, %d\n", id, pData->x, pData->y);
 
+	if (m_vPlayerVectors.empty()) return;
+
 	m_vPlayerVectors[id]->SetPivot(pos);
 	m_vPlayerVectors[id]->SetInput(dir);
 }
