@@ -44,10 +44,17 @@ void SOCKETINFO::UpdateBeforeInfo()
 
 bool SOCKETINFO::IsUpdated()
 {
+	// 입력도 캐릭터 마다 비교
+	unsigned char input[2] = {
+		0b00001111,
+		0b11110000
+	};
+
 	bool bUpdated = false;
 	for (int i = 0; i < MAX_PLAYERS * 2; ++i) {
 		// 좌표 변경 비교
-		if (!(m_befPlayersInfo[i / 2].p_pos[i % 2] == m_PlayersInfo[i / 2].p_pos[i % 2])) {
+		if (!(m_befPlayersInfo[i / 2].p_pos[i % 2] == m_PlayersInfo[i / 2].p_pos[i % 2]) ||
+			!((m_befPlayersInfo[i / 2].p_dir & input[i % 2]) == (m_PlayersInfo[i / 2].p_dir & input[i % 2]))) {
 			bUpdated = true;
 			m_Updated[i] = true;
 		}
