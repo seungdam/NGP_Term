@@ -70,7 +70,7 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	}
 		break;
 
-	case END_SCENE:				// game clear;
+	case 4:				// game clear;
 		m_nTileYLen = 18;
 		m_nTileXLen = 32;
 		m_imgBackGround.Load(TEXT("Resource/gameover.bmp"));
