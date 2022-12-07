@@ -87,6 +87,8 @@ int main(int argc, char* argv[]) {
 			err_quit("accept()");
 		}
 		if (currentPlayerNum < MAX_PLAYERS) {
+			g_bGameLoop = true;
+
 			// id는 0부터 부여한다
 			int id = currentPlayerNum++;
 			g_clients.try_emplace(id, id, client_sock);
@@ -241,6 +243,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 	//g_clients.clear();
 
 	if (pManager) delete pManager;
+	currentPlayerNum = 0;
 
 	return 0;
 }
