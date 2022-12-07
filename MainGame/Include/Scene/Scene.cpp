@@ -97,7 +97,15 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		m_nTileXLen = 32;
 		m_imgBackGround.Load(TEXT("Resource/title.bmp"));
 		break;
+	case NEXT_SCENE:
+		m_nTileYLen = 18;
+		m_nTileXLen = 32;
+
+		fp = fopen("Scene/scene_02.txt", "r");
+		LoadMapFromFile(fp);
+
 	}
+
 	if (iSceneNum == 1) {
 		m_vPlayerVectors.reserve(m_vMyPlayer.size() + m_vOtherPlayers.size());
 
@@ -340,6 +348,7 @@ void Scene::Collision()
 		}
 		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
 			// Stage Clear
+			m_nNextSceneNum = -1;
 			//GameManager::GetInst().ChangeScene(m_nNextSceneNum);
 			return;
 		}

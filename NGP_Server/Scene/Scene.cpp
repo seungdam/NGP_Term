@@ -43,8 +43,8 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 
 	case 1:
 	{
-		m_p0StartPos = { 387.5f, 1175.0f };
-		m_p1StartPos = { 187.5f, 1175.0f };
+		m_p0StartPos = { 600, 40.0f };
+		m_p1StartPos = { 620.5f, 40.0f };
 
 		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
@@ -299,7 +299,7 @@ void Scene::Collision()
 		}
 		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
 			// Stage Clear
-
+			
 			// (주의) 스테이지 클리어 나중에 추가할 것
 			return;
 		}

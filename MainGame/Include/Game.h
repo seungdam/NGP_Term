@@ -41,6 +41,7 @@ using namespace std;
 #define TILESIZE 40
 #define END_SCENE 999
 #define LOADING_SCENE 998
+#define NEXT_SCENE 997
 #define WINDOW_SIZE_WIDTH 1280
 #define WINDOW_SIZE_HEIGHT 720
 
