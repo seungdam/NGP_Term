@@ -42,14 +42,19 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	break;
 
 	case 1:
+	case 2:
+	case 3:
 	{
-		m_p0StartPos = { 600, 40.0f };
-		m_p1StartPos = { 620.5f, 40.0f };
+		switch (m_nSceneNum) {
+		case 1:		fp = fopen("Scene/scene_01.txt", "r");	break;
+		case 2:		fp = fopen("Scene/stage2.txt", "r");	break;
+		case 3:		fp = fopen("Scene/stage3.txt", "r");	break;
+		default:	fp = fopen("Scene/scene_01.txt", "r");	break;
+		}
 
-		fp = fopen("Scene/scene_01.txt", "r");
 		LoadMapFromFile(fp);
 	}
-		break;
+	break;
 
 	case END_SCENE:				// game clear;
 		m_nTileYLen = 18;

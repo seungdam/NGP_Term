@@ -42,9 +42,9 @@ bool Networker::ConnectTo(const char* ipAddr)
 //	return true;
 //}
 
-bool Networker::IsClientLogin(bool isSuccess)
+void Networker::IsClientLogin(bool isSuccess)
 {
-	return isSuccess;
+	m_isLogin = isSuccess;
 }
 
 bool Networker::ClientDoSendMovePacket(uint8_t dir)

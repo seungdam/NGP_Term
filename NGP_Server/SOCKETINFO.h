@@ -34,9 +34,7 @@ public:
 
 	// 플레이어 패킷의 정보를 갱신
 	static void UpdatePlayerInfo();
-
 	static void UpdateBeforeInfo();
-
 	static bool IsUpdated();
 
 public:

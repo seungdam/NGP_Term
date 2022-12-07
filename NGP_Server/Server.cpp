@@ -89,11 +89,24 @@ int main(int argc, char* argv[]) {
 			int id = currentPlayerNum++;
 			g_clients.try_emplace(id, id, client_sock);
 			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
+			if (rthread[id] != NULL) CloseHandle(rthread[id]);
 			if (MAX_PLAYERS == currentPlayerNum) {
 				// send 스레드 생성, 
 				// 정보) 로그인 패킷 송신 부분 SendThread로 이동 확인 했으면 이 주석 지울 것
 				sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
+				if (sthread != NULL) CloseHandle(sthread);
 			}
+		}
+		else { // 정원 외 클라이언트 접속 시 접속 끊기
+			S2C_LOGIN_PACKET p;
+			p.b_success = false;
+			p.c_id = -1;
+			p.type = (char)SERVER_PACKET_INFO::LOGIN();
+			retval = send(client_sock, (char*)&p, sizeof(S2C_LOGIN_PACKET), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+			}
+			closesocket(client_sock);
 		}
 	}
 
@@ -161,14 +174,14 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 		int res = pManager->Update(fTimeElapsed);
 		if (res == CLEAR_STAGE) {
 			for (auto& i : g_clients) {
-				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene++);
+				int retval = i.second.ServerDoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene + 1);
 				if (retval == SOCKET_ERROR) {
 					Disconnect(i.first);
 					break;
 				}
 			}
 			// 씬 변경
-			pManager->ChangeScene(curScene);
+			pManager->ChangeScene(++curScene);
 			SOCKETINFO::SetScene(pManager->GetScene());
 		}
 		SOCKETINFO::UpdatePlayerInfo();

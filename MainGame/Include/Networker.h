@@ -10,8 +10,9 @@ class Networker
 	int m_iClientID = -1;
 	SOCKET m_clientSocket;
 	Scene* m_pScene;
-
+	
 public:
+	bool m_isLogin = false;
 	Networker();
 	~Networker();
 
@@ -20,7 +21,7 @@ public:
 
 	// 서버로부터 로그인 패킷이 올 때까지 기다린다.
 	//bool WaitLoginPacket();
-	bool IsClientLogin(bool);
+	void IsClientLogin(bool);
 
 	// 입력의 변화가 생기면 송신한다
 	bool ClientDoSendMovePacket(uint8_t dir);

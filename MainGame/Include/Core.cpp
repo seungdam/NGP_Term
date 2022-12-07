@@ -90,6 +90,9 @@ int Core::Run()
 		return -1;
 
 	if(!m_NetworkManager->ClientDoRecv()) return -1;
+	else {
+		if (!m_NetworkManager->m_isLogin) return -1;
+	}
 
 	HANDLE rThread = CreateThread(NULL, 0, Recv_Thread,(LPVOID)m_NetworkManager, 0, 0);
 	if (rThread != NULL) {
