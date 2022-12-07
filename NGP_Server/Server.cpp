@@ -116,23 +116,27 @@ int main(int argc, char* argv[]) {
 
 void Disconnect(int id) {
 
+	std::cout << id << " 클라이언트 종료" << std::endl;
 	g_clients.erase(id);
+	for (auto i : g_clients) {
+		std::cout << "남은 클라 ID: " << i.first << std::endl;
+	}
 }
 
 DWORD WINAPI ServerRecvThread(LPVOID arg)
 {
 	int id = *((int*)arg);
-	bool retval;
+	int retval;
 	cout << "클라이언트 접속, id: " << id << endl;
 
 	while (true) {
 		retval = g_clients[id].ServerDoRecv();
-		if (!retval) {
+		if (retval == SOCKET_ERROR || retval == 0) {
 			err_display("recv()");
 			break;
 		}
 	}
-
+	Disconnect(id);
 	return 0;
 }
 

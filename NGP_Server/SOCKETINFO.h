@@ -43,7 +43,7 @@ public:
 	int ServerDoSendLoginPacket(bool isSuccess);
 
 	// 클라이언트로 부터 온 패킷을 수신한다
-	bool ServerDoRecv();
+	int ServerDoRecv();
 
 	// 수신한 패킷의 종류를 파악하고 처리한다
 	void ProcessPacket(char* data);

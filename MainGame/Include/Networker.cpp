@@ -106,7 +106,7 @@ void Networker::ProcessPacket(char* packet)
 
 bool Networker::ClientDoRecv()
 {
-	int retval;
+	int retval = 0;
 	char buff[512];
 	retval = recv(m_clientSocket, buff, sizeof(char), MSG_WAITALL);
 	if (retval == SOCKET_ERROR) {

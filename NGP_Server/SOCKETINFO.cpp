@@ -83,7 +83,7 @@ int SOCKETINFO::ServerDoSend(char type, int scene)
 			 
 			retval = send(m_sock, (char*)&packet, sizeof(S2C_PLAYER_MOVE_PACKET), 0);
 			if (SOCKET_ERROR == retval) {
-				cout << "player move error" << endl;
+				cout << "[" << m_Id << "]" <<  "player move error" << endl;
 			}
 		}
 	}
@@ -97,7 +97,7 @@ int SOCKETINFO::ServerDoSend(char type, int scene)
 		retval = send(m_sock, (char*)&packet, sizeof(S2C_SCENE_CHANGE_PACKET), 0);
 
 		if (SOCKET_ERROR == retval) {
-			cout << "scene change error" << endl;
+			cout <<"[" << m_Id <<"]" << "scene change error" << endl;
 		}
 	}
 		break;
@@ -122,21 +122,22 @@ int SOCKETINFO::ServerDoSendLoginPacket(bool isSuccess)
 
 
 
-bool SOCKETINFO::ServerDoRecv()
+int SOCKETINFO::ServerDoRecv()
 {
 	int retval;
 	char buff[512];
 	//C2S_MOVE_PACKET packet;
 
 	retval = recv(m_sock, buff, sizeof(char), MSG_WAITALL);
+	if (retval == SOCKET_ERROR || retval == 0)
+		return retval;
 	retval = recv(m_sock, buff + sizeof(char), sizeof(C2S_MOVE_PACKET) - sizeof(char), MSG_WAITALL);
-
-	if (retval == SOCKET_ERROR) 
-		return false;
+	if (retval == SOCKET_ERROR || retval == 0) 
+		return retval;
 
 	ProcessPacket(buff);
 
-	return true;
+	return retval;
 }
 
 void SOCKETINFO::ProcessPacket(char* data)
