@@ -170,6 +170,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 	float fTimeElapsed = 0.0f;
 	float fSendElapsed = 0.0f;
 
+
 	while (true) {
 		// get elapsed time
 		LARGE_INTEGER tTime;
