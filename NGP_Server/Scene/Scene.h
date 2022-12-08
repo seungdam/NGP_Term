@@ -39,6 +39,10 @@ private:
 	FPOINT m_p0StartPos;
 	FPOINT m_p1StartPos;
 
+	// player start position
+	FPOINT m_p0CheatPos;
+	FPOINT m_p1CheatPos;
+
 private:
 	bool LoadMapFromFile(FILE* fp);
 
@@ -57,6 +61,9 @@ public:
 	unsigned char GetPlayerInput(int index);
 
 	bool IsPlayersUpdated() const;
+
+	// 치트자리로 이동시킨다
+	void SetPlayerToCheatPos(int id);
 
 public:
 	void Init();

@@ -48,30 +48,38 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 		switch (m_nSceneNum) {
 		case 1:
 			fp = fopen("Scene/scene_01.txt", "r");
-			m_p0StartPos = { 600, 40 };
-			m_p1StartPos = { 620, 40 };
-			//m_p0StartPos = { 375, 1150 };
-			//m_p1StartPos = { 175, 1150 };
+			// cheat
+			m_p0CheatPos = { 600, 40 };
+			m_p1CheatPos = { 620, 40 };
+			// start
+			m_p0StartPos = { 375, 1150 };
+			m_p1StartPos = { 175, 1150 };
 			break;
 		case 2:
 			fp = fopen("Scene/stage2.txt", "r");
-			m_p0StartPos = { 1640, 100 };
-			m_p1StartPos = { 1580, 100 };
-			//m_p0StartPos = { 40, 40 };
-			//m_p1StartPos = { 80, 40 };
+			// cheat
+			m_p0CheatPos = { 1640, 100 };
+			m_p1CheatPos = { 1580, 100 };
+			// start
+			m_p0StartPos = { 40, 40 };
+			m_p1StartPos = { 80, 40 };
 			break;
 		case 3:
 			fp = fopen("Scene/stage3.txt", "r");
-			m_p0StartPos = { 2900, 100 };
-			m_p1StartPos = { 2980, 100 };
-			//m_p0StartPos = { 40, 400 };
-			//m_p1StartPos = { 80, 400 };
+			// cheat
+			m_p0CheatPos = { 2900, 100 };
+			m_p1CheatPos = { 2980, 100 };
+			// start
+			m_p0StartPos = { 40, 400 };
+			m_p1StartPos = { 80, 400 };
 			break;
 		default:
 			fp = fopen("Scene/scene_01.txt", "r");
-			//m_p0StartPos = { 600, 40 };
-			//m_p1StartPos = { 620, 40 };
-			m_p0StartPos = { 375, 1150 };
+			// cheat
+			m_p0CheatPos = { 600, 40 };
+			m_p1CheatPos = { 620, 40 };
+			// start
+			m_p0CheatPos = { 375, 1150 };
 			m_p1StartPos = { 175, 1150 };
 			break;
 		}
@@ -257,6 +265,17 @@ bool Scene::IsPlayersUpdated() const
 		if (player->IsPlayerUpdated()) return true;
 
 	return false;
+}
+
+void Scene::SetPlayerToCheatPos(int id)
+{
+	int purpleIndex = id * 2;
+	int yellowIndex = purpleIndex + 1;
+
+	m_vPlayers[purpleIndex]->SetPosition(m_p0CheatPos);
+	m_vPlayers[yellowIndex]->SetPosition(m_p1CheatPos);
+	m_vPlayers[purpleIndex]->SetBefPos(m_p0CheatPos);
+	m_vPlayers[yellowIndex]->SetBefPos(m_p1CheatPos);
 }
 
 void Scene::Init()
