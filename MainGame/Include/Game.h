@@ -14,10 +14,10 @@
 
 #ifdef _DEBUG
 #include <crtdbg.h>
-#include <iostream>
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif // _DEBUG
 
+#include <iostream>
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 using namespace std;
 

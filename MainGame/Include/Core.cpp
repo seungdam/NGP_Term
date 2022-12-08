@@ -92,9 +92,16 @@ int Core::Run()
 	QueryPerformanceCounter(&m_Time);
 	GameManager::GetInst().Init();
 	GameManager::GetInst().Render(hdc);
+
+	char ipAddr[50];
+	cout << "IP 주소: ";
+	cin >> ipAddr;
+
 	// if loggin failed
-	if (!m_NetworkManager->ConnectTo(SERVERIP)) 
+	if (!m_NetworkManager->ConnectTo(ipAddr))
 		return -1;
+
+	cout << "로그인 성공!\n";
 
 	if(!m_NetworkManager->ClientDoRecv()) return -1;
 	else {
@@ -109,7 +116,7 @@ int Core::Run()
 
 	GameManager::GetInst().ChangeScene(1);
 	m_NetworkManager->SetScene(GameManager::GetInst().GetScene());
-
+	
 	//FMOD_SOUND* pBGSound;
 	//FMOD_CHANNEL* pChannel;
 
