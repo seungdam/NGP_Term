@@ -181,9 +181,9 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 		// cheat pos check
 		int cheatId = -1;
-		if (GetAsyncKeyState('1') & 0x0001) cheatId = 0;
-		if (GetAsyncKeyState('2') & 0x0001) cheatId = 1;
-		if (GetAsyncKeyState('3') & 0x0001) cheatId = 2;
+		if (GetAsyncKeyState(VK_F1) & 0x0001) cheatId = 0;
+		if (GetAsyncKeyState(VK_F2) & 0x0001) cheatId = 1;
+		if (GetAsyncKeyState(VK_F3) & 0x0001) cheatId = 2;
 
 		if (cheatId >= 0 && pManager->GetScene()) 
 			pManager->GetScene()->SetPlayerToCheatPos(cheatId);

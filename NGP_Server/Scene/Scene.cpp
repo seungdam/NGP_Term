@@ -310,16 +310,16 @@ int Scene::Collision()
 
 	// 플레이어와 몬스터 충돌 확인
 	bool bCollide = false;
-	for (int i = 0; i < m_vPlayers.size(); ++i) {
-		for (auto& dMonster : m_vMonster) {
-			FRECT player = m_vPlayers[i]->GetPosition();
-			FRECT monster = dMonster->GetPosition();
+	//for (int i = 0; i < m_vPlayers.size(); ++i) {
+	//	for (auto& dMonster : m_vMonster) {
+	//		FRECT player = m_vPlayers[i]->GetPosition();
+	//		FRECT monster = dMonster->GetPosition();
 
-			if (player.IntersectRect(monster)) {
-				ResetPlayerPos(i);
-			}
-		}
-	}
+	//		if (player.IntersectRect(monster)) {
+	//			ResetPlayerPos(i);
+	//		}
+	//	}
+	//}
 
 	// 플레이어와 타일맵 충돌 확인
 	for (int i = 0; i < m_vPlayers.size(); ++i) {

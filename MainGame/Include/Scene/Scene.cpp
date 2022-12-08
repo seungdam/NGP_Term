@@ -612,7 +612,7 @@ void Scene::Render(HDC hdc)
 	for (auto const d : m_vButton) d->Render(memdc);
 
 	// draw monster
-	for (auto const d : m_vMonster) d->Render(memdc);
+	//for (auto const d : m_vMonster) d->Render(memdc);
 	// draw player
 	for (auto const d : m_vMyPlayer) d->Render(memdc);
 
