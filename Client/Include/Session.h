@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Game.h"
-
 class Scene;
 
 // when it is created, init wsa, when it's deleted, cleanup wsa
-class Networker
+class Session
 {
 	int m_cid = -1;
 	SOCKET m_sock;
@@ -14,8 +12,8 @@ class Networker
 public:
 	bool m_isLogin = false;
 	int m_most_high_score_id = -1;
-	Networker();
-	~Networker();
+	Session();
+	~Session();
 
 	// returns false when fails
 	bool DoConnect(const char* ipAddr);

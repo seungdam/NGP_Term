@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "Networker.h"
+#include "Session.h"
 #include "Scene/Scene.h"
 
-Networker::Networker()
+Session::Session()
 {
 	// was start
 	WSADATA wsa;
@@ -16,33 +16,33 @@ Networker::Networker()
 
 }
 
-Networker::~Networker()
+Session::~Session()
 {
 	closesocket(m_sock);
 	WSACleanup();
 }
 
-bool Networker::DoConnect(const char* ipAddr)
+bool Session::DoConnect(const char* ipAddr)
 {
 	// connect to ipAddr
-	SOCKADDR_IN serverAddr;
-	ZeroMemory(&serverAddr, sizeof(serverAddr));
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = inet_addr(ipAddr);
-	serverAddr.sin_port = htons(SERVERPORT);
-	int val = connect(m_sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
+	SOCKADDR_IN server_addr;
+	::ZeroMemory(&server_addr, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	inet_pton(AF_INET,ipAddr, &server_addr.sin_addr);
+	server_addr.sin_port = htons(SERVERPORT);
+	int val = connect(m_sock, (SOCKADDR*)&server_addr, sizeof(server_addr));
 	if (val == SOCKET_ERROR) return false;
 
 	// login ok
 	return true;
 }
 
-void Networker::IsClientLogin(bool isSuccess)
+void Session::IsClientLogin(bool isSuccess)
 {
 	m_isLogin = isSuccess;
 }
 
-bool Networker::DoSend(uint8_t dir)
+bool Session::DoSend(uint8_t dir)
 {
 	static uint8_t befDir = 0;
 
@@ -70,7 +70,7 @@ bool Networker::DoSend(uint8_t dir)
 	return true;
 }
 
-void Networker::ProcessPacket(char* packet)
+void Session::ProcessPacket(char* packet)
 {
 	switch ((SERVER_PACKET_INFO)packet[0]) {
 	case SERVER_PACKET_INFO::LOGIN:
@@ -108,7 +108,7 @@ void Networker::ProcessPacket(char* packet)
 	}
 }
 
-bool Networker::DoRecv()
+bool Session::DoRecv()
 {
 	int retval = 0;
 	char buff[512];
@@ -130,12 +130,12 @@ bool Networker::DoRecv()
 	return true;
 }
 
-void Networker::Disconnect()
+void Session::Disconnect()
 {
 	closesocket(m_sock);
 }
 
-void Networker::SetScene(Scene* pScene)
+void Session::SetScene(Scene* pScene)
 {
 	m_pScene = pScene;
 }
