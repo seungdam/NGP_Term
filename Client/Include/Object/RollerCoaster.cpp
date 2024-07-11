@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "RollerCoaster.h"
 
 CImage RollerCoaster::m_tRCImg;

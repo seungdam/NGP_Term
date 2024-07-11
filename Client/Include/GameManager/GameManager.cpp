@@ -1,7 +1,7 @@
 #include "../pch.h"
 #include "../Core.h"
 #include "GameManager.h"
-
+#include "../Session.h"
 
 
 GameManager::~GameManager()

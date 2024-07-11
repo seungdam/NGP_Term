@@ -1,15 +1,17 @@
 #pragma once
 
-#include "pch.h"
 
-class Networker;
 
-class Core {
+class Session;
+
+class Core 
+{
 	Core();
 	~Core();
 
 public:
-	static Core& GetInst() {
+	static Core& GetInst() 
+	{
 		static Core inst;
 		return inst;
 	}
@@ -33,10 +35,10 @@ private:
 	bool m_bGameLoop = true;
 
 private:
-	Networker* m_NetworkManager = nullptr;
+	Session* m_NetworkManager = nullptr;
 
 public:
-	Networker* GetNetworkManager() { return m_NetworkManager; }
+	Session* GetNetworkManager() { return m_NetworkManager; }
 
 public:
 	SIZE GetSize() const { return m_tWndSize; }

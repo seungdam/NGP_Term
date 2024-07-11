@@ -34,14 +34,6 @@ enum class STEP_FOR
 	SF_ALL
 };
 
-template <typename T>
-void ReleaseAndCleanVector(T& p)
-{
-	typename T::iterator iter;
-	for (iter = p.begin(); iter != p.end(); ++iter) SAFE_DELETE((*iter));
-
-	p.clear();
-}
 
 struct FRECT
 {

@@ -1,15 +1,17 @@
 #pragma once
 #pragma warning (disable : 4996)
 
-
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #include <Windows.h>
 #include <vector>
 #include <list>
 #include <string>
 #include <atlimage.h>
 #include <iostream>
+#include <time.h>
 
 #pragma comment(lib, "ws2_32")
 
@@ -23,7 +25,7 @@
 
 #include "Type.h"
 #include "Macro.h"
-#include "../../Protocol/Packet.h";
+#include "../../Protocol/Packet.h"
 
 
 

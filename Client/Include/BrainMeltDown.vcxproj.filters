@@ -34,9 +34,6 @@
     <Filter Include="01 Object\2%29 Static\2- Button">
       <UniqueIdentifier>{6ed3c53b-338e-49d0-a77d-36f97c13de66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. Network">
-      <UniqueIdentifier>{7bfd5a6a-0cce-41a1-a855-8cc36536c828}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05. Manager">
       <UniqueIdentifier>{58d96064-98b1-46b8-9983-df456496f0b7}</UniqueIdentifier>
     </Filter>
@@ -47,6 +44,9 @@
     <Filter Include="Header">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="04. Session">
+      <UniqueIdentifier>{7bfd5a6a-0cce-41a1-a855-8cc36536c828}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -86,8 +86,8 @@
     <ClCompile Include="Object\Button.cpp">
       <Filter>01 Object\2%29 Static\2- Button</Filter>
     </ClCompile>
-    <ClCompile Include="Networker.cpp">
-      <Filter>04. Network</Filter>
+    <ClCompile Include="Session.cpp">
+      <Filter>04. Session</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Header</Filter>
@@ -136,8 +136,8 @@
     <ClInclude Include="Object\Button.h">
       <Filter>01 Object\2%29 Static\2- Button</Filter>
     </ClInclude>
-    <ClInclude Include="Networker.h">
-      <Filter>04. Network</Filter>
+    <ClInclude Include="Session.h">
+      <Filter>04. Session</Filter>
     </ClInclude>
     <ClInclude Include="..\..\protocol\Packet.h">
       <Filter>Header</Filter>

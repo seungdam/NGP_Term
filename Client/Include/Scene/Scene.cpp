@@ -1,5 +1,7 @@
+#include "../pch.h"
 #include "Scene.h"
 #include "../Core.h"
+#include "../Session.h"
 
 
 
@@ -9,65 +11,76 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	FILE* fp = NULL;
 	m_nNextSceneNum = -1;
 	// set player position and background
-	switch (m_nSceneNum) {
-	case -10:				// test Scene;
+	switch (m_nSceneNum) 
 	{
-		m_nTileXLen = 32;
-		m_nNextSceneNum = 999;
+		case -10:				// test Scene;
+		{
+			m_nTileXLen = 32;
+			m_nNextSceneNum = 999;
 
-		m_imgBackGround.Load(TEXT("Resource/bgTemp.png"));
+			m_imgBackGround.Load(TEXT("Resource/bgTemp.png"));
 
-		Player* p0 = new PurplePlayer;
-		Player* p1 = new YellowPlayer;
+			Player* p0 = new PurplePlayer;
+			Player* p1 = new YellowPlayer;
 
-		m_vMyPlayer.push_back(p0);
-		m_vMyPlayer.push_back(p1);
-		
-		// load moving objs
+			m_vMyPlayer.push_back(p0);
+			m_vMyPlayer.push_back(p1);
+			
+			// load moving objs
 
-		// static objs
-		Step* s0 = new Step(STEP_FOR::SF_ALL, { 700,550,750,575 });
-		Step* s1 = new Step(STEP_FOR::SF_YELLOW, { 800,550,850,575 });
-		Step* s2 = new Step(STEP_FOR::SF_PUR, { 900,550,950,575 });
+			// static objs
+			Step* s0 = new Step(STEP_FOR::SF_ALL, { 700,550,750,575 });
+			Step* s1 = new Step(STEP_FOR::SF_YELLOW, { 800,550,850,575 });
+			Step* s2 = new Step(STEP_FOR::SF_PUR, { 900,550,950,575 });
 
-		m_vSteps.push_back(s0);
-		m_vSteps.push_back(s1);
-		m_vSteps.push_back(s2);
+			m_vSteps.push_back(s0);
+			m_vSteps.push_back(s1);
+			m_vSteps.push_back(s2);
 
-		// tiles
-		//m_vTiles;
-		for (int i = 0; i < m_nTileYLen; ++i) {
-			for (int j = 0; j < m_nTileXLen; ++j) {
-				Tile* t;
-				
-				if (i == m_nTileYLen - 1) t = new Tile(TILE_DATA::TD_BLOCK);
-				else if (i == m_nTileYLen - 2 && j >= m_nTileXLen / 2) t = new Tile(TILE_DATA::TD_BLOCK);
-				else t = new Tile(TILE_DATA::TD_NON);
-
-				m_vTiles.push_back(t);
+			// tiles
+			//m_vTiles;
+			for (int i = 0; i < m_nTileYLen; ++i) 
+			{
+				for (int j = 0; j < m_nTileXLen; ++j) 
+				{
+					Tile* t;
+					
+					if (i == m_nTileYLen - 1) 
+					{t = new Tile(TILE_DATA::TD_BLOCK);
+					}
+					else if (i == m_nTileYLen - 2 && j >= m_nTileXLen / 2)
+					{
+						t = new Tile(TILE_DATA::TD_BLOCK);
+					}
+					else
+					{
+						t = new Tile(TILE_DATA::TD_NON);
+					}
+					m_vTiles.push_back(t);
+				}
 			}
 		}
-	}
-	break;
+		break;
 
-	case 1:
-	case 2:
-	case 3:
-	{
-		m_imgBackGround.Load(TEXT("Resource/tempBGv2.bmp"));
-		m_imgTile.Load(TEXT("Resource/tempsprite.bmp"));
+		case 1:
+		case 2:
+		case 3:
+		{
+			m_imgBackGround.Load(TEXT("Resource/tempBGv2.bmp"));
+			m_imgTile.Load(TEXT("Resource/tempsprite.bmp"));
 
-		InsertNewPlayer(Core::GetInst().GetNetworkManager()->GetID());
+			InsertNewPlayer(Core::GetInst().GetNetworkManager()->GetID());
 
-		switch (m_nSceneNum) {
-		case 1:		fp = fopen("Scene/scene_01.txt", "r");	break;
-		case 2:		fp = fopen("Scene/stage2.txt", "r");	break;
-		case 3:		fp = fopen("Scene/stage3.txt", "r");	break;
-		default:	fp = fopen("Scene/scene_01.txt", "r");	break;
+			switch (m_nSceneNum) 
+			{
+			case 1:		fp = fopen("Scene/scene_01.txt", "r");	break;
+			case 2:		fp = fopen("Scene/stage2.txt", "r");	break;
+			case 3:		fp = fopen("Scene/stage3.txt", "r");	break;
+			default:	fp = fopen("Scene/scene_01.txt", "r");	break;
+			}
+
+			LoadMapFromFile(fp);
 		}
-
-		LoadMapFromFile(fp);
-	}
 		break;
 
 	case 4:				// game clear;
@@ -123,7 +136,8 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	// monster
 	fscanf(fp, "%d", &size);
 	m_vMonster.reserve(size);
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; ++i) 
+	{
 		RECT t;
 		MOVE_DIR md;
 		fscanf(fp, "%d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &md);

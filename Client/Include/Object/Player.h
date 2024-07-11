@@ -47,8 +47,7 @@ protected:
 	int m_iMaxImageSprite = 4;
 	
 	// walking sound
-	//static FMOD_SOUND* m_pWalkSound;
-	//FMOD_CHANNEL* m_pPlayerChannel;
+
 
 public:
 	int GetPlayerNum() { return m_iPlayerNum; }

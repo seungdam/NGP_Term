@@ -1,14 +1,17 @@
 #include "pch.h"
+
 #include "Core.h"
 #include "GameManager/GameManager.h"
-#include "Networker.h"
-#include <time.h>
+#include "Session.h"
 
-DWORD WINAPI Core::Recv_Thread(LPVOID arg) {
+DWORD WINAPI Core::Recv_Thread(LPVOID arg) 
+{
 
-	while (Core::GetInst().GetGameLoop()) {
+	while (Core::GetInst().GetGameLoop()) 
+	{
 		Core::GetInst().GetNetworkManager()->DoRecv();
-		if (Core::GetInst().GetNetworkManager()->m_most_high_score_id >= 0) {
+		if (Core::GetInst().GetNetworkManager()->m_most_high_score_id >= 0) 
+		{
 			wstring str{ L"Winner Clients is~" };
 			str += to_wstring(Core::GetInst().GetNetworkManager()->m_most_high_score_id);
 			MessageBox(NULL, str.c_str(), L"WINNER", MB_OK);
@@ -32,24 +35,18 @@ Core::~Core()
 
 void Core::OnDestroy()
 {
-	if (m_pSoundSystem) {
-		//FMOD_System_Close(m_pSoundSystem);
-		//FMOD_System_Release(m_pSoundSystem);
-	}
-
-	if (m_NetworkManager) {
+	if (m_NetworkManager) 
+	{
 		delete m_NetworkManager;
 	}
 }
 
 bool Core::Init(HINSTANCE hInst)
 {
-	// fmod system init
-	//FMOD_System_Create(&m_pSoundSystem);
-	//FMOD_System_Init(m_pSoundSystem, 32, FMOD_INIT_NORMAL, NULL);
+	
 
 	// window init
-	m_NetworkManager = new Networker;
+	m_NetworkManager = new Session;
 	m_hInst = hInst;
 
 	m_tWndSize.cx = WINDOW_SIZE_WIDTH;
@@ -119,16 +116,12 @@ int Core::Run()
 	GameManager::GetInst().ChangeScene(1);
 	m_NetworkManager->SetScene(GameManager::GetInst().GetScene());
 	
-	//FMOD_SOUND* pBGSound;
-	//FMOD_CHANNEL* pChannel;
+	
 
-	// bg sound
-	//FMOD_System_CreateSound(m_pSoundSystem, "Sounds/bgMusic.mp3", FMOD_LOOP_NORMAL, 0, &pBGSound);
-	//FMOD_System_PlaySound(m_pSoundSystem, pBGSound, NULL, 0, &pChannel);
-	//FMOD_Channel_SetVolume(pChannel, 0.1f);
-
-	while (GetGameLoop()) {
-		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE)) {
+	while (GetGameLoop()) 
+	{
+		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE)) 
+		{
 			TranslateMessage(&Message);
 			DispatchMessage(&Message);
 		}
@@ -146,7 +139,7 @@ int Core::Run()
 
 #ifdef DEBUG
 			TCHAR szTitle[30];
-			swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
+			//swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
 			SetConsoleTitle(szTitle);
 #endif // DEBUG
 		}
