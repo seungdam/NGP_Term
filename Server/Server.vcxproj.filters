@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source\GameReleated">
+      <UniqueIdentifier>{fa2079d0-e8b6-4f02-8720-3702c84abcdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameReleated\GameObjects">
+      <UniqueIdentifier>{e2daa1ca-14cf-4af0-8e7e-3140cd0b1d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source\GameReleated\Scene">
+      <UniqueIdentifier>{368b2c33-90ec-40b4-b53d-9bb650bd33f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{daaaffba-d7d0-4737-b727-75586b086518}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Object\Button.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Monster.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\MovingObject.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Object.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Player.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\RollerCoaster.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Step.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Tile.cpp">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source\GameReleated\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source\GameReleated\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Object\Button.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Monster.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\MovingObject.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Object.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Player.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\RollerCoaster.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Step.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source\GameReleated</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Tile.h">
+      <Filter>Source\GameReleated\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Source\GameReleated\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Source\GameReleated\Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
