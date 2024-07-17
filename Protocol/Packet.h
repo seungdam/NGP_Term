@@ -69,13 +69,15 @@ struct S2C_END_GAME_PACKET
 struct C2S_MOVE_PACKET
 {
 	char type;
-	char from_c_id;
+	char cid;
 	unsigned char direction;
 };
 
-inline int GetS2CSize(SERVER_PACKET_INFO p)
+
+
+inline int GetPacketSize(char p)
 {
-	switch (p) 
+	switch ((SERVER_PACKET_INFO)p)
 	{
 	case SERVER_PACKET_INFO::LOGIN:
 		return sizeof(S2C_LOGIN_PACKET);
@@ -93,11 +95,6 @@ inline int GetS2CSize(SERVER_PACKET_INFO p)
 		// error
 		return -1;
 	}
-}
-
-inline int GetS2CSize(char p)
-{
-	return GetS2CSize((SERVER_PACKET_INFO)p);
 }
 
 
