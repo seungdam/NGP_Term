@@ -9,7 +9,8 @@
 #include "../Object/Tile.h"
 
 
-class Scene {
+class Scene 
+{
 public:
 	Scene() = delete;
 	Scene(int nSceneNum);

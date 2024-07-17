@@ -69,7 +69,7 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 			m_imgBackGround.Load(TEXT("Resource/tempBGv2.bmp"));
 			m_imgTile.Load(TEXT("Resource/tempsprite.bmp"));
 
-			InsertNewPlayer(Core::GetInst().GetNetworkManager()->GetID());
+			InsertNewPlayer(Core::GetInst().GetSession()->GetID());
 
 			switch (m_nSceneNum) 
 			{
@@ -278,8 +278,8 @@ void Scene::Input(float fTimeElapsed)
 	uint8_t newDir = 0;
 	for (auto const& d : m_vMyPlayer) d->Input(fTimeElapsed, newDir);
 	
-	Core::GetInst().GetNetworkManager()->DoSend(newDir);
-	//Core::GetInst().GetNetworkManager()->SendPlayerPacket();
+	Core::GetInst().GetSession()->DoSend(newDir);
+	//Core::GetInst().GetSession()->SendPlayerPacket();
 
 	// camera
 	FPOINT pCenter;
