@@ -1,21 +1,21 @@
 #include "pch.h"
-
 #include "Core.h"
 #include "GameManager/GameManager.h"
 #include "Session.h"
 
-DWORD WINAPI Core::Recv_Thread(LPVOID arg) 
+__int32 __stdcall Core::RecvWorker()
 {
 
 	while (Core::GetInst().GetGameLoop()) 
 	{
-		Core::GetInst().GetNetworkManager()->DoRecv();
-		if (Core::GetInst().GetNetworkManager()->m_most_high_score_id >= 0) 
+		Core::GetInst().GetSession()->DoRecv();
+
+		if (Core::GetInst().GetSession()->m_most_high_score_id >= 0) 
 		{
 			wstring str{ L"Winner Clients is~" };
-			str += to_wstring(Core::GetInst().GetNetworkManager()->m_most_high_score_id);
+			str += to_wstring(Core::GetInst().GetSession()->m_most_high_score_id);
 			MessageBox(NULL, str.c_str(), L"WINNER", MB_OK);
-			Core::GetInst().m_bGameLoop = false;
+			Core::GetInst().SetGameLoopFalse();
 			break;
 		}
 	}
@@ -25,28 +25,33 @@ DWORD WINAPI Core::Recv_Thread(LPVOID arg)
 
 Core::Core()
 {
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), OUT & wsa) != 0)
+	{
+		cout << "WSA START ERROR!!" << endl;
+	}
+
+#ifdef DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(155);
+#endif // DEBUG
 }
 
 Core::~Core()
 {
+	WSACleanup();
 }
 
 void Core::OnDestroy()
 {
-	if (m_NetworkManager) 
+	if (m_Session) 
 	{
-		delete m_NetworkManager;
+		delete m_Session;
 	}
 }
 
-bool Core::Init(HINSTANCE hInst)
+bool Core::Init(HINSTANCE hInst, const char* ipAddr)
 {
-	
-
 	// window init
-	m_NetworkManager = new Session;
 	m_hInst = hInst;
 
 	m_tWndSize.cx = WINDOW_SIZE_WIDTH;
@@ -71,11 +76,20 @@ bool Core::Init(HINSTANCE hInst)
 
 	RECT rt = { 0,0,WINDOW_SIZE_WIDTH,WINDOW_SIZE_HEIGHT };
 	AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, NULL);
-	m_hWnd = CreateWindow(L"Class Name", L"Title", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
-		rt.right - rt.left, rt.bottom - rt.top, NULL, NULL, m_hInst, NULL);
+	m_hWnd = CreateWindow(L"Class Name", 
+						  L"Title", 
+		                  WS_OVERLAPPEDWINDOW, 
+		                  CW_USEDEFAULT, 
+		                  0,
+		                  rt.right - rt.left, rt.bottom - rt.top, 
+						  NULL, NULL, m_hInst, NULL);
 
 	ShowWindow(m_hWnd, SW_SHOW);
 	UpdateWindow(m_hWnd);
+	
+	m_Session = new Session();
+	if (ipAddr == nullptr) return false;
+	if (m_Session->DoConnect(ipAddr)) return false;
 
 	return true;
 }
@@ -84,39 +98,30 @@ bool Core::Init(HINSTANCE hInst)
 int Core::Run()
 {
 	MSG Message;
-
 	HDC hdc = NULL;
+
+	auto retval = m_Session->DoRecv();
+	
+	if(!retval) 
+	{
+		return -1;
+	}
+
+
+#ifdef DEBUG
+	wstring s = to_wstring(m_Session->GetID());
+	SetWindowText(m_hWnd, s.c_str());
+#endif // DEBUG
+
+	Core::SetThreadFunction<__int32>(Core::RecvWorker);
+	m_Session->SetScene(GameManager::GetInst().GetScene());
+	
 
 	QueryPerformanceFrequency(&m_Sec);
 	QueryPerformanceCounter(&m_Time);
 	GameManager::GetInst().Init();
 	GameManager::GetInst().Render(hdc);
-
-	char ipAddr[50];
-	cout << "IP 주소: ";
-	cin >> ipAddr;
-
-	// if loggin failed
-	if (!m_NetworkManager->DoConnect(ipAddr))
-		return -1;
-
-	cout << "로그인 성공!\n";
-
-	if(!m_NetworkManager->DoRecv()) return -1;
-	else {
-		if (!m_NetworkManager->m_isLogin) return -1;
-	}
-	wstring s = to_wstring(m_NetworkManager->GetID());
-	SetWindowText(m_hWnd, s.c_str());
-	HANDLE rThread = CreateThread(NULL, 0, Recv_Thread,(LPVOID)m_NetworkManager, 0, 0);
-	if (rThread != NULL) {
-		CloseHandle(rThread);
-	}
-
 	GameManager::GetInst().ChangeScene(1);
-	m_NetworkManager->SetScene(GameManager::GetInst().GetScene());
-	
-	
 
 	while (GetGameLoop()) 
 	{
@@ -125,7 +130,8 @@ int Core::Run()
 			TranslateMessage(&Message);
 			DispatchMessage(&Message);
 		}
-		else {
+		else 
+		{
 			// get elapsed time
 			LARGE_INTEGER tTime;
 			QueryPerformanceCounter(&tTime);
@@ -139,15 +145,15 @@ int Core::Run()
 
 #ifdef DEBUG
 			TCHAR szTitle[30];
-			//swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
+			swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
 			SetConsoleTitle(szTitle);
-#endif // DEBUG
+#endif 
 		}
 	}
 
 	
 	GameManager::GetInst().OnDestroy();
-	m_NetworkManager->Disconnect();
+	m_Session->Disconnect();
 	return 0;
 }
 
@@ -156,33 +162,27 @@ LRESULT Core::WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc = NULL, memdc = NULL;
 
-	switch (Msg) {
+	switch (Msg) 
+	{
 	case WM_CREATE:
-		//GameManager::GetInst().Init();
-
-		// Set Main Timer;
-		//SetTimer(hWnd, 0, 1, NULL);
+	
 		break;
 
 	case WM_PAINT:
 		break;
 
 	case WM_KEYDOWN:
-		if (wParam == 'g') Core::GetInst().SetGridShow();
+		if (wParam == 'g')
+		{
+			Core::GetInst().SetGridShow();
+		}
 		break;
-
-
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		Core::GetInst().SetGameLoopFalse();
-		//GameManager::OnDestroy();
 		break;
 
 	case WM_TIMER:
-		switch (wParam) {
-		case 0:
-			break;
-		}
 		break;
 	}
 
