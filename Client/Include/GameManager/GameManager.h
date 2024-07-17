@@ -3,7 +3,8 @@
 
 
 // Singleton class, manages scene
-class GameManager {
+class GameManager 
+{
 private:
 	GameManager() {}
 	~GameManager();
@@ -16,7 +17,8 @@ private:
 	class Scene *m_pScene = nullptr;
 
 public:
-	static GameManager& GetInst() {
+	static GameManager& GetInst() 
+	{
 		static GameManager inst;
 		return inst;
 	}
@@ -24,12 +26,8 @@ public:
 	
 	void Init();
 	void OnDestroy();
-
 	void OnSceneChangePacket(int nextScene) { m_bChange = true, m_iNextScene = nextScene; }
 	void ChangeScene(int nSceneNum);
-
-	void SynchronizeObjects();
-
 	Scene* GetScene() { return m_pScene; }
 
 public:

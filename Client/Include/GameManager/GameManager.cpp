@@ -18,14 +18,11 @@ void GameManager::ChangeScene(int nSceneNum)
 
 	m_pScene->Init();
 
-	Core::GetInst().GetNetworkManager()->SetScene(m_pScene);
+	Core::GetInst().GetSession()->SetScene(m_pScene);
 
 }
 
-void GameManager::SynchronizeObjects()
-{
-	// do synchronize
-}
+
 
 void GameManager::OnDestroy()
 {

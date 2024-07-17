@@ -145,7 +145,7 @@ int Core::Run()
 
 #ifdef DEBUG
 			TCHAR szTitle[30];
-			swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
+			//swprintf(szTitle, L"FPS : %.1f", 1 / m_fTimeElapsed);
 			SetConsoleTitle(szTitle);
 #endif 
 		}
