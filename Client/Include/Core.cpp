@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "GameManager/GameManager.h"
 #include "Session.h"
+#include <string>
 
 __int32 __stdcall Core::RecvWorker()
 {
@@ -88,8 +89,14 @@ bool Core::Init(HINSTANCE hInst, const char* ipAddr)
 	UpdateWindow(m_hWnd);
 	
 	m_Session = new Session();
-	if (ipAddr == nullptr) return false;
-	if (m_Session->DoConnect(ipAddr)) return false;
+	if (ipAddr == nullptr)
+	{
+		return false;
+	}
+	if (m_Session->DoConnect(ipAddr))
+	{
+		return false;
+	}
 
 	return true;
 }

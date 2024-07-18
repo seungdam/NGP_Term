@@ -7,7 +7,8 @@
 #include "../Object/RollerCoaster.h"
 #include "../Object/Button.h"
 
-class Scene {
+class Scene 
+{
 public:
 	Scene() = delete;
 	Scene(int nSceneNum);

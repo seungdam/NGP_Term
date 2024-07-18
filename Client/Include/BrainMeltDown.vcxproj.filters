@@ -94,9 +94,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Macro.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -108,9 +105,6 @@
     </ClInclude>
     <ClInclude Include="Object\MovingObject.h">
       <Filter>01 Object\1%29 Moving</Filter>
-    </ClInclude>
-    <ClInclude Include="Type.h">
-      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Object\Player.h">
       <Filter>01 Object\1%29 Moving\1- Player</Filter>
@@ -138,9 +132,6 @@
     </ClInclude>
     <ClInclude Include="Session.h">
       <Filter>04. Session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\protocol\Packet.h">
-      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

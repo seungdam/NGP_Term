@@ -3,7 +3,8 @@
 
 // TileSize 40x40;
 
-class Tile {
+class Tile 
+{
 public:
 	Tile() = delete;
 	Tile(TILE_DATA TD);

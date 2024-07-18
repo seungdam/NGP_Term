@@ -1,8 +1,8 @@
 #pragma once
 #include "Object.h"
-#include "../Type.h"
 
-class Step : public Object {
+class Step : public Object
+{
 private:
 	int m_iGroup;
 	STEP_FOR m_eType;

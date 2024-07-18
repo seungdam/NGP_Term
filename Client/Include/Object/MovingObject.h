@@ -1,7 +1,8 @@
 #pragma once
 #include "Object.h"
 
-class MovingObject : public Object {
+class MovingObject : public Object 
+{
 protected:
 	MovingObject();
 	virtual ~MovingObject();

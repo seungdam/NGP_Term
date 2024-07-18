@@ -88,15 +88,15 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)_Debug</TargetName>
     <OutDir>$(SolutionDir)Bianry\$(Configuration)\</OutDir>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\CoreEngine;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>$(SolutionDir)Bianry\$(Configuration)\</OutDir>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\CoreEngine;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -215,11 +215,9 @@
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\protocol\Packet.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameManager\GameManager.h" />
-    <ClInclude Include="Macro.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Object\Button.h" />
     <ClInclude Include="Object\Monster.h" />
@@ -230,7 +228,6 @@
     <ClInclude Include="Object\Step.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="Type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
