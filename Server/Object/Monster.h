@@ -2,7 +2,8 @@
 #include "MovingObject.h"
 
 
-class Monster : public MovingObject {
+class Monster : public MovingObject 
+{
 private:
 	MOVE_DIR m_eMoveDir = MOVE_DIR::MD_NONE;
 

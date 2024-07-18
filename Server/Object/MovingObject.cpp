@@ -1,4 +1,4 @@
-#include "../Game.h"
+#include "../pch.h"
 #include "MovingObject.h"
 
 MovingObject::MovingObject()

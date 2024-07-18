@@ -1,4 +1,4 @@
-#include "../Game.h"
+#include "../pch.h"
 #include "Button.h"
 
 Button::Button(RECT pos, bool bFixed, int group)

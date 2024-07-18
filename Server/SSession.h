@@ -1,24 +1,19 @@
 #pragma once
-#include <winsock2.h> 
-#include <iostream>
-
-using namespace std;
-
 class Scene;
 
-class Serssion
+class SSerssion
 {
 private:
-	int m_sid;
+	int32 m_sid;
 	SOCKET m_sock;
-	char m_type;
-	unsigned char m_dir;
-	int m_score = 0;
+	int8 m_type;
+	uint8 m_dir;
+	int32 m_score = 0;
 public:
-	Serssion();
-	Serssion(int id, SOCKET s);
+	SSerssion();
+	SSerssion(int id, SOCKET s);
 
-	~Serssion();
+	~SSerssion();
 
 private:
 	static Scene* m_pScene;

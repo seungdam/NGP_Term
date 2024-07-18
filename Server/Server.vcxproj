@@ -78,9 +78,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)Binary\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)..\CoreEngine;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)Binary\$(Configuration)\</OutDir>
+    <IncludePath>$(ProjectDir)..\CoreEngine;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\Library;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,6 +122,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +139,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,21 +151,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Object\Button.cpp" />
-    <ClCompile Include="Object\Monster.cpp" />
-    <ClCompile Include="Object\MovingObject.cpp" />
-    <ClCompile Include="Object\Object.cpp" />
-    <ClCompile Include="Object\Player.cpp" />
-    <ClCompile Include="Object\RollerCoaster.cpp" />
-    <ClCompile Include="Object\Step.cpp" />
-    <ClCompile Include="Object\Tile.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Object\Button.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\Monster.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\MovingObject.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\Object.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\Player.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\RollerCoaster.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\Step.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Object\Tile.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene\Scene.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="SSession.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Object\Button.h" />
     <ClInclude Include="Object\Monster.h" />
     <ClInclude Include="Object\MovingObject.h" />
@@ -162,9 +204,10 @@
     <ClInclude Include="Object\RollerCoaster.h" />
     <ClInclude Include="Object\Step.h" />
     <ClInclude Include="Object\Tile.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Session.h" />
+    <ClInclude Include="SSession.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

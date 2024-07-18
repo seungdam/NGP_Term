@@ -1,4 +1,4 @@
-#include "../Game.h"
+#include "../pch.h"
 #include "Object.h"
 
 Object::Object()

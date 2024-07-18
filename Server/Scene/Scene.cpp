@@ -1,6 +1,7 @@
-#include "../Game.h"
+#include "../pch.h"
 #include "Scene.h"
 #include <random>
+
 
 Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 {
@@ -8,7 +9,8 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 	FILE* fp = NULL;
 	m_nNextSceneNum = -1;
 	// set player position and background
-	switch (m_nSceneNum) {
+	switch (m_nSceneNum) 
+	{
 	case -10:				// test Scene;
 	{
 		m_nTileXLen = 32;
@@ -27,8 +29,10 @@ Scene::Scene(int iSceneNum) : m_nSceneNum(iSceneNum)
 
 		// tiles
 		//m_vTiles;
-		for (int i = 0; i < m_nTileYLen; ++i) {
-			for (int j = 0; j < m_nTileXLen; ++j) {
+		for (int i = 0; i < m_nTileYLen; ++i) 
+		{
+			for (int j = 0; j < m_nTileXLen; ++j) 
+			{
 				Tile* t;
 
 				if (i == m_nTileYLen - 1) t = new Tile(TILE_DATA::TD_BLOCK);
@@ -110,15 +114,18 @@ Scene::~Scene()
 
 bool Scene::LoadMapFromFile(FILE* fp)
 {
+	
 	if (fp == NULL) return false;
 
 	// get x,y size
-	fscanf(fp, "%d %d", &m_nTileXLen, &m_nTileYLen);
+	auto retval = fscanf(fp, "%d %d", &m_nTileXLen, &m_nTileYLen);
 
 	// get tiles
 	m_vTiles.reserve(m_nTileYLen * m_nTileXLen);
-	for (int i = 0; i < m_nTileYLen; ++i) {
-		for (int j = 0; j < m_nTileXLen; ++j) {
+	for (int i = 0; i < m_nTileYLen; ++i) 
+	{
+		for (int j = 0; j < m_nTileXLen; ++j) 
+		{
 			TILE_DATA temp;
 			fscanf(fp, "%d", &temp);
 
@@ -129,29 +136,30 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	}
 
 	int size;
+	
 	// monster
-	fscanf(fp, "%d", &size);
+	retval = fscanf(fp, "%d", &size);
 	m_vMonster.reserve(size);
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; ++i) 
+	{
 		RECT t;
 		MOVE_DIR md;
-		fscanf(fp, "%d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &md);
-
+		retval = fscanf(fp, "%d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &md);
 		Monster* temp = new Monster(t, md);
-		//printf("%d %d %d %d\n", t.left, t.top, t.right, t.bottom);
 		m_vMonster.push_back(temp);
 	}
 
 	// rollercoaster
-	fscanf(fp, "%d", &size);
+	retval = fscanf(fp, "%d", &size);
 	m_vRollerCoaster.reserve(size);
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; ++i) 
+	{
 		RECT t;			// init position
 		STEP_FOR sf;	// step for
 		int b;			// always on
 		int g;			// group number
 		RECT mt;		// destination
-		fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &sf, &b, &g, &mt.left, &mt.top, &mt.right, &mt.bottom);
+		retval = fscanf(fp, "%d %d %d %d %d %d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &sf, &b, &g, &mt.left, &mt.top, &mt.right, &mt.bottom);
 
 		//RollerCoaster(RECT pos, STEP_FOR t, BOOL b, int g, RECT mt);
 		RollerCoaster* temp = new RollerCoaster(t, sf, b, g, mt);
@@ -160,14 +168,15 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	}
 
 	// step
-	fscanf(fp, "%d", &size);
+	retval = fscanf(fp, "%d", &size);
 	m_vSteps.reserve(size);
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; ++i)
+	{
 		RECT t;			// position
 		STEP_FOR sf;	// step for
 		int group;		// group number
 		BOOL alive;		// always on
-		fscanf(fp, "%d %d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &sf, &alive, &group);
+		retval = fscanf(fp, "%d %d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &sf, &alive, &group);
 
 		Step* temp = new Step(t, sf, alive, group);
 
@@ -175,13 +184,14 @@ bool Scene::LoadMapFromFile(FILE* fp)
 	}
 
 	// button
-	fscanf(fp, "%d", &size);
+	retval = fscanf(fp, "%d", &size);
 	m_vButton.reserve(size);
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < size; ++i) 
+	{
 		RECT t;			// position
 		BOOL fixed;		// is fixed
 		int g;			// group number to controll
-		fscanf(fp, "%d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &fixed, &g);
+		retval = fscanf(fp, "%d %d %d %d %d %d", &t.left, &t.top, &t.right, &t.bottom, &fixed, &g);
 
 		Button* temp = new Button(t, fixed, g);
 
@@ -217,7 +227,8 @@ void Scene::InsertPlayers(int playerSize)
 	std::default_random_engine dre(rd());
 	std::uniform_real_distribution<float> uid(-50.0f, 50.0f);
 
-	for (int i = 0; i < playerSize; ++i) {
+	for (int i = 0; i < playerSize; ++i)
+	{
 		FPOINT offset = { uid(dre), uid(dre) };
 
 		Player* p0 = new PurplePlayer;
@@ -310,16 +321,6 @@ int Scene::Collision()
 
 	// 플레이어와 몬스터 충돌 확인
 	bool bCollide = false;
-	//for (int i = 0; i < m_vPlayers.size(); ++i) {
-	//	for (auto& dMonster : m_vMonster) {
-	//		FRECT player = m_vPlayers[i]->GetPosition();
-	//		FRECT monster = dMonster->GetPosition();
-
-	//		if (player.IntersectRect(monster)) {
-	//			ResetPlayerPos(i);
-	//		}
-	//	}
-	//}
 
 	// 플레이어와 타일맵 충돌 확인
 	for (int i = 0; i < m_vPlayers.size(); ++i) {
@@ -345,18 +346,25 @@ int Scene::Collision()
 			m_vPlayers[i]->Move(0, 40 * tLeft.y - playerPos.bottom);
 			m_vPlayers[i]->SetFallingFalse();
 		}
-		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) {
+		else if (leftBottom == TILE_DATA::TD_SPIKE || rightBottom == TILE_DATA::TD_SPIKE) 
+		{
 			ResetPlayerPos(i);
 		}
-		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) {
+		else if (leftBottom == TILE_DATA::TD_GOAL || rightBottom == TILE_DATA::TD_GOAL) 
+		{
 			// Stage Clear
 			std::cout << "hit goal" << std::endl;
 			// (주의) 스테이지 클리어 나중에 추가할 것
 			if (i == 0 || i == 1)
+			{
 				return 0;
+			}
 			else if (i == 2 || i == 3)
+			{
 				return 1;
-			else {
+			}
+			else 
+			{
 				return 2;
 			}
 		}
@@ -366,11 +374,12 @@ int Scene::Collision()
 		LB = tLeft.y * m_nTileXLen + tLeft.x - m_nTileXLen;
 		RB = tRight.y * m_nTileXLen + tRight.x - m_nTileXLen;
 
-		if (LB < 0 || RB < 0) {
+		if (LB < 0 || RB < 0) 
+		{
 			m_vPlayers[i]->SetFallingTrue();
 			continue;
 		}
-		//else if(LB > )
+		
 
 		if (LB < 0 || m_vTiles.size() <= LB || RB < 0 || m_vTiles.size() <= RB) continue;
 
@@ -382,7 +391,8 @@ int Scene::Collision()
 		else if (((0 <= LB && LB < m_vTiles.size()) &&
 			(0 <= RB && RB < m_vTiles.size())) &&
 			m_vTiles[LB]->GetTile() == TILE_DATA::TD_GOAL ||
-			m_vTiles[RB]->GetTile() == TILE_DATA::TD_GOAL) {
+			m_vTiles[RB]->GetTile() == TILE_DATA::TD_GOAL) 
+		{
 			std::cout << "hit goal" << std::endl;
 			// (주의) 스테이지 클리어 나중에 추가할 것
 			return CLEAR_STAGE;
@@ -390,27 +400,35 @@ int Scene::Collision()
 	}
 
 	// 플레이어와 장애물 충돌 확인		(step, rollercoaster, button)
-	for (auto& dPlayer : m_vPlayers) {
+	for (auto& dPlayer : m_vPlayers) 
+	{
 		// step
 		FRECT playerPos = dPlayer->GetPosition();
-		for (auto const dStep : m_vSteps) {
+		for (auto const dStep : m_vSteps) 
+		{
 			FRECT stepPosition = dStep->GetPosition();
 
-			if (!(dStep->IsAlive() + dStep->GetCount())) continue;
+			if (!(dStep->IsAlive() + dStep->GetCount()))
+			{
+				continue;
+			}
 
-			if ((int)(dStep->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(stepPosition)) {
+			if ((int)(dStep->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(stepPosition)) 
+			{
 				// hit side
 				if (playerPos.bottom > stepPosition.bottom && playerPos.top < stepPosition.top)
 					dPlayer->GoBackX();
 
 				// hit top
-				else if (playerPos.bottom - stepPosition.bottom < 0) {
+				else if (playerPos.bottom - stepPosition.bottom < 0) 
+				{
 					float offset = stepPosition.top - playerPos.bottom + 0.1f;
 					dPlayer->Move(0, offset);
 					dPlayer->SetFallingFalse();
 				}
 				// hit bottom
-				else if (playerPos.top - stepPosition.bottom < 0) {
+				else if (playerPos.top - stepPosition.bottom < 0) 
+				{
 					float offset = stepPosition.bottom - playerPos.top + 0.1f;
 					dPlayer->Move(0, offset);
 					dPlayer->OnHitCeil();
@@ -419,22 +437,28 @@ int Scene::Collision()
 		}
 
 		// rollercoaster
-		for (auto const dRCoaster : m_vRollerCoaster) {
+		for (auto const dRCoaster : m_vRollerCoaster) 
+		{
 			FRECT rcPosition = dRCoaster->GetPosition();
 
-			if ((int)(dRCoaster->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(rcPosition)) {
+			if ((int)(dRCoaster->GetType()) - dPlayer->GetPlayerNum() && playerPos.IntersectRect(rcPosition)) 
+			{
 				// hit side
 				if (playerPos.bottom > rcPosition.bottom && playerPos.top < rcPosition.top)
+				{
 					dPlayer->GoBackX();
+				}
 
 				// hit top
-				else if (playerPos.bottom - rcPosition.bottom < 0) {
+				else if (playerPos.bottom - rcPosition.bottom < 0) 
+				{
 					float offset = rcPosition.top - playerPos.bottom + 1.0f;
 					dPlayer->Move(0, offset);
 					dPlayer->SetFallingFalse();
 				}
 				// hit bottom
-				else if (playerPos.top - rcPosition.bottom < 0) {
+				else if (playerPos.top - rcPosition.bottom < 0) 
+				{
 					float offset = rcPosition.bottom - playerPos.top;
 					dPlayer->Move(0, offset);
 					dPlayer->OnHitCeil();
@@ -446,27 +470,34 @@ int Scene::Collision()
 	// 플레이어와 플레이어 충돌 확인
 	// (주의) 여기 부분 살짝 수정 필요
 
-	for (int i = 0; i < m_vPlayers.size(); ++i) {
+	for (int i = 0; i < m_vPlayers.size(); ++i) 
+	{
 		Player* p0 = m_vPlayers[i];
 		FRECT p0Pos = p0->GetPosition();
-		for (int j = i + 1; j < m_vPlayers.size(); ++j) {
+		for (int j = i + 1; j < m_vPlayers.size(); ++j)
+		{
 			Player* p1 = m_vPlayers[j];
 			FRECT p1Pos = p1->GetPosition();
 
-			if (p0Pos.IntersectRect(p1Pos)) {
-				if (p0Pos.IntersectRect(p1Pos)) {
+			if (p0Pos.IntersectRect(p1Pos)) 
+			{
+				if (p0Pos.IntersectRect(p1Pos)) 
+				{
 					// p0 is higher position
-					if (p0Pos.bottom - p1Pos.bottom < -20) {
+					if (p0Pos.bottom - p1Pos.bottom < -20) 
+					{
 						float offset = p1Pos.top - p0Pos.bottom + 0.1f;
 						p0->Move(0, offset);
 						p0->SetFallingFalse();
 					}
-					else if (p1Pos.bottom - p0Pos.bottom < -20) {
+					else if (p1Pos.bottom - p0Pos.bottom < -20) 
+					{
 						float offset = p0Pos.top - p1Pos.bottom + 0.1f;
 						p1->Move(0, offset);
 						p1->SetFallingFalse();
 					}
-					else {
+					else
+					{
 						p1->GoBackX();
 						p0->GoBackX();
 					}
@@ -482,30 +513,52 @@ int Scene::Collision()
 	// turn off everything
 	for (auto& d : m_vRollerCoaster) d->DeActive();
 	for (auto& d : m_vSteps) if (!d->IsAlive()) d->DeActive();
-	for (auto& dButton : m_vButton) {
+	for (auto& dButton : m_vButton) 
+	{
 
-		for (auto& dPlayer : m_vPlayers) {
-			if (dPlayer->GetPosition().IntersectRect(dButton->GetPosition())) {
+		for (auto& dPlayer : m_vPlayers)
+		{
+			if (dPlayer->GetPosition().IntersectRect(dButton->GetPosition())) 
+			{
 				//if (dButton->IsActive()) break;
 				dButton->SetActiveState(true);
 
 				// turn on everything
-				for (auto& d : m_vRollerCoaster) if (d->GetGroup() == dButton->getGroupCtrl())			d->Active();
-				for (auto& d : m_vSteps) if (!d->IsAlive() && d->GetGroup() == dButton->getGroupCtrl()) d->Active();
+				for (auto& d : m_vRollerCoaster)
+				{
+					if (d->GetGroup() == dButton->getGroupCtrl())
+					{
+						d->Active();
+					}
+				}
+				for (auto& d : m_vSteps)
+				{
+					if (!d->IsAlive() && d->GetGroup() == dButton->getGroupCtrl())
+					{
+						d->Active();
+					}
+				}
+
 				break;
 			}
-			else {
+			else 
+			{
 				if (dButton->IsFixed())
+				{
 					break;
+				}
 				dButton->SetActiveState(false);
 			}
 		}
 	}
 
 	// 몬스터와 몬스터 충돌
-	for (auto iter = m_vMonster.begin(); iter != m_vMonster.end(); ++iter) {
-		for (auto inIt = (iter + 1); inIt != m_vMonster.end(); ++inIt) {
-			if ((*iter)->GetPosition().IntersectRect((*inIt)->GetPosition())) {
+	for (auto iter = m_vMonster.begin(); iter != m_vMonster.end(); ++iter) 
+	{
+		for (auto inIt = (iter + 1); inIt != m_vMonster.end(); ++inIt) 
+		{
+			if ((*iter)->GetPosition().IntersectRect((*inIt)->GetPosition())) 
+			{
 				(*iter)->GoBack();
 				(*inIt)->GoBack();
 
@@ -516,25 +569,31 @@ int Scene::Collision()
 		}
 	}
 	// 몬스터와 타일맵 충돌(벽)
-	for (auto d : m_vMonster) {
+	for (auto d : m_vMonster) 
+	{
 		POINT t;
-		switch (d->GetDirection()) {
-		case MOVE_DIR::MD_BACK:		t = { (LONG)(d->GetPosition().left), (LONG)(d->GetPosition().top) };	break;
-		case MOVE_DIR::MD_FRONT:	t = { (LONG)(d->GetPosition().right), (LONG)(d->GetPosition().top) };	break;
-		default: continue;
+		switch (d->GetDirection()) 
+		{
+		case MOVE_DIR::MD_BACK:		
+			t = { (LONG)(d->GetPosition().left), (LONG)(d->GetPosition().top) };	
+			break;
+		case MOVE_DIR::MD_FRONT:	
+			t = { (LONG)(d->GetPosition().right), (LONG)(d->GetPosition().top) };	
+			break;
+		default: 
+			continue;
 		}
+
 		t.x = t.x / 40;
 		t.y = t.y / 40;
-		//tLeft.y* m_pScene->m_nTileXLen + tLeft.x
+		
 		if (m_vTiles[t.y * m_nTileXLen + t.x]->GetTile() == TILE_DATA::TD_BLOCK ||
 			m_vTiles[t.y * m_nTileXLen + t.x]->GetTile() == TILE_DATA::TD_FLOOR)
+		{
 			d->Reverse();
+		}
 	}
 
-	//if (!bCollide) {
-	//	m_pScene->m_vPlayer.front()->SetFallingTrue();
-	//	m_pScene->m_vPlayer.back()->SetFallingTrue();
-	//}
 	return -1;
 }
 

@@ -1,32 +1,34 @@
-#include "Game.h"
+#include "pch.h"
 #include "Scene/Scene.h"
-#include "Session.h"
+#include "SSession.h"
 
+using namespace std;
 
-Scene* Serssion::m_pScene = nullptr;
-PLAYERINFO Serssion::m_PlayersInfo[MAX_PLAYERS] = {};
-PLAYERINFO Serssion::m_befPlayersInfo[MAX_PLAYERS] = {};
-bool Serssion::m_Updated[MAX_PLAYERS * 2] = {};
+Scene* SSerssion::m_pScene = nullptr;
+PLAYERINFO SSerssion::m_PlayersInfo[MAX_PLAYERS] = {};
+PLAYERINFO SSerssion::m_befPlayersInfo[MAX_PLAYERS] = {};
+bool SSerssion::m_Updated[MAX_PLAYERS * 2] = {};
 
-Serssion::Serssion()
+SSerssion::SSerssion()
 {
 }
 
-Serssion::Serssion(int id, SOCKET s) :
+SSerssion::SSerssion(int id, SOCKET s) :
 	m_sid{ id },
 	m_sock{ s }
 {
 }
 
-Serssion::~Serssion()
+SSerssion::~SSerssion()
 {
 	closesocket(m_sock);
 }
 
-void Serssion::UpdatePlayerInfo()
+void SSerssion::UpdatePlayerInfo()
 {
 	// 씬에서 플레이어 정보를 가져와 업데이트 한다
-	for (int i = 0; i < MAX_PLAYERS; ++i) {
+	for (int i = 0; i < MAX_PLAYERS; ++i) 
+	{
 		m_PlayersInfo[i].dir = m_pScene->GetPlayerInput(i);				// 방향 업데이트 필요
 		m_PlayersInfo[i].pid = i;
 		m_PlayersInfo[i].pos[0] = m_pScene->GetPlayerPosition(i * 2);
@@ -34,7 +36,7 @@ void Serssion::UpdatePlayerInfo()
 	}
 }
 
-void Serssion::UpdateBeforeInfo()
+void SSerssion::UpdateBeforeInfo()
 {
 	// m_befPlayersInfo를 갱신한다
 	memcpy(m_befPlayersInfo, m_PlayersInfo, sizeof(PLAYERINFO) * MAX_PLAYERS);
@@ -43,19 +45,22 @@ void Serssion::UpdateBeforeInfo()
 	memset(m_Updated, 0, sizeof(bool) * MAX_PLAYERS * 2);
 }
 
-bool Serssion::IsUpdated()
+bool SSerssion::IsUpdated()
 {
 	// 입력도 캐릭터 마다 비교
-	unsigned char input[2] = {
+	unsigned char input[2] = 
+	{
 		0b00001111,
 		0b11110000
 	};
 
 	bool bUpdated = false;
-	for (int i = 0; i < MAX_PLAYERS * 2; ++i) {
+	for (int i = 0; i < MAX_PLAYERS * 2; ++i) 
+	{
 		// 좌표 변경 비교
 		if (!(m_befPlayersInfo[i / 2].pos[i % 2] == m_PlayersInfo[i / 2].pos[i % 2]) ||
-			!((m_befPlayersInfo[i / 2].dir & input[i % 2]) == (m_PlayersInfo[i / 2].dir & input[i % 2]))) {
+			!((m_befPlayersInfo[i / 2].dir & input[i % 2]) == (m_PlayersInfo[i / 2].dir & input[i % 2]))) 
+		{
 			bUpdated = true;
 			m_Updated[i] = true;
 		}
@@ -65,7 +70,7 @@ bool Serssion::IsUpdated()
 }
 
 // Processing Scene change packet and move packet
-int Serssion::DoSend(char type, int parameter)
+int SSerssion::DoSend(char type, int parameter)
 {
 	int retval = 0;
 	SOCKADDR_IN clientaddr;
@@ -144,7 +149,7 @@ int Serssion::DoSend(char type, int parameter)
 	return retval;
 }
 
-int Serssion::DoRecv()
+int SSerssion::DoRecv()
 {
 	int retval;
 	char buff[512];
@@ -164,7 +169,7 @@ int Serssion::DoRecv()
 	return retval;
 }
 
-void Serssion::ProcessPacket(char* data)
+void SSerssion::ProcessPacket(char* data)
 {
 	switch ((CLIENT_PACKET_INFO)data[0]) 
 	{
@@ -173,7 +178,7 @@ void Serssion::ProcessPacket(char* data)
 			// 클라이언트에서 받은 데이터 넣어주기
 			C2S_MOVE_PACKET* info = (C2S_MOVE_PACKET*)data;
 			m_type = info->type;
-			m_sid = info->from_c_id;
+			m_sid = info->cid;
 			m_dir = info->direction;
 			//cout << "recv id: " << m_sid << " dir: " << (unsigned int)m_dir << endl;
 

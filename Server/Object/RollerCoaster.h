@@ -1,7 +1,8 @@
 #pragma once
 #include "MovingObject.h"
 
-class RollerCoaster : public MovingObject {
+class RollerCoaster : public MovingObject 
+{
 private:
 	RECT m_tInitpos;
 	RECT m_tMoveTo;

@@ -1,7 +1,8 @@
 #pragma once
 #include "Object.h"
 
-class Button : public Object {
+class Button : public Object 
+{
 private:
 	bool m_bActive = false;
 	bool m_bFixed;

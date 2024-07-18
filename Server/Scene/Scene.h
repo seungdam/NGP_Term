@@ -1,6 +1,5 @@
 #pragma once
-#include <vector>
-#include <Windows.h>
+
 #include "../Object/Player.h"
 #include "../Object/Step.h"
 #include "../Object/Monster.h"

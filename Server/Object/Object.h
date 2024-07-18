@@ -1,6 +1,7 @@
 #pragma once
 
-class Object {
+class Object 
+{
 protected:
 	Object();
 
@@ -14,7 +15,8 @@ protected:
 
 public:
 	// getter setter
-	FRECT GetPosition() const { 
+	FRECT GetPosition() const 
+	{ 
 		FRECT temp;
 		temp.left = m_tPosition.x - m_tSize.x;
 		temp.top = m_tPosition.y - m_tSize.y;

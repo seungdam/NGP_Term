@@ -1,9 +1,9 @@
-#include "Game.h"
-#include "Session.h"
-#include "../Protocol/Packet.h"
+#include "pch.h"
+#include "SSession.h"
 #include "Scene/Scene.h"
 #include "SceneManager.h"
 
+using namespace std;
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -31,12 +31,8 @@ void err_display(const char* msg)
 	LocalFree(lpMsgBuf);
 }
 
-#define SERVERPORT 9000
-
-using namespace std;
-
 // SOCKETINFO를 담을 전역 변수
-unordered_map<int, Serssion> g_clients;
+unordered_map<int, SSerssion> g_clients;
 
 // RecvThread를 관리하는 함수
 HANDLE rthread[MAX_PLAYERS];
@@ -44,6 +40,7 @@ HANDLE sthread;
 
 DWORD WINAPI ServerRecvThread(LPVOID arg);
 DWORD WINAPI ServerSendThread(LPVOID arg);
+
 int currentPlayerNum = 0;
 bool g_bGameLoop = true;
 
@@ -55,12 +52,18 @@ int main(int argc, char* argv[])
 	// 윈속 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+
+	{
 		return 1;
+
+	}
 
 	// 소켓 생성
 	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (sock == INVALID_SOCKET) err_quit("socket()");
-
+	if (sock == INVALID_SOCKET)
+	{
+		err_quit("socket()");
+	}
 	// bind()
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
@@ -68,12 +71,16 @@ int main(int argc, char* argv[])
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVERPORT);
 	retval = bind(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit("bind()");
-	
+	if (retval == SOCKET_ERROR)
+	{
+		err_quit("bind()");
+	}
 	// listen()
 	retval = listen(sock, SOMAXCONN);
-	if (retval == SOCKET_ERROR) err_quit("listen()");
-
+	if (retval == SOCKET_ERROR)
+	{
+		err_quit("listen()");
+	}
 
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
@@ -95,13 +102,13 @@ int main(int argc, char* argv[])
 			// id는 0부터 부여한다
 			int id = currentPlayerNum++;
 			g_clients.try_emplace(id, id, client_sock);
-			rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
+			//rthread[id] = CreateThread(NULL, 0, ServerRecvThread, (LPVOID)&id, 0, NULL);
 			if (rthread[id] != NULL) CloseHandle(rthread[id]);
 			if (MAX_PLAYERS == currentPlayerNum) 
 			{
 				// send 스레드 생성, 
 				// 정보) 로그인 패킷 송신 부분 SendThread로 이동 확인 했으면 이 주석 지울 것
-				sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
+				//sthread = CreateThread(NULL, 0, ServerSendThread, nullptr, 0, NULL);
 				if (sthread != NULL) CloseHandle(sthread);
 			}
 		}
@@ -121,13 +128,16 @@ int main(int argc, char* argv[])
 
 	closesocket(sock);
 	WSACleanup();
+	return 0;
 }
 
-void Disconnect(int id) {
+void Disconnect(int id) 
+{
 
 	std::cout << id << " 클라이언트 종료" << std::endl;
 	g_clients.erase(id);
-	for (auto& i : g_clients) {
+	for (auto& i : g_clients) 
+	{
 		std::cout << "남은 클라 ID: " << i.first << std::endl;
 	}
 }
@@ -138,10 +148,11 @@ DWORD WINAPI ServerRecvThread(LPVOID arg)
 	int retval;
 	cout << "클라이언트 접속, id: " << id << endl;
 
-	while (g_bGameLoop) {
+	while (g_bGameLoop) 
+	{
 		retval = g_clients[id].DoRecv();
-		if (retval == SOCKET_ERROR || retval == 0) {
-		//if (false) {
+		if (retval == SOCKET_ERROR || retval == 0) 
+		{
 			err_display("recv()");
 			break;
 		}
@@ -158,7 +169,7 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 	SceneManager* pManager = new SceneManager;
 
 	pManager->ChangeScene(curScene++);
-	Serssion::SetScene(pManager->GetScene());
+	SSerssion::SetScene(pManager->GetScene());
 
 	// 접속한 플레이어들에게 로그인
 	for (auto& i : g_clients) 
@@ -198,13 +209,16 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 
 		// update
 		int goal_clients_id = pManager->Update(fTimeElapsed);
-		if (goal_clients_id >= 0) {
+		if (goal_clients_id >= 0)
+		{
 			g_clients[goal_clients_id].AddScore();
 
-			//for (auto& i : g_clients) {
-			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+		
+			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) 
+			{
 				int retval = iter->second.DoSend((char)(SERVER_PACKET_INFO::SCENE_CHANGE), curScene);
-				if (retval == SOCKET_ERROR) {
+				if (retval == SOCKET_ERROR) 
+				{
 					std::cout << iter->first << " 클라이언트 종료" << std::endl;
 					iter = g_clients.erase(iter);
 				}
@@ -213,18 +227,21 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 			}
 			// 씬 변경
 			pManager->ChangeScene(curScene);
-			Serssion::SetScene(pManager->GetScene());
+			SSerssion::SetScene(pManager->GetScene());
 
 			// 게임 끝이라면?
-			if (curScene == 4) {
+			if (curScene == 4) 
+			{
 				int max_score_id = 0;
 				int score = 0;
-				for (auto& i : g_clients) {
+				for (auto& i : g_clients) 
+				{
 					if (i.second.GetScore() > score) max_score_id = i.first;
 					score = i.second.GetScore();
 				}
 
-				for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+				for (auto iter = g_clients.begin(); iter != g_clients.end(); )
+				{
 					int retval = iter->second.DoSend((char)(SERVER_PACKET_INFO::GAME_END), max_score_id);
 					if (retval == SOCKET_ERROR) {
 						std::cout << iter->first << " 클라이언트 종료" << std::endl;
@@ -238,30 +255,34 @@ DWORD WINAPI ServerSendThread(LPVOID arg)
 			curScene++;
 		}
 
-		Serssion::UpdatePlayerInfo();
+		SSerssion::UpdatePlayerInfo();
 
 		int retval = 0;
 		// send to player
-		if (Serssion::IsUpdated()) 
+		if (SSerssion::IsUpdated()) 
 		{
 			fSendElapsed = 0.0f;
-			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) {
+			for (auto iter = g_clients.begin(); iter != g_clients.end(); ) 
+			{
 				 retval = iter->second.DoSend((char)(SERVER_PACKET_INFO::PLAYER_MOVE));
-				 if (retval == SOCKET_ERROR) {
+				 if (retval == SOCKET_ERROR) 
+				 {
 					 std::cout << iter->first << " 클라이언트 종료" << std::endl;
 					 iter = g_clients.erase(iter);
 				 }
 				 else ++iter;
 			}
-			Serssion::UpdateBeforeInfo();
+			SSerssion::UpdateBeforeInfo();
 		}
 
 		if (g_clients.empty()) break;
 	}
 
-	//g_clients.clear();
-
-	if (pManager) delete pManager;
+	
+	if (pManager)
+	{
+		delete pManager;
+	}
 	currentPlayerNum = 0;
 
 	return 0;
