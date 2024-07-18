@@ -1,24 +1,5 @@
 #pragma once
-
-#define MAX_PLAYERS 3
-#define EPSILON 0.00001f
-
-struct FPOINT 
-{
-	float x;
-	float y;
-
-	bool operator==(const FPOINT& other) 
-	{
-		return
-			(abs(x - other.x) < EPSILON) &&
-			(abs(y - other.y) < EPSILON);
-	}
-};
-
-
-
-enum class SERVER_PACKET_INFO 
+enum class SERVER_PACKET_INFO
 {
 	LOGIN = 0,
 	PLAYER_MOVE,
@@ -26,7 +7,7 @@ enum class SERVER_PACKET_INFO
 	GAME_END
 };
 
-enum class CLIENT_PACKET_INFO 
+enum class CLIENT_PACKET_INFO
 {
 	MOVE = 0,
 };
